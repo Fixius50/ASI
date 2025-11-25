@@ -9,18 +9,5 @@
         "name": "Roberto Monedero Alonso"
     },
     "items": [
-        {
-            "id": "https://Fixius50.github.io/ASI/taller-ia-4.html",
-            "url": "https://Fixius50.github.io/ASI/taller-ia-4.html",
-            "title": "Taller IA",
-            "content_html": "<div style=\"width: 100vw; position: relative; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw; height: 100vh; /* ocupa toda la altura de la ventana visible */    min-height: 800px; /* seguridad por si la pantalla es bajita */    background: #000;\"><div class=\"post__iframe\"><iframe loading=\"lazy\" style=\"width: 100%; height: 100%; border: none; display: block;\" src=\"https://Fixius50.github.io/TrabajosModulosPedro/ASI/index.html\" allowfullscreen=\"allowfullscreen\">\n    </iframe></div></div>",
-            "author": {
-                "name": "Roberto Monedero Alonso"
-            },
-            "tags": [
-            ],
-            "date_published": "2025-11-25T11:56:53+01:00",
-            "date_modified": "2025-11-25T11:56:53+01:00"
-        }
     ]
 }
