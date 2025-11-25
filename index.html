@@ -1,104 +1,393 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Taller IA - Taller IA</title><meta name="description" content="Bitácora Automática Galería secuencial (1.jpg, 2.jpg...)"><meta name="generator" content="Publii Open-Source CMS for Static Site"><link rel="canonical" href="https://Fixius50.github.io/ASI/"><link rel="alternate" type="application/atom+xml" href="https://Fixius50.github.io/ASI/feed.xml" title="Taller IA - RSS"><link rel="alternate" type="application/json" href="https://Fixius50.github.io/ASI/feed.json" title="Taller IA - JSON"><meta property="og:title" content="Taller IA"><meta property="og:site_name" content="Taller IA"><meta property="og:description" content="Bitácora Automática Galería secuencial (1.jpg, 2.jpg...)"><meta property="og:url" content="https://Fixius50.github.io/ASI/"><meta property="og:type" content="article"><link rel="stylesheet" href="https://Fixius50.github.io/ASI/assets/css/style.css?v=b09e72b2ca1a38c969d44da51bb22509"><script type="application/ld+json">{"@context":"http://schema.org","@type":"Article","mainEntityOfPage":{"@type":"WebPage","@id":"https://Fixius50.github.io/ASI/"},"headline":"Taller IA","datePublished":"2025-11-25T10:55+01:00","dateModified":"2025-11-25T13:51+01:00","description":"Bitácora Automática Galería secuencial (1.jpg, 2.jpg...)","author":{"@type":"Person","name":"Roberto Monedero Alonso","url":"https://Fixius50.github.io/ASI/authors/roberto-monedero-alonso/"},"publisher":{"@type":"Organization","name":"Roberto Monedero Alonso"}}</script><noscript><style>img[loading] {
-                    opacity: 1;
-                }</style></noscript></head><body class="page-template"><header class="top js-header"><a class="logo" href="https://Fixius50.github.io/ASI/">Taller IA</a></header><main class="page"><article class="content"><div class="hero hero--noimage"><header class="hero__content"><div class="wrapper"><h1>Taller IA</h1></div></header></div><div class="entry-wrapper content__entry"><div id="auto-bitacora"><div class="header-area"><h1 style="margin: 0; color: white;">Bitácora Automática</h1><p style="color: #64748b; margin: 5px 0 20px;">Galería secuencial (1.jpg, 2.jpg...)</p><div id="nav-container"></div></div><div id="gallery-container"></div></div><script>(function() {
-        /**
-         * ========================================================
-         * CONFIGURACIÓN AUTOMÁTICA
-         * ========================================================
-         * Solo tienes que decir cuántas fotos (count) hay en la carpeta.
-         * El script buscará: 1.jpg, 2.jpg, 3.jpg ... hasta llegar al número.
-         */
-        const SECTIONS = [
-            {
-                label: "Mac Mini",      // Nombre del botón
-                folder: "Mac_mini",     // Nombre EXACTO de la carpeta (sin espacios)
-                count: 5,               // ¿Cuántas fotos hay? (del 1 al 5)
-                ext: "jpg"              // ¿Extensión? jpg, png, webp...
-            },
-            {
-                label: "Raspberry",
-                folder: "Raspberry",
-                count: 3,               // Hay fotos: 1.jpg, 2.jpg, 3.jpg
-                ext: "jpg"
-            },
-            {
-                label: "Montaje Final",
-                folder: "Montaje_Final", 
-                count: 10,              // Buscará del 1 al 10
-                ext: "png"              // Estas son PNG
-            }
-        ];
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitácora - Taller de IA</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Roboto -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 
-        // LÓGICA DE BUCLE
-        const nav = document.getElementById('nav-container');
-        const gallery = document.getElementById('gallery-container');
-        
-        // Limpiar contenedor al inicio
-        if(gallery) gallery.innerHTML = '';
-
-        SECTIONS.forEach((sec, index) => {
-            // 1. Crear Botón
-            const btn = document.createElement('button');
-            btn.className = `nav-btn ${index === 0 ? 'active' : ''}`;
-            btn.textContent = sec.label;
-            
-            btn.onclick = () => loadSection(index);
-            nav.appendChild(btn);
-
-            // 2. Crear Contenedor de la Sección
-            const wrapper = document.createElement('div');
-            wrapper.className = `gallery-grid ${index === 0 ? 'fade-in' : 'hidden'}`;
-            wrapper.id = `sec-${index}`;
-
-            // 3. BUCLE MÁGICO (Generador de fotos)
-            for (let i = 1; i <= sec.count; i++) {
-                
-                // Construimos la ruta: media/files/CARPETA/NUMERO.jpg
-                // Añadimos una barra inicial "/" para asegurar la ruta desde la raíz
-                const imgSrc = `/media/files/${sec.folder}/${i}.${sec.ext || 'jpg'}`;
-                
-                const card = document.createElement('div');
-                card.className = 'photo-item';
-                card.innerHTML = `
-                    <div class="img-box">
-                        <img loading="lazy" src="${imgSrc}" loading="lazy" alt="Imagen ${i}"
-                             onclick="window.open(this.src, '_blank')" style="cursor: zoom-in;"
-                             onerror="this.parentElement.innerHTML='<div style=\'color:red; padding:20px; text-align:center\' data-is-external-image="true">Falta: ${i}.${sec.ext}</div>'">
-                    </div>
-                    <div class="info-box">
-                        <h3>Imagen ${i}</h3>
-                        <p>Archivo: ${sec.folder}/${i}.${sec.ext}</p>
-                    </div>
-                `;
-                wrapper.appendChild(card);
-            }
-            gallery.appendChild(wrapper);
-        });
-
-        // Función cambio de pestaña
-        function loadSection(idx) {
-            // Botones
-            Array.from(nav.children).forEach((b, i) => {
-                b.classList.toggle('active', i === idx);
-            });
-            // Galerías
-            Array.from(gallery.children).forEach((div, i) => {
-                if (i === idx) {
-                    div.classList.remove('hidden');
-                    div.classList.add('fade-in');
-                } else {
-                    div.classList.add('hidden');
-                    div.classList.remove('fade-in');
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                fontFamily: {
+                    sans: ['Roboto', 'sans-serif'],
+                },
+                extend: {
+                    colors: {
+                        primary: '#3b82f6', // Blue 500
+                        secondary: '#8b5cf6', // Violet 500
+                        darkbg: '#0f172a', // Slate 900
+                        surface: '#1e293b', // Slate 800
+                    }
                 }
+            }
+        }
+    </script>
+    <style>
+        /* Transición suave para el contenido de las pestañas */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Estilo para la pestaña activa */
+        .tab-btn.active {
+            background-color: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.5);
+        }
+        .dark .tab-btn.active {
+            background-color: #3b82f6;
+            color: white;
+        }
+
+        /* Loading Spinner */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 4px solid #3b82f6;
+            width: 40px;
+            height: 40px;
+            -webkit-animation: spin 1s linear infinite; /* Safari */
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 dark:bg-darkbg dark:text-gray-200 transition-colors duration-300 antialiased flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-white/80 dark:bg-darkbg/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2">
+                    <span class="material-icons-round text-primary text-3xl">auto_stories</span>
+                    <span id="nav-title" class="font-bold text-xl tracking-tight">Bitácora IA</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button onclick="toggleTheme()" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label="Toggle Dark Mode">
+                        <span class="material-icons-round dark:hidden">dark_mode</span>
+                        <span class="material-icons-round hidden dark:block text-yellow-400">light_mode</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
+
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-4" id="main-title">
+                Cargando Portafolio...
+            </h1>
+            <p class="text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto" id="main-desc">
+                Conectando con el repositorio de GitHub...
+            </p>
+        </header>
+
+        <!-- Loading State -->
+        <div id="loading-indicator" class="flex flex-col items-center justify-center py-20">
+            <div class="loader mb-4"></div>
+            <p class="text-gray-500">Obteniendo carpetas y archivos...</p>
+        </div>
+
+        <!-- Error State (Hidden by default) -->
+        <div id="error-message" class="hidden text-center py-10 bg-red-50 dark:bg-red-900/20 rounded-xl border border-red-200 dark:border-red-800">
+            <span class="material-icons-round text-red-500 text-4xl mb-2">error_outline</span>
+            <p class="text-red-600 dark:text-red-400 font-medium" id="error-text">Error al cargar datos.</p>
+        </div>
+
+        <!-- TABS NAVIGATION SYSTEM (Hidden while loading) -->
+        <div id="app-content" class="hidden">
+            <div class="mb-10 overflow-x-auto pb-4 scrollbar-hide">
+                <div class="flex space-x-3 md:justify-center min-w-max px-2" id="tabs-container">
+                    <!-- JS Injected Tabs Buttons -->
+                </div>
+            </div>
+
+            <!-- TABS CONTENT DISPLAY area -->
+            <div id="content-display" class="relative min-h-[400px]">
+                <!-- JS Injected Content Blocks -->
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="border-t border-gray-200 dark:border-gray-800 mt-auto bg-white dark:bg-darkbg">
+        <div class="max-w-5xl mx-auto py-8 px-4 flex flex-col items-center justify-center text-center">
+            <p class="text-sm font-medium text-gray-900 dark:text-white mb-1">
+                Autor: Roberto Monedero Alonso
+            </p>
+            <p class="text-xs text-gray-400">
+                Datos obtenidos dinámicamente desde GitHub
+            </p>
+        </div>
+    </footer>
+
+    <!-- MAIN LOGIC -->
+    <script>
+        // --- CONFIGURACIÓN PRINCIPAL ---
+
+        const GITHUB_CONFIG = {
+            owner: 'Fixius50',
+            repo: 'ASI',
+            path: 'media/files'
+        };
+
+        const DOC_DATA = {
+            title: "Portafolio Taller de IA",
+            description: "Registro documental de los proyectos alojados en el repositorio.",
+            author: "Roberto Monedero Alonso",
+            works: [] // Se llenará dinámicamente
+        };
+
+        /**
+         * MAPA DE CARPETAS Y DESCRIPCIONES MANUALES
+         * Aquí es donde "traduces" los números de las carpetas a títulos reales.
+         * También puedes añadir descripciones específicas para archivos concretos.
+         */
+        const FOLDER_MAP = {
+            // Mapeo para la carpeta "1"
+            "1": {
+                title: "Montaje Inicial Raspberry",
+                // Descripciones opcionales para archivos específicos dentro de esta carpeta
+                descriptions: {
+                    "IMG_20231027_180815.jpg": "Vista general de la placa Raspberry Pi 4 lista para el primer encendido. Se aprecian los puertos USB y Ethernet.",
+                    "IMG_20231103_174219.jpg": "Detalle de la conexión de los pines GPIO para el primer sensor de temperatura."
+                    // Añade más archivos aquí si necesitas descripciones específicas...
+                }
+            },
+            // Mapeo para la carpeta "2"
+            "2": {
+                title: "Configuración de Sensores",
+                descriptions: {
+                    // Si no pones descripciones aquí, se usará el texto genérico.
+                }
+            },
+            // Mapeo para la carpeta "3"
+             "3": {
+                title: "Integración Final",
+                 descriptions: {}
+            }
+            // Puedes seguir añadiendo "4", "5", etc...
+        };
+
+
+        // --- GITHUB API LOGIC ---
+
+        async function initApp() {
+            const loadingEl = document.getElementById('loading-indicator');
+            const appContentEl = document.getElementById('app-content');
+            const errorEl = document.getElementById('error-message');
+
+            try {
+                // 1. Fetch de la carpeta raíz
+                const rootUrl = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}`;
+                const rootResponse = await fetch(rootUrl);
+
+                if (!rootResponse.ok) throw new Error(`GitHub API Error: ${rootResponse.status} - Verifica la ruta y el repositorio.`);
+                
+                const rootData = await rootResponse.json();
+                const folders = rootData.filter(item => item.type === 'dir');
+
+                if (folders.length === 0) throw new Error("No se encontraron carpetas en media/files/.");
+
+                // 2. Iterar sobre cada carpeta
+                for (const folder of folders) {
+                    const folderResponse = await fetch(folder.url);
+                    const folderFiles = await folderResponse.json();
+
+                    const images = folderFiles.filter(file => 
+                        file.name.match(/\.(jpg|jpeg|png|gif|webp)$/i)
+                    );
+
+                    if (images.length > 0) {
+                        // Usamos FOLDER_MAP para obtener el título, o el nombre de carpeta si no existe mapeo.
+                        const folderInfo = FOLDER_MAP[folder.name] || {};
+                        const prettyTitle = folderInfo.title || `Carpeta ${folder.name}`;
+
+                        DOC_DATA.works.push({
+                            id: folder.name.replace(/\s+/g, '-'),
+                            title: prettyTitle,
+                            folderNameRaw: folder.name, // Guardamos el nombre original para buscar descripciones luego
+                            items: images.map(img => ({
+                                name: img.name,
+                                url: img.download_url,
+                                // Título corto basado en el nombre del archivo
+                                shortTitle: formatShortTitle(img.name)
+                            }))
+                        });
+                    }
+                }
+
+                // 3. Renderizar
+                loadingEl.classList.add('hidden');
+                appContentEl.classList.remove('hidden');
+                renderApp();
+
+            } catch (error) {
+                console.error(error);
+                loadingEl.classList.add('hidden');
+                errorEl.classList.remove('hidden');
+                document.getElementById('error-text').textContent = `Error: ${error.message}. Posible límite de API de GitHub excedido o ruta incorrecta.`;
+            }
+        }
+
+        // Función auxiliar para nombres cortos
+        function formatShortTitle(filename) {
+            let text = filename.replace(/\.[^/.]+$/, ""); // Quitar extensión
+            text = text.replace(/[-_]/g, " "); // Reemplazar guiones
+             // Intentar limpiar nombres de cámara comunes (ej: IMG_2023...)
+            text = text.replace(/^(IMG|VID|PXL)_\d{8}_/i, "Captura ");
+            return text.charAt(0).toUpperCase() + text.slice(1);
+        }
+
+        // --- RENDER LOGIC ---
+
+        function renderApp() {
+            document.title = DOC_DATA.title;
+            document.getElementById('main-title').textContent = DOC_DATA.title;
+            document.getElementById('main-desc').textContent = DOC_DATA.description;
+
+            const tabsContainer = document.getElementById('tabs-container');
+            const displayContainer = document.getElementById('content-display');
+
+            tabsContainer.innerHTML = '';
+            displayContainer.innerHTML = '';
+
+            if (DOC_DATA.works.length === 0) {
+                displayContainer.innerHTML = '<p class="text-center text-gray-500 text-xl py-10">No se encontraron imágenes en las subcarpetas.</p>';
+                return;
+            }
+
+            // Loop Principal
+            DOC_DATA.works.forEach((work, index) => {
+                const isFirst = index === 0;
+
+                // A. Botón Pestaña
+                const btn = document.createElement('button');
+                btn.className = `tab-btn px-6 py-3 rounded-full text-sm font-bold transition-all border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 whitespace-nowrap uppercase tracking-wider ${isFirst ? 'active' : ''}`;
+                btn.textContent = work.title;
+                btn.onclick = () => switchTab(work.id);
+                btn.id = `tab-btn-${work.id}`;
+                tabsContainer.appendChild(btn);
+
+                // B. Contenedor Pestaña
+                const contentDiv = document.createElement('div');
+                contentDiv.className = `tab-content space-y-16 ${isFirst ? 'active' : ''}`;
+                contentDiv.id = `work-content-${work.id}`;
+
+                let blocksHTML = '';
+                
+                // Loop Imágenes dentro de la pestaña
+                work.items.forEach(item => {
+                    // LÓGICA DE DESCRIPCIÓN:
+                    // 1. Buscamos si hay una descripción manual en FOLDER_MAP para este archivo exacto.
+                    const manualDesc = FOLDER_MAP[work.folderNameRaw]?.descriptions?.[item.name];
+                    
+                    // 2. Si no hay manual, usamos una genérica.
+                    const finalDescription = manualDesc || `
+                        <p>Esta imagen corresponde al proceso de trabajo de la sección <strong>"${work.title}"</strong>.</p>
+                        <p class="mt-2">Observamos el estado del montaje o configuración en este punto específico del desarrollo. (Puedes editar el código para añadir una descripción técnica detallada para este archivo: <code>${item.name}</code>).</p>
+                    `;
+
+                    blocksHTML += `
+                        <div class="bg-white dark:bg-surface rounded-3xl p-6 md:p-8 shadow-lg border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-shadow duration-300">
+                            <div class="flex flex-col lg:flex-row gap-8 items-center">
+                                
+                                <!-- COLUMNA IMAGEN (Visual) -->
+                                <div class="w-full lg:w-7/12 flex-shrink-0">
+                                    <div class="relative rounded-2xl overflow-hidden shadow-inner bg-gray-100 dark:bg-black/20 group cursor-pointer">
+                                        <img src="${item.url}" alt="${item.shortTitle}" class="w-full h-auto max-h-[600px] object-contain bg-gray-50 dark:bg-gray-900 mx-auto transform group-hover:scale-[1.02] transition-transform duration-500">
+                                        
+                                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                            <a href="${item.url}" target="_blank" class="text-white text-xs font-bold flex items-center gap-1 hover:underline">
+                                                <span class="material-icons-round text-sm">open_in_new</span> Ver imagen original a tamaño completo
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- COLUMNA DESCRIPCIÓN (Texto) -->
+                                <div class="w-full lg:w-5/12 flex flex-col justify-center">
+                                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                                        <span class="material-icons-round text-primary">image</span>
+                                        ${item.shortTitle}
+                                    </h3>
+                                    
+                                    <div class="prose prose-blue dark:prose-invert max-w-none text-gray-600 dark:text-gray-300">
+                                        ${finalDescription}
+                                        <div class="mt-6 pt-4 border-t border-gray-100 dark:border-gray-700 flex items-center gap-2">
+                                            <span class="material-icons-round text-gray-400 text-sm">folder_open</span>
+                                            <span class="text-xs font-mono text-gray-500 dark:text-gray-400 truncate">
+                                                ${GITHUB_CONFIG.path}/${work.folderNameRaw}/${item.name}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                contentDiv.innerHTML = blocksHTML;
+                displayContainer.appendChild(contentDiv);
             });
         }
-    })();</script></div></article></main><footer class="footer"><div class="wrapper"><div class="footer__copyright">Powered by Publii</div><button id="backToTop" class="footer__bttop" aria-label="Back to top" title="Back to top"><svg width="20" height="20"><use xlink:href="https://Fixius50.github.io/ASI/assets/svg/svg-map.svg#toparrow"/></svg></button></div></footer><script defer="defer" src="https://Fixius50.github.io/ASI/assets/js/scripts.min.js?v=700105c316933a8202041b6415abb233"></script><script>window.publiiThemeMenuConfig={mobileMenuMode:'sidebar',animationSpeed:300,submenuWidth: 'auto',doubleClickTime:500,mobileMenuExpandableSubmenus:true,relatedContainerForOverlayMenuSelector:'.top'};</script><script>var images = document.querySelectorAll('img[loading]');
-        for (var i = 0; i < images.length; i++) {
-            if (images[i].complete) {
-                images[i].classList.add('is-loaded');
+
+        // --- TAB SWITCHING LOGIC ---
+        function switchTab(id) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+            document.getElementById(`tab-btn-${id}`).classList.add('active');
+            document.getElementById(`work-content-${id}`).classList.add('active');
+        }
+
+        // --- THEME HANDLING ---
+        function toggleTheme() {
+            const html = document.documentElement;
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
             } else {
-                images[i].addEventListener('load', function () {
-                    this.classList.add('is-loaded');
-                }, false);
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
             }
-        }</script></body></html>
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+            initApp();
+        });
+
+    </script>
+</body>
+</html>
