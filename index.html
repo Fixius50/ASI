@@ -33,7 +33,6 @@
         }
     </script>
     <style>
-        /* Transición suave para el contenido de las pestañas */
         .tab-content {
             display: none;
             animation: fadeIn 0.4s ease-out;
@@ -46,7 +45,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* Estilo para la pestaña activa */
         .tab-btn.active {
             background-color: #3b82f6;
             color: white;
@@ -58,14 +56,12 @@
             color: white;
         }
 
-        /* Loading Spinner */
         .loader {
             border: 4px solid #f3f3f3;
             border-radius: 50%;
             border-top: 4px solid #3b82f6;
             width: 40px;
             height: 40px;
-            -webkit-animation: spin 1s linear infinite; /* Safari */
             animation: spin 1s linear infinite;
         }
         @keyframes spin {
@@ -76,7 +72,6 @@
 </head>
 <body class="bg-gray-50 text-gray-800 dark:bg-darkbg dark:text-gray-200 transition-colors duration-300 antialiased flex flex-col min-h-screen">
 
-    <!-- Navigation -->
     <nav class="sticky top-0 z-50 bg-white/80 dark:bg-darkbg/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
@@ -85,7 +80,7 @@
                     <span id="nav-title" class="font-bold text-xl tracking-tight">Bitácora IA</span>
                 </div>
                 <div class="flex items-center gap-4">
-                    <button onclick="toggleTheme()" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label="Toggle Dark Mode">
+                    <button onclick="toggleTheme()" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
                         <span class="material-icons-round dark:hidden">dark_mode</span>
                         <span class="material-icons-round hidden dark:block text-yellow-400">light_mode</span>
                     </button>
@@ -94,10 +89,8 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
     <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
 
-        <!-- Header -->
         <header class="text-center mb-12">
             <h1 class="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-4" id="main-title">
                 Cargando Portafolio...
@@ -107,29 +100,25 @@
             </p>
         </header>
 
-        <!-- Loading State -->
         <div id="loading-indicator" class="flex flex-col items-center justify-center py-20">
             <div class="loader mb-4"></div>
-            <p class="text-gray-500">Obteniendo carpetas y archivos...</p>
+            <p class="text-gray-500">Analizando estructura de carpetas...</p>
         </div>
 
-        <!-- Error State (Hidden by default) -->
         <div id="error-message" class="hidden text-center py-10 bg-red-50 dark:bg-red-900/20 rounded-xl border border-red-200 dark:border-red-800">
             <span class="material-icons-round text-red-500 text-4xl mb-2">error_outline</span>
             <p class="text-red-600 dark:text-red-400 font-medium" id="error-text">Error al cargar datos.</p>
         </div>
 
-        <!-- TABS NAVIGATION SYSTEM (Hidden while loading) -->
         <div id="app-content" class="hidden">
             <div class="mb-10 overflow-x-auto pb-4 scrollbar-hide">
                 <div class="flex space-x-3 md:justify-center min-w-max px-2" id="tabs-container">
-                    <!-- JS Injected Tabs Buttons -->
+                    <!-- JS Injected Tabs -->
                 </div>
             </div>
 
-            <!-- TABS CONTENT DISPLAY area -->
             <div id="content-display" class="relative min-h-[400px]">
-                <!-- JS Injected Content Blocks -->
+                <!-- JS Injected Content -->
             </div>
         </div>
 
@@ -146,7 +135,6 @@
         </div>
     </footer>
 
-    <!-- MAIN LOGIC -->
     <script>
         // --- CONFIGURACIÓN PRINCIPAL ---
 
@@ -160,38 +148,16 @@
             title: "Portafolio Taller de IA",
             description: "Registro documental de los proyectos alojados en el repositorio.",
             author: "Roberto Monedero Alonso",
-            works: [] // Se llenará dinámicamente
+            works: [] 
         };
 
         /**
-         * MAPA DE CARPETAS Y DESCRIPCIONES MANUALES
-         * Aquí es donde "traduces" los números de las carpetas a títulos reales.
-         * También puedes añadir descripciones específicas para archivos concretos.
+         * FOLDER_MAP: Diccionario opcional para descripciones muy específicas.
+         * Si se deja vacío, el sistema generará descripciones "naturales" automáticamente.
          */
         const FOLDER_MAP = {
-            // Mapeo para la carpeta "1"
-            "1": {
-                title: "Montaje Inicial Raspberry",
-                // Descripciones opcionales para archivos específicos dentro de esta carpeta
-                descriptions: {
-                    "IMG_20231027_180815.jpg": "Vista general de la placa Raspberry Pi 4 lista para el primer encendido. Se aprecian los puertos USB y Ethernet.",
-                    "IMG_20231103_174219.jpg": "Detalle de la conexión de los pines GPIO para el primer sensor de temperatura."
-                    // Añade más archivos aquí si necesitas descripciones específicas...
-                }
-            },
-            // Mapeo para la carpeta "2"
-            "2": {
-                title: "Configuración de Sensores",
-                descriptions: {
-                    // Si no pones descripciones aquí, se usará el texto genérico.
-                }
-            },
-            // Mapeo para la carpeta "3"
-             "3": {
-                title: "Integración Final",
-                 descriptions: {}
-            }
-            // Puedes seguir añadiendo "4", "5", etc...
+            // Ejemplo:
+            // "13": { title: "Monitorización Final", descriptions: { "13.jpg": "Escritorio remoto operativo." } }
         };
 
 
@@ -203,18 +169,24 @@
             const errorEl = document.getElementById('error-message');
 
             try {
-                // 1. Fetch de la carpeta raíz
+                // 1. Fetch Root
                 const rootUrl = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}`;
                 const rootResponse = await fetch(rootUrl);
 
-                if (!rootResponse.ok) throw new Error(`GitHub API Error: ${rootResponse.status} - Verifica la ruta y el repositorio.`);
+                if (!rootResponse.ok) throw new Error(`Error API (${rootResponse.status}): Verifica repositorio y ruta.`);
                 
                 const rootData = await rootResponse.json();
-                const folders = rootData.filter(item => item.type === 'dir');
+                
+                // Ordenación natural
+                const folders = rootData
+                    .filter(item => item.type === 'dir')
+                    .sort((a, b) => {
+                        return a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' });
+                    });
 
                 if (folders.length === 0) throw new Error("No se encontraron carpetas en media/files/.");
 
-                // 2. Iterar sobre cada carpeta
+                // 2. Fetch Files per Folder
                 for (const folder of folders) {
                     const folderResponse = await fetch(folder.url);
                     const folderFiles = await folderResponse.json();
@@ -224,25 +196,30 @@
                     );
 
                     if (images.length > 0) {
-                        // Usamos FOLDER_MAP para obtener el título, o el nombre de carpeta si no existe mapeo.
-                        const folderInfo = FOLDER_MAP[folder.name] || {};
-                        const prettyTitle = folderInfo.title || `Carpeta ${folder.name}`;
+                        const cleanFolderName = folder.name.trim();
+                        const folderInfo = FOLDER_MAP[cleanFolderName] || {};
+                        
+                        // LÓGICA DE TÍTULO DE CARPETA
+                        let prettyTitle = folderInfo.title;
+                        if (!prettyTitle) {
+                            let text = cleanFolderName.replace(/^(carpeta|folder)[-_ ]?/i, "");
+                            text = text.replace(/[-_]/g, " ");
+                            prettyTitle = text.toUpperCase();
+                        }
 
                         DOC_DATA.works.push({
-                            id: folder.name.replace(/\s+/g, '-'),
+                            id: cleanFolderName.replace(/\s+/g, '-'),
                             title: prettyTitle,
-                            folderNameRaw: folder.name, // Guardamos el nombre original para buscar descripciones luego
+                            folderNameRaw: cleanFolderName,
                             items: images.map(img => ({
                                 name: img.name,
                                 url: img.download_url,
-                                // Título corto basado en el nombre del archivo
                                 shortTitle: formatShortTitle(img.name)
                             }))
                         });
                     }
                 }
 
-                // 3. Renderizar
                 loadingEl.classList.add('hidden');
                 appContentEl.classList.remove('hidden');
                 renderApp();
@@ -251,17 +228,38 @@
                 console.error(error);
                 loadingEl.classList.add('hidden');
                 errorEl.classList.remove('hidden');
-                document.getElementById('error-text').textContent = `Error: ${error.message}. Posible límite de API de GitHub excedido o ruta incorrecta.`;
+                document.getElementById('error-text').textContent = `Error: ${error.message}`;
             }
         }
 
-        // Función auxiliar para nombres cortos
         function formatShortTitle(filename) {
-            let text = filename.replace(/\.[^/.]+$/, ""); // Quitar extensión
-            text = text.replace(/[-_]/g, " "); // Reemplazar guiones
-             // Intentar limpiar nombres de cámara comunes (ej: IMG_2023...)
-            text = text.replace(/^(IMG|VID|PXL)_\d{8}_/i, "Captura ");
-            return text.charAt(0).toUpperCase() + text.slice(1);
+            let text = filename.replace(/\.[^/.]+$/, ""); 
+            text = text.replace(/[-_]/g, " ");
+            // Limpieza básica de prefijos comunes de cámara
+            text = text.replace(/^(IMG|VID|PXL|Screenshot)[-_]?\d*[-_]?/i, "");
+            
+            // Si el nombre queda vacío o son solo números, usamos "Registro"
+            if (!text || /^\d+$/.test(text.trim())) {
+                return "Registro " + (text || filename.replace(/\.[^/.]+$/, ""));
+            }
+            
+            return "Registro: " + text.charAt(0).toUpperCase() + text.slice(1);
+        }
+
+        // --- GENERADOR DE DESCRIPCIONES NATURALES ---
+        function generateNaturalDescription(filename, folderTitle) {
+            // Lista de plantillas para que no suene repetitivo
+            const templates = [
+                `En esta captura se documenta una fase clave del proyecto <strong>${folderTitle}</strong>. Muestra el estado operativo y los detalles de la configuración realizada en el archivo <code>${filename}</code>.`,
+                `Evidencia visual del proceso de implementación en <strong>${folderTitle}</strong>. Aquí se puede observar el resultado directo de los comandos ejecutados y la respuesta del sistema.`,
+                `Registro gráfico correspondiente a la sección <strong>${folderTitle}</strong>. Esta imagen sirve para validar que los componentes se han integrado correctamente según lo planificado.`,
+                `Detalle técnico capturado durante la sesión de trabajo en <strong>${folderTitle}</strong>. Refleja el progreso y es fundamental para la trazabilidad del montaje.`,
+                `Vista del entorno de trabajo para <strong>${folderTitle}</strong>. Se aprecian los ajustes finales y la disposición de los elementos tal como quedaron registrados en <code>${filename}</code>.`
+            ];
+
+            // Elegimos una frase basada en la longitud del nombre del archivo para que sea "aleatoria" pero consistente (siempre la misma para el mismo archivo)
+            const index = filename.length % templates.length;
+            return `<p>${templates[index]}</p>`;
         }
 
         // --- RENDER LOGIC ---
@@ -278,73 +276,62 @@
             displayContainer.innerHTML = '';
 
             if (DOC_DATA.works.length === 0) {
-                displayContainer.innerHTML = '<p class="text-center text-gray-500 text-xl py-10">No se encontraron imágenes en las subcarpetas.</p>';
+                displayContainer.innerHTML = '<p class="text-center text-gray-500 py-10">No hay imágenes disponibles.</p>';
                 return;
             }
 
-            // Loop Principal
             DOC_DATA.works.forEach((work, index) => {
                 const isFirst = index === 0;
 
-                // A. Botón Pestaña
+                // Tab Button
                 const btn = document.createElement('button');
-                btn.className = `tab-btn px-6 py-3 rounded-full text-sm font-bold transition-all border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 whitespace-nowrap uppercase tracking-wider ${isFirst ? 'active' : ''}`;
+                btn.className = `tab-btn px-5 py-2.5 rounded-full text-sm font-bold transition-all border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 whitespace-nowrap uppercase tracking-wider ${isFirst ? 'active' : ''}`;
                 btn.textContent = work.title;
                 btn.onclick = () => switchTab(work.id);
                 btn.id = `tab-btn-${work.id}`;
                 tabsContainer.appendChild(btn);
 
-                // B. Contenedor Pestaña
+                // Tab Content
                 const contentDiv = document.createElement('div');
-                contentDiv.className = `tab-content space-y-16 ${isFirst ? 'active' : ''}`;
+                contentDiv.className = `tab-content space-y-12 ${isFirst ? 'active' : ''}`;
                 contentDiv.id = `work-content-${work.id}`;
 
                 let blocksHTML = '';
                 
-                // Loop Imágenes dentro de la pestaña
                 work.items.forEach(item => {
-                    // LÓGICA DE DESCRIPCIÓN:
-                    // 1. Buscamos si hay una descripción manual en FOLDER_MAP para este archivo exacto.
+                    // 1. Mirar si hay descripción manual
                     const manualDesc = FOLDER_MAP[work.folderNameRaw]?.descriptions?.[item.name];
                     
-                    // 2. Si no hay manual, usamos una genérica.
-                    const finalDescription = manualDesc || `
-                        <p>Esta imagen corresponde al proceso de trabajo de la sección <strong>"${work.title}"</strong>.</p>
-                        <p class="mt-2">Observamos el estado del montaje o configuración en este punto específico del desarrollo. (Puedes editar el código para añadir una descripción técnica detallada para este archivo: <code>${item.name}</code>).</p>
-                    `;
+                    // 2. Si no, generar una "natural"
+                    const finalDescription = manualDesc 
+                        ? `<p>${manualDesc}</p>` 
+                        : generateNaturalDescription(item.name, work.title);
 
                     blocksHTML += `
-                        <div class="bg-white dark:bg-surface rounded-3xl p-6 md:p-8 shadow-lg border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-shadow duration-300">
-                            <div class="flex flex-col lg:flex-row gap-8 items-center">
+                        <div class="bg-white dark:bg-surface rounded-3xl p-6 shadow-lg border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300">
+                            <div class="flex flex-col lg:flex-row gap-8 items-start">
                                 
-                                <!-- COLUMNA IMAGEN (Visual) -->
-                                <div class="w-full lg:w-7/12 flex-shrink-0">
-                                    <div class="relative rounded-2xl overflow-hidden shadow-inner bg-gray-100 dark:bg-black/20 group cursor-pointer">
-                                        <img src="${item.url}" alt="${item.shortTitle}" class="w-full h-auto max-h-[600px] object-contain bg-gray-50 dark:bg-gray-900 mx-auto transform group-hover:scale-[1.02] transition-transform duration-500">
-                                        
-                                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                            <a href="${item.url}" target="_blank" class="text-white text-xs font-bold flex items-center gap-1 hover:underline">
-                                                <span class="material-icons-round text-sm">open_in_new</span> Ver imagen original a tamaño completo
+                                <div class="w-full lg:w-1/2 flex-shrink-0">
+                                    <div class="relative rounded-xl overflow-hidden shadow-sm bg-gray-100 dark:bg-black/20 group cursor-pointer border border-gray-100 dark:border-gray-700">
+                                        <img src="${item.url}" alt="${item.shortTitle}" class="w-full h-auto max-h-[500px] object-contain bg-white dark:bg-gray-900 mx-auto">
+                                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center">
+                                            <a href="${item.url}" target="_blank" class="opacity-0 group-hover:opacity-100 bg-white/90 dark:bg-black/80 text-gray-900 dark:text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all duration-300 flex items-center gap-2">
+                                                <span class="material-icons-round text-sm">fullscreen</span> Ampliar
                                             </a>
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- COLUMNA DESCRIPCIÓN (Texto) -->
-                                <div class="w-full lg:w-5/12 flex flex-col justify-center">
-                                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                                        <span class="material-icons-round text-primary">image</span>
+                                <div class="w-full lg:w-1/2 flex flex-col pt-2">
+                                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                                        <span class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center text-primary">
+                                            <span class="material-icons-round text-sm">assignment</span>
+                                        </span>
                                         ${item.shortTitle}
                                     </h3>
                                     
-                                    <div class="prose prose-blue dark:prose-invert max-w-none text-gray-600 dark:text-gray-300">
+                                    <div class="prose prose-sm prose-blue dark:prose-invert max-w-none text-gray-600 dark:text-gray-300 leading-relaxed">
                                         ${finalDescription}
-                                        <div class="mt-6 pt-4 border-t border-gray-100 dark:border-gray-700 flex items-center gap-2">
-                                            <span class="material-icons-round text-gray-400 text-sm">folder_open</span>
-                                            <span class="text-xs font-mono text-gray-500 dark:text-gray-400 truncate">
-                                                ${GITHUB_CONFIG.path}/${work.folderNameRaw}/${item.name}
-                                            </span>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -357,16 +344,13 @@
             });
         }
 
-        // --- TAB SWITCHING LOGIC ---
         function switchTab(id) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-
             document.getElementById(`tab-btn-${id}`).classList.add('active');
             document.getElementById(`work-content-${id}`).classList.add('active');
         }
 
-        // --- THEME HANDLING ---
         function toggleTheme() {
             const html = document.documentElement;
             if (html.classList.contains('dark')) {
@@ -378,7 +362,6 @@
             }
         }
 
-        // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 document.documentElement.classList.add('dark');
