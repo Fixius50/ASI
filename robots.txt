@@ -1,3 +1,0 @@
-User-agent: *
-Disallow:
-Sitemap: https://Fixius50.github.io/ASI/sitemap.xml
