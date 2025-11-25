@@ -9,5 +9,18 @@
         "name": "Roberto Monedero Alonso"
     },
     "items": [
+        {
+            "id": "https://Fixius50.github.io/ASI/taller-ia-3.html",
+            "url": "https://Fixius50.github.io/ASI/taller-ia-3.html",
+            "title": "Taller IA",
+            "content_html": "<div style=\"width: 100%; height: 85vh; min-height: 500px; overflow: hidden; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin: 20px 0;\"><div class=\"post__iframe\"><iframe loading=\"lazy\" style=\"width: 100%; height: 100%; border: none; display: block;\" src=\"https://Fixius50.github.io/TrabajosModulosPedro/ASI/index.html\" allowfullscreen=\"allowfullscreen\">\n    </iframe></div></div>",
+            "author": {
+                "name": "Roberto Monedero Alonso"
+            },
+            "tags": [
+            ],
+            "date_published": "2025-11-25T11:41:03+01:00",
+            "date_modified": "2025-11-25T11:41:03+01:00"
+        }
     ]
 }
