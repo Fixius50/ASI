@@ -1,104 +1,96 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Taller IA - Taller IA</title><meta name="description" content="Bitácora de Prácticas Repositorio Local Cargando..."><meta name="generator" content="Publii Open-Source CMS for Static Site"><link rel="canonical" href="https://Fixius50.github.io/ASI/"><link rel="alternate" type="application/atom+xml" href="https://Fixius50.github.io/ASI/feed.xml" title="Taller IA - RSS"><link rel="alternate" type="application/json" href="https://Fixius50.github.io/ASI/feed.json" title="Taller IA - JSON"><meta property="og:title" content="Taller IA"><meta property="og:site_name" content="Taller IA"><meta property="og:description" content="Bitácora de Prácticas Repositorio Local Cargando..."><meta property="og:url" content="https://Fixius50.github.io/ASI/"><meta property="og:type" content="article"><link rel="stylesheet" href="https://Fixius50.github.io/ASI/assets/css/style.css?v=b09e72b2ca1a38c969d44da51bb22509"><script type="application/ld+json">{"@context":"http://schema.org","@type":"Article","mainEntityOfPage":{"@type":"WebPage","@id":"https://Fixius50.github.io/ASI/"},"headline":"Taller IA","datePublished":"2025-11-25T10:55+01:00","dateModified":"2025-11-25T13:46+01:00","description":"Bitácora de Prácticas Repositorio Local Cargando...","author":{"@type":"Person","name":"Roberto Monedero Alonso","url":"https://Fixius50.github.io/ASI/authors/roberto-monedero-alonso/"},"publisher":{"@type":"Organization","name":"Roberto Monedero Alonso"}}</script><noscript><style>img[loading] {
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Taller IA - Taller IA</title><meta name="description" content="Bitácora Automática Galería secuencial (1.jpg, 2.jpg...)"><meta name="generator" content="Publii Open-Source CMS for Static Site"><link rel="canonical" href="https://Fixius50.github.io/ASI/"><link rel="alternate" type="application/atom+xml" href="https://Fixius50.github.io/ASI/feed.xml" title="Taller IA - RSS"><link rel="alternate" type="application/json" href="https://Fixius50.github.io/ASI/feed.json" title="Taller IA - JSON"><meta property="og:title" content="Taller IA"><meta property="og:site_name" content="Taller IA"><meta property="og:description" content="Bitácora Automática Galería secuencial (1.jpg, 2.jpg...)"><meta property="og:url" content="https://Fixius50.github.io/ASI/"><meta property="og:type" content="article"><link rel="stylesheet" href="https://Fixius50.github.io/ASI/assets/css/style.css?v=b09e72b2ca1a38c969d44da51bb22509"><script type="application/ld+json">{"@context":"http://schema.org","@type":"Article","mainEntityOfPage":{"@type":"WebPage","@id":"https://Fixius50.github.io/ASI/"},"headline":"Taller IA","datePublished":"2025-11-25T10:55+01:00","dateModified":"2025-11-25T13:51+01:00","description":"Bitácora Automática Galería secuencial (1.jpg, 2.jpg...)","author":{"@type":"Person","name":"Roberto Monedero Alonso","url":"https://Fixius50.github.io/ASI/authors/roberto-monedero-alonso/"},"publisher":{"@type":"Organization","name":"Roberto Monedero Alonso"}}</script><noscript><style>img[loading] {
                     opacity: 1;
-                }</style></noscript></head><body class="page-template"><header class="top js-header"><a class="logo" href="https://Fixius50.github.io/ASI/">Taller IA</a></header><main class="page"><article class="content"><div class="hero hero--noimage"><header class="hero__content"><div class="wrapper"><h1>Taller IA</h1></div></header></div><div class="entry-wrapper content__entry"><div id="mi-bitacora"><div class="header-bitacora"><h1 style="color: white; margin: 0; font-size: 32px;">Bitácora de Prácticas</h1><p style="color: #94a3b8; margin: 5px 0 20px 0;">Repositorio Local</p><div id="tabs-container"></div></div><div id="content-container" class="content-bitacora"><p style="text-align: center; color: #64748b;">Cargando...</p></div></div><script>(function() {
+                }</style></noscript></head><body class="page-template"><header class="top js-header"><a class="logo" href="https://Fixius50.github.io/ASI/">Taller IA</a></header><main class="page"><article class="content"><div class="hero hero--noimage"><header class="hero__content"><div class="wrapper"><h1>Taller IA</h1></div></header></div><div class="entry-wrapper content__entry"><div id="auto-bitacora"><div class="header-area"><h1 style="margin: 0; color: white;">Bitácora Automática</h1><p style="color: #64748b; margin: 5px 0 20px;">Galería secuencial (1.jpg, 2.jpg...)</p><div id="nav-container"></div></div><div id="gallery-container"></div></div><script>(function() {
         /**
-         * CONFIGURACIÓN DE FOTOS
-         * 1. He quitado los espacios en los nombres de carpeta (Mac_mini).
-         * 2. Uso rutas relativas que suelen funcionar mejor en Publii.
+         * ========================================================
+         * CONFIGURACIÓN AUTOMÁTICA
+         * ========================================================
+         * Solo tienes que decir cuántas fotos (count) hay en la carpeta.
+         * El script buscará: 1.jpg, 2.jpg, 3.jpg ... hasta llegar al número.
          */
-        const DATA = [
+        const SECTIONS = [
             {
-                id: "mac", 
-                label: "Mac Mini", // Lo que se lee en el botón
-                files: [
-                    {
-                        // IMPORTANTE: Asegúrate de que la carpeta se llama Mac_mini (sin espacios)
-                        src: "media/files/Mac_mini/foto1.jpg", 
-                        title: "Instalación Inicial",
-                        desc: "Configuración del sistema macOS."
-                    },
-                    {
-                        src: "media/files/Mac_mini/red.png", 
-                        title: "Configuración de Red",
-                        desc: "Ajustes de IP estática."
-                    }
-                ]
+                label: "Mac Mini",      // Nombre del botón
+                folder: "Mac_mini",     // Nombre EXACTO de la carpeta (sin espacios)
+                count: 5,               // ¿Cuántas fotos hay? (del 1 al 5)
+                ext: "jpg"              // ¿Extensión? jpg, png, webp...
             },
             {
-                id: "rasp",
                 label: "Raspberry",
-                files: [
-                    {
-                        src: "media/files/Raspberry/montaje.jpg", 
-                        title: "Montaje Hardware",
-                        desc: "Conexión de la placa."
-                    }
-                ]
+                folder: "Raspberry",
+                count: 3,               // Hay fotos: 1.jpg, 2.jpg, 3.jpg
+                ext: "jpg"
+            },
+            {
+                label: "Montaje Final",
+                folder: "Montaje_Final", 
+                count: 10,              // Buscará del 1 al 10
+                ext: "png"              // Estas son PNG
             }
         ];
 
-        // LÓGICA
-        const tabsContainer = document.getElementById('tabs-container');
-        const contentContainer = document.getElementById('content-container');
+        // LÓGICA DE BUCLE
+        const nav = document.getElementById('nav-container');
+        const gallery = document.getElementById('gallery-container');
         
-        // Limpiar
-        if(contentContainer) contentContainer.innerHTML = '';
+        // Limpiar contenedor al inicio
+        if(gallery) gallery.innerHTML = '';
 
-        DATA.forEach((section, index) => {
-            // 1. CREAR BOTÓN
+        SECTIONS.forEach((sec, index) => {
+            // 1. Crear Botón
             const btn = document.createElement('button');
-            btn.className = `tab-btn ${index === 0 ? 'active' : ''}`;
-            btn.textContent = section.label; // Solo texto, sin iconos rotos
+            btn.className = `nav-btn ${index === 0 ? 'active' : ''}`;
+            btn.textContent = sec.label;
             
-            btn.onclick = function() {
-                loadTab(index);
-            };
-            tabsContainer.appendChild(btn);
+            btn.onclick = () => loadSection(index);
+            nav.appendChild(btn);
 
-            // 2. CREAR CONTENEDOR DE FOTOS
+            // 2. Crear Contenedor de la Sección
             const wrapper = document.createElement('div');
-            wrapper.id = `tab-${index}`;
-            wrapper.className = index === 0 ? 'fade-in' : 'hidden';
-            
-            section.files.forEach(file => {
-                const card = document.createElement('div');
-                card.className = "photo-card";
-                
-                // Intento de ruta doble por si acaso (Ruta absoluta vs relativa)
-                // Esto ayuda a encontrar la imagen tanto en preview como en web final
-                const imagePath = file.src; 
+            wrapper.className = `gallery-grid ${index === 0 ? 'fade-in' : 'hidden'}`;
+            wrapper.id = `sec-${index}`;
 
+            // 3. BUCLE MÁGICO (Generador de fotos)
+            for (let i = 1; i <= sec.count; i++) {
+                
+                // Construimos la ruta: media/files/CARPETA/NUMERO.jpg
+                // Añadimos una barra inicial "/" para asegurar la ruta desde la raíz
+                const imgSrc = `/media/files/${sec.folder}/${i}.${sec.ext || 'jpg'}`;
+                
+                const card = document.createElement('div');
+                card.className = 'photo-item';
                 card.innerHTML = `
-                    <div class="photo-area">
-                        <img loading="lazy" src="${imagePath}" alt="${file.title}"
-                             onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'color: #ef4444; text-align: center; padding: 20px;\' data-is-external-image="true"><p>❌ <b>Error de imagen</b></p><p style=\'font-size: 12px; font-family: monospace;\'>${imagePath}</p></div>'">
+                    <div class="img-box">
+                        <img loading="lazy" src="${imgSrc}" loading="lazy" alt="Imagen ${i}"
+                             onclick="window.open(this.src, '_blank')" style="cursor: zoom-in;"
+                             onerror="this.parentElement.innerHTML='<div style=\'color:red; padding:20px; text-align:center\' data-is-external-image="true">Falta: ${i}.${sec.ext}</div>'">
                     </div>
-                    <div class="text-area">
-                        <h3>${file.title}</h3>
-                        <p>${file.desc}</p>
+                    <div class="info-box">
+                        <h3>Imagen ${i}</h3>
+                        <p>Archivo: ${sec.folder}/${i}.${sec.ext}</p>
                     </div>
                 `;
                 wrapper.appendChild(card);
-            });
-            contentContainer.appendChild(wrapper);
+            }
+            gallery.appendChild(wrapper);
         });
 
-        // CAMBIAR PESTAÑA
-        function loadTab(activeIndex) {
-            const buttons = tabsContainer.children;
-            const contents = contentContainer.children;
-
-            for (let i = 0; i < buttons.length; i++) {
-                if (i === activeIndex) {
-                    buttons[i].classList.add('active');
-                    contents[i].classList.remove('hidden');
-                    contents[i].classList.add('fade-in');
+        // Función cambio de pestaña
+        function loadSection(idx) {
+            // Botones
+            Array.from(nav.children).forEach((b, i) => {
+                b.classList.toggle('active', i === idx);
+            });
+            // Galerías
+            Array.from(gallery.children).forEach((div, i) => {
+                if (i === idx) {
+                    div.classList.remove('hidden');
+                    div.classList.add('fade-in');
                 } else {
-                    buttons[i].classList.remove('active');
-                    contents[i].classList.add('hidden');
-                    contents[i].classList.remove('fade-in');
+                    div.classList.add('hidden');
+                    div.classList.remove('fade-in');
                 }
-            }
+            });
         }
     })();</script></div></article></main><footer class="footer"><div class="wrapper"><div class="footer__copyright">Powered by Publii</div><button id="backToTop" class="footer__bttop" aria-label="Back to top" title="Back to top"><svg width="20" height="20"><use xlink:href="https://Fixius50.github.io/ASI/assets/svg/svg-map.svg#toparrow"/></svg></button></div></footer><script defer="defer" src="https://Fixius50.github.io/ASI/assets/js/scripts.min.js?v=700105c316933a8202041b6415abb233"></script><script>window.publiiThemeMenuConfig={mobileMenuMode:'sidebar',animationSpeed:300,submenuWidth: 'auto',doubleClickTime:500,mobileMenuExpandableSubmenus:true,relatedContainerForOverlayMenuSelector:'.top'};</script><script>var images = document.querySelectorAll('img[loading]');
         for (var i = 0; i < images.length; i++) {
