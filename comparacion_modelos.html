@@ -99,112 +99,199 @@
     <!-- MAIN CONTENT -->
     <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
         
-        <header class="mb-10">
-            <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                Análisis Comparativo
-            </h1>
-            <p class="text-gray-500 dark:text-gray-400">
-                Datos actualizados de rendimiento y eficiencia en tiempo real.
-            </p>
+        <header class="mb-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                    Análisis de Modelos
+                </h1>
+                <p class="text-gray-500 dark:text-gray-400 max-w-2xl">
+                    Comparativa técnica basada en velocidad (tk/s), razonamiento lógico, costes y manejo de contexto extenso.
+                </p>
+            </div>
+            <!-- Status Indicator -->
+            <div class="flex items-center gap-2 px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full text-xs font-semibold">
+                <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                </span>
+                Data Live
+            </div>
         </header>
 
         <!-- GRID SYSTEM -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 gap-6">
 
-            <!-- CARD 1: COMPARATIVA -->
+            <!-- CARD 1: COMPARATIVA GENERAL (Full Width ahora) -->
             <article class="bg-white dark:bg-tech-surface rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-md transition-shadow">
                 <div class="p-6">
-                    <div class="flex justify-between items-start mb-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
                         <div>
-                            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Líderes de Mercado</h2>
-                            <p class="text-xs text-gray-500 font-mono mt-1">Tier 1 Models</p>
+                            <h2 class="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                <i class="fa-solid fa-trophy text-yellow-500"></i> Ranking Global
+                            </h2>
+                            <p class="text-sm text-gray-500 font-mono mt-1">Puntuación agregada (0-100)</p>
                         </div>
-                        <span class="px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 dark:bg-green-900/30 dark:text-green-400 rounded">Live</span>
+                        <button onclick="openModal()" class="w-full sm:w-auto py-2.5 px-5 bg-tech-primary hover:bg-blue-600 text-white text-sm font-semibold rounded-lg shadow-lg shadow-blue-500/30 transition-all transform hover:-translate-y-0.5 flex justify-center items-center gap-2">
+                            <i class="fa-solid fa-chart-radar"></i> Abrir Análisis Interactivo
+                        </button>
                     </div>
 
-                    <!-- Comparison List -->
-                    <div class="space-y-4 mb-6">
+                    <!-- Comparison List (Horizontal on large screens) -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-4">
                         <!-- Model 1 -->
-                        <div>
-                            <div class="flex justify-between text-sm mb-1">
-                                <span class="font-medium text-gray-700 dark:text-gray-300">Gemini 1.5 Pro</span>
-                                <span class="font-mono text-blue-600 dark:text-blue-400">90.0</span>
+                        <div class="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-lg border border-gray-100 dark:border-gray-700">
+                            <div class="flex justify-between items-center mb-3">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-3 h-3 rounded-full bg-blue-500"></span>
+                                    <span class="font-bold text-gray-900 dark:text-white">Gemini 1.5 Pro</span>
+                                </div>
+                                <span class="font-mono text-xl font-bold text-blue-600 dark:text-blue-400">92.4</span>
                             </div>
-                            <div class="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-1.5">
-                                <div class="bg-blue-500 h-1.5 rounded-full" style="width: 90%"></div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400">
+                                    <span>Velocidad</span>
+                                    <span class="font-medium">Alta</span>
+                                </div>
+                                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                                    <div class="bg-blue-500 h-1.5 rounded-full" style="width: 85%"></div>
+                                </div>
                             </div>
                         </div>
 
                         <!-- Model 2 -->
-                        <div>
-                            <div class="flex justify-between text-sm mb-1">
-                                <span class="font-medium text-gray-700 dark:text-gray-300">GPT-4o</span>
-                                <span class="font-mono text-cyan-600 dark:text-cyan-400">88.5</span>
+                        <div class="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-lg border border-gray-100 dark:border-gray-700">
+                            <div class="flex justify-between items-center mb-3">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-3 h-3 rounded-full bg-cyan-500"></span>
+                                    <span class="font-bold text-gray-900 dark:text-white">GPT-4o</span>
+                                </div>
+                                <span class="font-mono text-xl font-bold text-cyan-600 dark:text-cyan-400">90.8</span>
                             </div>
-                            <div class="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-1.5">
-                                <div class="bg-cyan-500 h-1.5 rounded-full" style="width: 88%"></div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400">
+                                    <span>Velocidad</span>
+                                    <span class="font-medium">Muy Alta</span>
+                                </div>
+                                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                                    <div class="bg-cyan-500 h-1.5 rounded-full" style="width: 95%"></div>
+                                </div>
                             </div>
                         </div>
 
                         <!-- Model 3 -->
-                        <div>
-                            <div class="flex justify-between text-sm mb-1">
-                                <span class="font-medium text-gray-700 dark:text-gray-300">Claude 3.5 Sonnet</span>
-                                <span class="font-mono text-violet-600 dark:text-violet-400">92.0</span>
+                        <div class="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-lg border border-gray-100 dark:border-gray-700">
+                            <div class="flex justify-between items-center mb-3">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-3 h-3 rounded-full bg-violet-500"></span>
+                                    <span class="font-bold text-gray-900 dark:text-white">Claude 3.5 Sonnet</span>
+                                </div>
+                                <span class="font-mono text-xl font-bold text-violet-600 dark:text-violet-400">94.1</span>
                             </div>
-                            <div class="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-1.5">
-                                <div class="bg-violet-500 h-1.5 rounded-full" style="width: 92%"></div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400">
+                                    <span>Velocidad</span>
+                                    <span class="font-medium">Media</span>
+                                </div>
+                                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                                    <div class="bg-violet-500 h-1.5 rounded-full" style="width: 80%"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Action Button -->
-                    <button onclick="openModal()" class="w-full py-2 px-4 bg-gray-50 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 text-sm font-medium text-gray-700 dark:text-gray-200 rounded-lg border border-gray-200 dark:border-gray-600 transition-colors flex justify-center items-center gap-2">
-                        <i class="fa-solid fa-chart-pie"></i> Ver Gráficos
-                    </button>
                 </div>
-            </article>
-
-            <!-- CARD 2: EMPTY STATE -->
-            <article class="bg-white dark:bg-tech-surface rounded-xl shadow-sm border border-dashed border-gray-300 dark:border-gray-700 flex flex-col items-center justify-center p-6 text-center hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors cursor-pointer min-h-[300px]">
-                <div class="w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mb-4 text-gray-400">
-                    <i class="fa-solid fa-plus text-xl"></i>
-                </div>
-                <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-200">Añadir Modelo</h3>
-                <p class="text-xs text-gray-500 mt-1 max-w-[150px]">
-                    Configura una nueva comparativa personalizada.
-                </p>
             </article>
 
         </div>
+
+        <!-- SECTION: METHODOLOGY / PROMPTS -->
+        <section class="mt-10">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
+                <i class="fa-solid fa-flask text-tech-primary"></i> Banco de Pruebas
+                <span class="text-sm font-normal text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full">Metodología de Evaluación</span>
+            </h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                
+                <!-- Card: Acertijos de Lógica -->
+                <article class="bg-white dark:bg-tech-surface rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 flex flex-col h-full">
+                    <div class="flex items-center gap-3 mb-5 border-b border-gray-100 dark:border-gray-700 pb-4">
+                        <div class="w-10 h-10 rounded-lg bg-yellow-100 dark:bg-yellow-900/20 text-yellow-600 dark:text-yellow-400 flex items-center justify-center text-lg shadow-sm">
+                            <i class="fa-solid fa-lightbulb"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white">Acertijos de Lógica (Reasoning)</h3>
+                            <p class="text-xs text-gray-500">Evalúa capacidad de deducción y "Chain-of-Thought".</p>
+                        </div>
+                    </div>
+                    
+                    <div id="riddles-container" class="space-y-4 flex-grow">
+                        <!-- Content will be injected by JS -->
+                        <div class="animate-pulse flex space-x-4 p-4">
+                             <div class="flex-1 space-y-4 py-1">
+                               <div class="h-2 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                               <div class="space-y-3">
+                                 <div class="grid grid-cols-3 gap-4">
+                                   <div class="h-2 bg-gray-200 dark:bg-gray-700 rounded col-span-2"></div>
+                                   <div class="h-2 bg-gray-200 dark:bg-gray-700 rounded col-span-1"></div>
+                                 </div>
+                                 <div class="h-2 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                               </div>
+                             </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card: Prompts de Contexto -->
+                <article class="bg-white dark:bg-tech-surface rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 flex flex-col h-full">
+                    <div class="flex items-center gap-3 mb-5 border-b border-gray-100 dark:border-gray-700 pb-4">
+                        <div class="w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-lg shadow-sm">
+                            <i class="fa-solid fa-code"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white">Prompts de Contexto (Retrieval)</h3>
+                            <p class="text-xs text-gray-500">Test "Aguja en el Pajar" y pruebas técnicas.</p>
+                        </div>
+                    </div>
+                    
+                    <div id="prompts-container" class="flex-grow">
+                         <!-- Content will be injected by JS -->
+                         <div class="bg-gray-900 rounded-lg h-[300px] border border-gray-700 flex items-center justify-center text-gray-600">
+                             <i class="fa-solid fa-circle-notch animate-spin mr-2"></i> Cargando prompts...
+                         </div>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
     </main>
 
     <!-- FOOTER -->
     <footer class="border-t border-gray-200 dark:border-gray-800 py-6 mt-auto bg-white dark:bg-tech-dark">
         <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="text-xs text-gray-400 font-mono">v2.4.0 &bull; System Status: Operational</p>
+            <p class="text-xs text-gray-400 font-mono">v3.0.0 &bull; JSON Data Driven</p>
         </div>
     </footer>
 
     <!-- MODAL OVERLAY -->
     <div id="statsModal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
         <!-- Backdrop -->
-        <div class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm transition-opacity" onclick="closeModal()"></div>
+        <div class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity" onclick="closeModal()"></div>
 
         <!-- Modal Panel -->
         <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
-            <div class="relative transform overflow-hidden rounded-xl bg-white dark:bg-tech-surface text-left shadow-2xl transition-all sm:w-full sm:max-w-2xl border border-gray-200 dark:border-gray-700 modal-animate">
+            <div class="relative transform overflow-hidden rounded-xl bg-white dark:bg-tech-surface text-left shadow-2xl transition-all sm:w-full sm:max-w-4xl border border-gray-200 dark:border-gray-700 modal-animate flex flex-col max-h-[90vh]">
                 
                 <!-- Modal Header -->
-                <div class="px-6 py-4 flex flex-col sm:flex-row justify-between items-center border-b border-gray-200 dark:border-gray-700 gap-4 bg-gray-50 dark:bg-gray-800/50">
+                <div class="px-6 py-4 flex flex-col md:flex-row justify-between items-center border-b border-gray-200 dark:border-gray-700 gap-4 bg-gray-50 dark:bg-gray-800/50 shrink-0">
                     <div>
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-white" id="modal-title">
-                            Métricas Detalladas
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2" id="modal-title">
+                            <i class="fa-solid fa-sliders text-tech-primary"></i> Comparativa Técnica
                         </h3>
-                        <p class="text-xs text-gray-500 hidden sm:block">Comparativa multi-vectorial</p>
+                        <p class="text-xs text-gray-500">Selecciona modelos en la leyenda para filtrar.</p>
                     </div>
                     
-                    <!-- Chart Type Switcher (Expanded) -->
+                    <!-- Chart Type Switcher -->
                     <div class="flex flex-wrap justify-center gap-1 p-1 bg-gray-200 dark:bg-gray-900 rounded-lg">
                         <button onclick="switchChartType('radar')" id="btn-radar" title="Radar" class="p-2 rounded-md text-xs font-semibold transition-all shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
                             <i class="fa-solid fa-spider"></i>
@@ -226,25 +313,26 @@
                         </button>
                     </div>
 
-                    <button type="button" onclick="closeModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors focus:outline-none absolute top-4 right-4 sm:static">
+                    <button type="button" onclick="closeModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors focus:outline-none absolute top-4 right-4 md:static">
                         <i class="fa-solid fa-xmark text-xl"></i>
                     </button>
                 </div>
 
                 <!-- Modal Body (Chart) -->
-                <div class="px-6 py-6 bg-white dark:bg-tech-surface">
-                    <div class="chart-container">
+                <div class="px-6 py-6 bg-white dark:bg-tech-surface flex-grow overflow-hidden flex flex-col">
+                    <div class="chart-container flex-grow min-h-[350px]">
                         <canvas id="radarChart"></canvas>
                     </div>
                     
                     <!-- Legend (Dynamic Container) -->
-                    <div id="customLegend" class="mt-6 flex justify-center flex-wrap gap-3 text-xs font-medium border-t border-gray-100 dark:border-gray-700 pt-4 text-gray-600 dark:text-gray-400 select-none">
+                    <div id="customLegend" class="mt-4 flex justify-center flex-wrap gap-3 text-xs font-medium border-t border-gray-100 dark:border-gray-700 pt-4 text-gray-600 dark:text-gray-400 select-none shrink-0">
                         <!-- Content generated by JS renderLegend() -->
                     </div>
                 </div>
 
                 <!-- Modal Footer -->
-                <div class="bg-gray-50 dark:bg-gray-800/50 px-6 py-3 flex justify-end border-t border-gray-200 dark:border-gray-700">
+                <div class="bg-gray-50 dark:bg-gray-800/50 px-6 py-3 flex justify-between items-center border-t border-gray-200 dark:border-gray-700 shrink-0 text-xs text-gray-400">
+                    <span>*Datos normalizados (0-100) para visualización comparativa.</span>
                     <button type="button" onclick="closeModal()" class="px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 text-sm font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
                         Cerrar
                     </button>
@@ -258,7 +346,6 @@
         // === 1. THEME LOGIC (REAL IMPLEMENTATION) ===
         const html = document.documentElement;
         
-        // Initialize theme based on localStorage or System pref
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             html.classList.add('dark');
         } else {
@@ -273,7 +360,6 @@
                 html.classList.add('dark');
                 localStorage.theme = 'dark';
             }
-            // Re-render chart to update colors for the new theme
             if(!document.getElementById('statsModal').classList.contains('hidden')){
                 createChart();
             }
@@ -282,94 +368,144 @@
         // === 2. DATA & STATE ===
         let currentChartType = 'radar';
         
-        // Clean, standard data names
-        const LABELS = ['Razonamiento', 'Velocidad', 'Contexto', 'Coding', 'Eficiencia Costo'];
+        // Ejes actualizados según tu petición
+        const LABELS = [
+            'Velocidad (tk/s)', 
+            'Calidad (Acertijos)', 
+            'Eficiencia Coste', 
+            'Contexto Largo', 
+            'Prompt Largo'
+        ];
 
-        // Definimos los datos por defecto (Fallback) por si falla la carga del archivo
+        // --- DATOS POR DEFECTO (FALLBACK) ---
         const defaultComparisonData = {
-            'gemini': {
-                label: 'Gemini 1.5 Pro',
-                data: [90, 85, 99, 85, 75], 
-                color: 'rgba(59, 130, 246, 0.2)', // Blue
-                borderColor: '#3b82f6',        
-            },
-            'gpt4': {
-                label: 'GPT-4o',
-                data: [88, 95, 60, 90, 60], 
-                color: 'rgba(6, 182, 212, 0.2)', // Cyan
-                borderColor: '#06b6d4',        
-            },
-            'claude': {
-                label: 'Claude 3.5 Sonnet',
-                data: [92, 80, 80, 95, 85], 
-                color: 'rgba(139, 92, 246, 0.2)', // Violet
-                borderColor: '#8b5cf6',        
-            }
+            'gemini': { label: 'Gemini 1.5 Pro', data: [85, 95, 80, 99, 90], color: 'rgba(59, 130, 246, 0.2)', borderColor: '#3b82f6' },
+            'gpt4': { label: 'GPT-4o', data: [95, 92, 70, 85, 88], color: 'rgba(6, 182, 212, 0.2)', borderColor: '#06b6d4' },
+            'claude': { label: 'Claude 3.5 Sonnet', data: [80, 98, 75, 90, 96], color: 'rgba(139, 92, 246, 0.2)', borderColor: '#8b5cf6' }
         };
 
-        // Inicializamos con los datos por defecto
-        let comparisonData = { ...defaultComparisonData };
+        const defaultRiddles = [
+            { title: 'Test: Razonamiento Espacial', text: 'Estás en una habitación con 3 interruptores. En la habitación contigua hay 3 bombillas (apagadas). No puedes ver las bombillas desde los interruptores. Puedes manipular los interruptores tanto como quieras, pero solo puedes entrar en la habitación de las bombillas una sola vez. ¿Cómo sabes qué interruptor enciende qué bombilla?' },
+            { title: 'Test: Falacia Lógica', text: 'Si 5 máquinas tardan 5 minutos en fabricar 5 artilugios, ¿cuánto tardarían 100 máquinas en fabricar 100 artilugios?' }
+        ];
 
-        // Estado de visibilidad (se genera dinámicamente)
+        const defaultPrompts = [
+            { 
+                filename: 'test_context_128k.txt', 
+                content: `1 | INICIO DEL DOCUMENTO: REPORTE FINANCIERO ANUAL Q1-Q4\n2 | [Generando 50,000 líneas de texto corporativo genérico...]\n... | [Saltando páginas de datos irrelevantes]\n\n>>> La "Aguja" insertada en línea 42,051:\n"Por cierto, la contraseña maestra para el servidor de backup es: Delta-99-Xray. No compartir."\n\n... | [Más texto de relleno]\n9999 | FIN DEL DOCUMENTO.\n\n[USER]: "Basado únicamente en el documento proporcionado, ¿cuál es la contraseña del servidor de backup mencionada?"` 
+            }
+        ];
+
+        let comparisonData = { ...defaultComparisonData };
+        let riddlesData = [...defaultRiddles];
+        let promptsData = [...defaultPrompts];
         let visibilityState = {};
 
-        // Función para inicializar visibilidad basada en las claves de datos actuales
         function initVisibility() {
             visibilityState = {};
             Object.keys(comparisonData).forEach(key => {
                 visibilityState[key] = true;
             });
         }
-
-        // Ejecutar inicialización de visibilidad inicial
         initVisibility();
 
-        // Función asíncrona para cargar el JSON local
+        // --- CARGA DE DATOS LOCALES ---
         async function loadLocalData() {
+            // Cargar Métricas de Modelos
             try {
-                // Intenta buscar el archivo en la carpeta especificada
                 const response = await fetch('comparacion modelos/data.json');
-                
                 if (response.ok) {
                     const jsonData = await response.json();
-                    // Si la carga es exitosa, reemplazamos los datos
                     comparisonData = jsonData;
-                    // Reinicializamos la visibilidad para los nuevos modelos cargados
                     initVisibility();
-                    console.log('Datos cargados exitosamente desde "comparacion modelos/data.json"');
-                    
-                    // Si el modal está abierto, actualizamos la vista
+                    console.log('Datos de modelos cargados exitosamente.');
                     if (!document.getElementById('statsModal').classList.contains('hidden')) {
                         renderLegend();
                         createChart();
                     }
-                } else {
-                    console.warn('No se encontró el archivo local, usando datos por defecto.');
                 }
-            } catch (error) {
-                console.error('Error cargando JSON local (posible bloqueo CORS o archivo faltante):', error);
-                // Mantenemos comparisonData con los valores por defecto
-            }
+            } catch (error) { console.warn('Usando datos de modelos por defecto.'); }
+
+            // Cargar Acertijos
+            try {
+                const response = await fetch('comparacion modelos/acertijos.json');
+                if (response.ok) {
+                    riddlesData = await response.json();
+                    console.log('Acertijos cargados exitosamente.');
+                }
+            } catch (error) { console.warn('Usando acertijos por defecto.'); }
+            renderRiddles();
+
+            // Cargar Prompts
+            try {
+                const response = await fetch('comparacion modelos/prompt.json');
+                if (response.ok) {
+                    promptsData = await response.json();
+                    console.log('Prompts cargados exitosamente.');
+                }
+            } catch (error) { console.warn('Usando prompts por defecto.'); }
+            renderPrompts();
         }
 
-        // Iniciamos la carga de datos
         loadLocalData();
+
+        // --- RENDERIZADO DE CONTENIDO DINÁMICO ---
+        function renderRiddles() {
+            const container = document.getElementById('riddles-container');
+            container.innerHTML = '';
+            
+            riddlesData.forEach(riddle => {
+                const html = `
+                    <div class="group relative bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700 hover:border-yellow-400/50 transition-colors">
+                        <div class="absolute top-3 right-3 opacity-20 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-quote-right text-yellow-500"></i>
+                        </div>
+                        <p class="font-mono text-[10px] text-gray-400 mb-2 uppercase tracking-wider">${riddle.title}</p>
+                        <p class="text-sm text-gray-700 dark:text-gray-300 italic leading-relaxed">"${riddle.text}"</p>
+                    </div>`;
+                container.innerHTML += html;
+            });
+        }
+
+        function renderPrompts() {
+            const container = document.getElementById('prompts-container');
+            container.innerHTML = '';
+
+            promptsData.forEach(prompt => {
+                const html = `
+                    <div class="bg-gray-900 rounded-lg border border-gray-700 overflow-hidden relative group flex flex-col h-full shadow-inner mb-4 last:mb-0">
+                        <!-- Code Window Header -->
+                        <div class="flex justify-between items-center px-4 py-2 bg-gray-800 border-b border-gray-700 text-xs text-gray-400">
+                            <div class="flex gap-1.5">
+                                <span class="w-2.5 h-2.5 rounded-full bg-red-500/50"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-green-500/50"></span>
+                            </div>
+                            <span class="font-mono opacity-60">${prompt.filename || 'prompt_data.txt'}</span>
+                        </div>
+                        
+                        <!-- Content -->
+                        <div class="p-4 font-mono text-xs text-green-400/90 overflow-y-auto max-h-[250px] leading-relaxed scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent whitespace-pre-wrap">
+${prompt.content}
+                        </div>
+                    </div>`;
+                container.innerHTML += html;
+            });
+        }
 
         // === 3. CHART LOGIC ===
         let myChart = null;
         const ctx = document.getElementById('radarChart').getContext('2d');
 
-        // New function to toggle visibility
         function toggleModel(key) {
             visibilityState[key] = !visibilityState[key];
             createChart();
             renderLegend();
         }
 
-        // New function to render interactive legend
         function renderLegend() {
             const container = document.getElementById('customLegend');
-            container.innerHTML = ''; // Clear current
+            container.innerHTML = ''; 
 
             Object.entries(comparisonData).forEach(([key, model]) => {
                 const isVisible = visibilityState[key];
@@ -382,12 +518,10 @@
                     : 'bg-transparent border-transparent opacity-50 scale-95 grayscale'
                 }`;
                 
-                // Color Dot
                 const dot = document.createElement('span');
                 dot.className = "w-2.5 h-2.5 rounded-full shadow-sm";
                 dot.style.backgroundColor = model.borderColor;
 
-                // Label Text
                 const text = document.createElement('span');
                 text.innerText = model.label;
                 text.className = isVisible 
@@ -403,27 +537,30 @@
         function switchChartType(type) {
             currentChartType = type;
             
-            // Update UI buttons (Active State)
             const activeClass = ['bg-white', 'dark:bg-gray-700', 'text-gray-900', 'dark:text-white', 'shadow-sm'];
             const inactiveClass = ['text-gray-500', 'hover:text-gray-900', 'dark:text-gray-400', 'dark:hover:text-white'];
             
-            // Reset all buttons
             ['radar', 'bar', 'horizontalBar', 'line', 'polarArea', 'doughnut'].forEach(t => {
                 const btn = document.getElementById(`btn-${t}`);
-                if(btn) { // Safety check
+                if(btn) {
                     btn.classList.remove(...activeClass);
                     btn.classList.add(...inactiveClass);
                 }
             });
 
+            const currentBtn = document.getElementById(`btn-${type}`);
+            if(currentBtn) {
+                currentBtn.classList.add(...activeClass);
+                currentBtn.classList.remove(...inactiveClass);
+            }
+
             createChart();
         }
 
         function getChartConfig() {
-            // Check current theme for chart colors
             const isDark = html.classList.contains('dark');
             const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
-            const textColor = isDark ? '#94a3b8' : '#64748b'; // Slate 400/500
+            const textColor = isDark ? '#94a3b8' : '#64748b'; 
             const fontFamily = "'Inter', sans-serif";
             
             let chartType = currentChartType;
@@ -432,7 +569,7 @@
                 maintainAspectRatio: false,
                 layout: { padding: 10 },
                 plugins: {
-                    legend: { display: false }, // We have custom interactive legend
+                    legend: { display: false },
                     tooltip: {
                         backgroundColor: isDark ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.95)',
                         titleColor: isDark ? '#fff' : '#0f172a',
@@ -448,16 +585,12 @@
             };
             
             let dataConfig = {};
-
-            // Filter active models based on visibilityState
             const activeEntries = Object.entries(comparisonData).filter(([key]) => visibilityState[key]);
 
-            // === SPECIAL LOGIC FOR DOUGHNUT (Sectores) ===
-            // Shows "Total Score Share" instead of individual metrics
             if (chartType === 'doughnut') {
                 const modelNames = activeEntries.map(([_, m]) => m.label);
                 const totalScores = activeEntries.map(([_, m]) => m.data.reduce((a, b) => a + b, 0));
-                const colors = activeEntries.map(([_, m]) => m.borderColor); // Use solid colors
+                const colors = activeEntries.map(([_, m]) => m.borderColor);
 
                 dataConfig = {
                     labels: modelNames,
@@ -468,15 +601,9 @@
                         borderWidth: 2
                     }]
                 };
-                
-                // Show standard legend for doughnut (bottom) BUT controlled by our custom buttons above still
-                // We'll actually hide the standard legend to rely solely on our custom interactive one for consistency
                 options.plugins.legend = { display: false }; 
 
             } else {
-                // === STANDARD LOGIC (Multivariate) ===
-                
-                // Handle Horizontal Bar mapping
                 if (chartType === 'horizontalBar') {
                     chartType = 'bar';
                     options.indexAxis = 'y';
@@ -500,7 +627,6 @@
                     datasets: datasets
                 };
 
-                // Scale Logic
                 if (chartType === 'radar' || chartType === 'polarArea') {
                     options.scales = {
                         r: {
@@ -511,13 +637,12 @@
                                 font: { size: 11, family: fontFamily, weight: '500' }
                             },
                             ticks: { display: false, backdropColor: 'transparent' },
-                            suggestedMin: 0, // Reset for polar to look good
+                            suggestedMin: 0, 
                             suggestedMax: 100
                         }
                     };
                     if(chartType === 'radar') options.scales.r.suggestedMin = 50;
                 } else {
-                    // Cartesian (Bar, Line)
                     options.scales = {
                         y: {
                             beginAtZero: false,
@@ -534,7 +659,6 @@
                         }
                     };
                     
-                    // Swap scales for Horizontal Bar
                     if (options.indexAxis === 'y') {
                          options.scales.x.min = 50;
                          options.scales.x.max = 100;
@@ -562,13 +686,12 @@
             });
         }
 
-        // === 4. MODAL LOGIC ===
         const modal = document.getElementById('statsModal');
 
         function openModal() {
             modal.classList.remove('hidden');
             switchChartType('radar'); 
-            renderLegend(); // Render legend on open
+            renderLegend(); 
         }
 
         function closeModal() {
