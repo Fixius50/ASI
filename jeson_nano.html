@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Roberto Monedero Alonso">
+    <meta name="description" content="Documentación técnica del montaje y configuración de NVIDIA Jetson Nano">
+    <title>Documentación de Proyecto: Jetson Nano</title>
+
+    <!-- 
+    ★ ARQUITECTURA TÉCNICA Y JUSTIFICACIÓN DEL STACK ★
+    
+    1. Alpine.js: 
+       Seleccionado por su naturaleza "drop-in". Para iterar una lista y manejar estado simple 
+       en un solo archivo HTML, ofrece la mejor relación potencia/peso sin necesidad de bundlers (Webpack/Vite).
+    
+    2. Tailwind CSS:
+       Elegido para garantizar un sistema de diseño consistente (espaciados, tipografía, colores) 
+       y una adaptabilidad móvil (responsive) inmediata mediante clases utilitarias.
+    
+    3. GLightbox:
+       Seleccionado como motor de visualización. Es 'dependency-free', ligero y soporta 
+       gestos táctiles nativos, ideal para inspeccionar detalles de hardware en móviles.
+    -->
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js (CORREGIDO: Se añade 'defer' para garantizar el orden de ejecución) -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <!-- GLightbox CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        /* Smooth placeholder transition */
+        .img-placeholder { background-color: #f3f4f6; display: flex; align-items: center; justify-content: center; color: #9ca3af; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800" x-data="projectDocs()">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-10 shadow-sm">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-xl md:text-2xl font-bold text-slate-900 tracking-tight">Montaje Jetson Nano</h1>
+                <p class="text-xs md:text-sm text-slate-500 font-medium mt-1">Configuración para IA & Edge Computing</p>
+            </div>
+            <div class="text-right hidden md:block">
+                <span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-2 py-1 rounded-full uppercase tracking-wider">v1.0 Release</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 py-8 space-y-8">
+        
+        <!-- Loop de Tarjetas -->
+        <template x-for="step in steps" :key="step.id">
+            
+            <!-- Tarjeta Narrativa -->
+            <article class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col md:flex-row hover:shadow-md transition-shadow duration-300">
+                
+                <!-- Columna Visual (Izquierda/Arriba) -->
+                <div class="w-full md:w-5/12 h-64 md:h-auto relative bg-slate-100 group cursor-zoom-in">
+                    <!-- Enlace para Lightbox -->
+                    <a :href="step.imagePath" class="glightbox block w-full h-full" :data-description="step.description" :data-title="step.title">
+                        
+                        <!-- Imagen con manejo de error -->
+                        <img 
+                            :src="step.imagePath" 
+                            :alt="step.title"
+                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            x-on:error="$el.style.display='none'; $el.nextElementSibling.style.display='flex'"
+                        >
+                        
+                        <!-- Placeholder elegante si falla la imagen -->
+                        <div class="hidden w-full h-full absolute top-0 left-0 bg-slate-100 flex-col items-center justify-center text-slate-400 p-4 text-center border-r border-slate-200">
+                            <svg class="w-10 h-10 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            <span class="text-xs font-mono font-semibold" x-text="step.filename"></span>
+                            <span class="text-[10px] mt-1 text-slate-500">Archivo no encontrado</span>
+                        </div>
+                    </a>
+                    
+                    <!-- Badge de número de paso -->
+                    <div class="absolute top-3 left-3 bg-slate-900/80 text-white text-xs font-bold px-2 py-1 rounded backdrop-blur-sm">
+                        Paso <span x-text="step.id"></span>
+                    </div>
+                </div>
+
+                <!-- Columna Narrativa (Derecha/Abajo) -->
+                <div class="w-full md:w-7/12 p-6 flex flex-col justify-center">
+                    <h2 class="text-lg font-bold text-slate-800 mb-2" x-text="step.title"></h2>
+                    <p class="text-slate-600 text-sm leading-relaxed text-justify" x-text="step.description"></p>
+                    
+                    <!-- Metadatos técnicos extra (simulados) -->
+                    <div class="mt-4 pt-4 border-t border-slate-100 flex items-center space-x-4 text-xs text-slate-400 font-mono">
+                        <span class="flex items-center">
+                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Est. 5 min
+                        </span>
+                        <span class="flex items-center text-emerald-600 font-medium" x-show="step.critical">
+                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            Paso Crítico
+                        </span>
+                    </div>
+                </div>
+            </article>
+        </template>
+        
+        <!-- Empty State / Loading -->
+        <div x-show="steps.length === 0" class="text-center py-20 text-slate-400">
+            <p>Cargando documentación...</p>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 mt-12 py-8">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <p class="text-sm text-slate-500">
+                Documentación generada para uso interno.
+            </p>
+            <p class="text-xs text-slate-400 mt-2 font-mono">
+                Autor: <span class="font-bold text-slate-600">Roberto Monedero Alonso</span> &copy; <span x-text="new Date().getFullYear()"></span>
+            </p>
+        </div>
+    </footer>
+
+    <!-- GLightbox JS -->
+    <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+
+    <!-- LÓGICA DE NEGOCIO -->
+    <script>
+        // Configuración Global
+        const CONFIG = {
+            TOTAL_IMAGENES: 20,
+            RUTA_BASE: './fotos/', // Cambiar si las fotos están en otra carpeta
+            EXTENSION: '.jpg'
+        };
+
+        // Contexto Narrativo (Simulación de IA Writer)
+        // Estos textos se asocian a las IDs ordenadas
+        const CONTEXTO_TECNICO = [
+            { t: "Recepción y Unboxing", d: "Verificación de la integridad del kit de desarrollo NVIDIA Jetson Nano. Se comprueba la presencia del módulo SOM, la placa base carrier board, y se inspeccionan visualmente los pines GPIO para descartar dobleces durante el transporte." },
+            { t: "Inspección de Interfaces", d: "Revisión detallada de los puertos de E/S: 4x USB 3.0, salida HDMI 2.0, DisplayPort y el puerto Gigabit Ethernet. Es fundamental localizar el puerto micro-USB que servirá para la alimentación en modo 5W o para la conexión serial." },
+            { t: "Preparación del Disipador", d: "La Jetson Nano genera calor considerable durante el entrenamiento de modelos. Verificamos que el disipador pasivo de aluminio esté correctamente anclado al SOM y no presente holguras." },
+            { t: "Selección de MicroSD", d: "Selección de una tarjeta microSD de clase UHS-1 de al menos 64GB. La velocidad de lectura/escritura es crítica para evitar cuellos de botella al cargar datasets grandes en memoria." },
+            { t: "Flasheo de JetPack SDK", d: "Proceso de escritura de la imagen del sistema operativo (Ubuntu 18.04 LTS con drivers de NVIDIA) utilizando Etcher. Se verifica la integridad del hash SHA256 de la imagen descargada antes de proceder." },
+            { t: "Inserción de MicroSD", d: "Colocación de la tarjeta en el slot ubicado bajo el módulo del disipador. Se utiliza un mecanismo de push-push; es vital asegurar que haga 'clic' para garantizar contacto en los pines de datos." },
+            { t: "Configuración del Jumper J48", d: "Paso Crítico: Para habilitar la alimentación por el Barrel Jack (necesario para modo MAXN 10W), se debe puentear el header J48. Esto deshabilita la alimentación por micro-USB." },
+            { t: "Conexión de Fuente de Alimentación", d: "Conexión de una fuente de 5V 4A al Barrel Jack. Una fuente inestable o con amperaje insuficiente provocará apagados repentinos cuando la GPU entre en carga." },
+            { t: "Instalación de Ventilador PWM", d: "Montaje de un ventilador Noctua de 40mm sobre el disipador. Se conecta al header de 4 pines de la placa base para permitir el control de revoluciones por software (jetson-stats)." },
+            { t: "Conexión de Periféricos", d: "Conexión de teclado y ratón USB, así como el monitor vía HDMI. Se recomienda no usar adaptadores VGA ya que pueden causar problemas con la detección EDID del monitor." },
+            { t: "Conectividad de Red", d: "Conexión del cable Ethernet Cat6 directo al router para garantizar la máxima velocidad de descarga de paquetes durante la actualización inicial (apt-get update)." },
+            { t: "Primer Boot (Cold Boot)", d: "Encendido inicial. Se observa el LED verde de encendido fijo. Si parpadea o se apaga inmediatamente, indicaría insuficiencia de corriente o cortocircuito." },
+            { t: "Pantalla de Inicio NVIDIA", d: "Verificación de la salida de video. El logo de NVIDIA debe aparecer en los primeros 10 segundos. Si no, se revisa la configuración del archivo extlinux.conf o el cable HDMI." },
+            { t: "Setup Inicial de Ubuntu (oem-config)", d: "Navegación por el asistente de configuración del sistema: selección de idioma, zona horaria y disposición del teclado. Se crea el usuario 'jetson' con privilegios sudo." },
+            { t: "Gestión de Particiones", d: "El sistema expande automáticamente el sistema de archivos para ocupar toda la tarjeta SD. Verificamos el espacio disponible con `df -h` para asegurar al menos 50GB libres." },
+            { t: "Configuración de Swapfile", d: "Dado que la Nano tiene 4GB de RAM compartida, se crea un archivo de intercambio (Swap) de 6GB para evitar cierres por 'Out of Memory' durante la compilación de librerías pesadas." },
+            { t: "Actualización de Repositorios", d: "Ejecución de `sudo apt update && sudo apt upgrade`. Es un proceso lento en arquitectura ARM64 pero necesario para parchear vulnerabilidades de seguridad." },
+            { t: "Instalación de Jetson Stats", d: "Instalación de la utilidad `jtop` para monitorizar en tiempo real el consumo de CPU, GPU, temperatura y uso de RAM. Esencial para benchmarking." },
+            { t: "Prueba 'Hello AI World'", d: "Ejecución del contenedor de demostración de NVIDIA. Se corre una inferencia de clasificación de imágenes (GoogLeNet) para verificar que los núcleos CUDA están activos." },
+            { t: "Sistema Operativo Listo", d: "El sistema está estable, refrigerado y configurado. La Jetson Nano está lista para iniciar el desarrollo de proyectos de visión artificial y robótica." }
+        ];
+
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('projectDocs', () => ({
+                steps: [],
+                
+                init() {
+                    this.generateGalleryData();
+                    // Inicializar GLightbox después de que Alpine renderice el DOM
+                    this.$nextTick(() => {
+                        const lightbox = GLightbox({
+                            touchNavigation: true,
+                            loop: true,
+                            autoplayVideos: true,
+                            zoomable: true
+                        });
+                    });
+                },
+
+                // Lógica de Generación y Ordenamiento
+                generateGalleryData() {
+                    let rawList = [];
+                    
+                    // 1. Generación de nombres de archivo
+                    for (let i = 1; i <= CONFIG.TOTAL_IMAGENES; i++) {
+                        rawList.push(i.toString()); // "1", "2", ... "20"
+                    }
+
+                    // 2. REQUISITO MANDATORIO: Ordenamiento Natural
+                    // Aunque el loop for ya los crea en orden, simulamos que vienen desordenados
+                    // y aplicamos la lógica de 'localeCompare' con {numeric: true}
+                    rawList.sort((a, b) => {
+                        return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
+                    });
+
+                    // 3. Mapeo a Objetos con Contexto
+                    this.steps = rawList.map((numStr, index) => {
+                        const id = parseInt(numStr);
+                        // Recuperar contexto o usar fallback si hay más de 20 imágenes
+                        const context = CONTEXTO_TECNICO[index] || { 
+                            t: `Fase de Configuración ${id}`, 
+                            d: "Procedimiento técnico estándar en la secuencia de montaje." 
+                        };
+
+                        return {
+                            id: id,
+                            filename: numStr + CONFIG.EXTENSION,
+                            imagePath: CONFIG.RUTA_BASE + numStr + CONFIG.EXTENSION,
+                            title: context.t,
+                            description: context.d,
+                            // Marcar pasos 6, 9 y 18 como críticos visualmente
+                            critical: [6, 9, 18].includes(id) 
+                        };
+                    });
+                }
+            }));
+        });
+    </script>
+</body>
+</html>
