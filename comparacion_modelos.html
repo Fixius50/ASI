@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Model Benchmark Dashboard</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Google Fonts: Inter (UI) & JetBrains Mono (Data) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        tech: {
+                            primary: '#3b82f6',   // Blue 500
+                            accent: '#06b6d4',    // Cyan 500
+                            dark: '#0f172a',      // Slate 900
+                            surface: '#1e293b',   // Slate 800
+                            light: '#f8fafc',     // Slate 50
+                            text: '#334155',      // Slate 700
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Smooth transitions for theme switching */
+        body, div, nav, button, span, h1, h2, h3, p {
+            transition-property: background-color, border-color, color, fill, stroke;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 300ms;
+        }
+
+        /* Modal Animation */
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-animate {
+            animation: slideUp 0.3s ease-out forwards;
+        }
+
+        /* Chart Container Fix */
+        .chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body class="bg-tech-light text-tech-text dark:bg-tech-dark dark:text-gray-200 font-sans min-h-screen flex flex-col antialiased">
+
+    <!-- HEADER / NAVBAR -->
+    <nav class="sticky top-0 z-40 w-full bg-white/80 dark:bg-tech-dark/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <!-- Logo -->
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded bg-gradient-to-tr from-blue-600 to-cyan-500 flex items-center justify-center text-white shadow-lg shadow-blue-500/30">
+                        <i class="fa-solid fa-layer-group text-sm"></i>
+                    </div>
+                    <span class="text-lg font-bold tracking-tight text-gray-900 dark:text-white">AI Benchmarks</span>
+                </div>
+
+                <!-- Theme Toggle -->
+                <button onclick="toggleTheme()" class="w-10 h-10 rounded-full flex items-center justify-center bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <i class="fa-solid fa-sun text-yellow-500 text-lg hidden dark:block"></i>
+                    <i class="fa-solid fa-moon text-gray-600 text-lg dark:hidden"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+        
+        <header class="mb-10">
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                Análisis Comparativo
+            </h1>
+            <p class="text-gray-500 dark:text-gray-400">
+                Datos actualizados de rendimiento y eficiencia en tiempo real.
+            </p>
+        </header>
+
+        <!-- GRID SYSTEM -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <!-- CARD 1: COMPARATIVA -->
+            <article class="bg-white dark:bg-tech-surface rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-md transition-shadow">
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Líderes de Mercado</h2>
+                            <p class="text-xs text-gray-500 font-mono mt-1">Tier 1 Models</p>
+                        </div>
+                        <span class="px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 dark:bg-green-900/30 dark:text-green-400 rounded">Live</span>
+                    </div>
+
+                    <!-- Comparison List -->
+                    <div class="space-y-4 mb-6">
+                        <!-- Model 1 -->
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="font-medium text-gray-700 dark:text-gray-300">Gemini 1.5 Pro</span>
+                                <span class="font-mono text-blue-600 dark:text-blue-400">90.0</span>
+                            </div>
+                            <div class="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-1.5">
+                                <div class="bg-blue-500 h-1.5 rounded-full" style="width: 90%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Model 2 -->
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="font-medium text-gray-700 dark:text-gray-300">GPT-4o</span>
+                                <span class="font-mono text-cyan-600 dark:text-cyan-400">88.5</span>
+                            </div>
+                            <div class="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-1.5">
+                                <div class="bg-cyan-500 h-1.5 rounded-full" style="width: 88%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Model 3 -->
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="font-medium text-gray-700 dark:text-gray-300">Claude 3.5 Sonnet</span>
+                                <span class="font-mono text-violet-600 dark:text-violet-400">92.0</span>
+                            </div>
+                            <div class="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-1.5">
+                                <div class="bg-violet-500 h-1.5 rounded-full" style="width: 92%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Button -->
+                    <button onclick="openModal()" class="w-full py-2 px-4 bg-gray-50 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 text-sm font-medium text-gray-700 dark:text-gray-200 rounded-lg border border-gray-200 dark:border-gray-600 transition-colors flex justify-center items-center gap-2">
+                        <i class="fa-solid fa-chart-pie"></i> Ver Gráficos
+                    </button>
+                </div>
+            </article>
+
+            <!-- CARD 2: EMPTY STATE -->
+            <article class="bg-white dark:bg-tech-surface rounded-xl shadow-sm border border-dashed border-gray-300 dark:border-gray-700 flex flex-col items-center justify-center p-6 text-center hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors cursor-pointer min-h-[300px]">
+                <div class="w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mb-4 text-gray-400">
+                    <i class="fa-solid fa-plus text-xl"></i>
+                </div>
+                <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-200">Añadir Modelo</h3>
+                <p class="text-xs text-gray-500 mt-1 max-w-[150px]">
+                    Configura una nueva comparativa personalizada.
+                </p>
+            </article>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-gray-200 dark:border-gray-800 py-6 mt-auto bg-white dark:bg-tech-dark">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-xs text-gray-400 font-mono">v2.4.0 &bull; System Status: Operational</p>
+        </div>
+    </footer>
+
+    <!-- MODAL OVERLAY -->
+    <div id="statsModal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <!-- Backdrop -->
+        <div class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm transition-opacity" onclick="closeModal()"></div>
+
+        <!-- Modal Panel -->
+        <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+            <div class="relative transform overflow-hidden rounded-xl bg-white dark:bg-tech-surface text-left shadow-2xl transition-all sm:w-full sm:max-w-2xl border border-gray-200 dark:border-gray-700 modal-animate">
+                
+                <!-- Modal Header -->
+                <div class="px-6 py-4 flex flex-col sm:flex-row justify-between items-center border-b border-gray-200 dark:border-gray-700 gap-4 bg-gray-50 dark:bg-gray-800/50">
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white" id="modal-title">
+                            Métricas Detalladas
+                        </h3>
+                        <p class="text-xs text-gray-500 hidden sm:block">Comparativa multi-vectorial</p>
+                    </div>
+                    
+                    <!-- Chart Type Switcher (Expanded) -->
+                    <div class="flex flex-wrap justify-center gap-1 p-1 bg-gray-200 dark:bg-gray-900 rounded-lg">
+                        <button onclick="switchChartType('radar')" id="btn-radar" title="Radar" class="p-2 rounded-md text-xs font-semibold transition-all shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                            <i class="fa-solid fa-spider"></i>
+                        </button>
+                        <button onclick="switchChartType('bar')" id="btn-bar" title="Barras Verticales" class="p-2 rounded-md text-xs font-semibold transition-all text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
+                            <i class="fa-solid fa-chart-column"></i>
+                        </button>
+                        <button onclick="switchChartType('horizontalBar')" id="btn-horizontalBar" title="Barras Horizontales" class="p-2 rounded-md text-xs font-semibold transition-all text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
+                            <i class="fa-solid fa-bars"></i>
+                        </button>
+                        <button onclick="switchChartType('line')" id="btn-line" title="Líneas" class="p-2 rounded-md text-xs font-semibold transition-all text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </button>
+                        <button onclick="switchChartType('polarArea')" id="btn-polarArea" title="Área Polar" class="p-2 rounded-md text-xs font-semibold transition-all text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
+                            <i class="fa-regular fa-snowflake"></i>
+                        </button>
+                        <button onclick="switchChartType('doughnut')" id="btn-doughnut" title="Sectores (Total Score)" class="p-2 rounded-md text-xs font-semibold transition-all text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
+                            <i class="fa-solid fa-chart-pie"></i>
+                        </button>
+                    </div>
+
+                    <button type="button" onclick="closeModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors focus:outline-none absolute top-4 right-4 sm:static">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+
+                <!-- Modal Body (Chart) -->
+                <div class="px-6 py-6 bg-white dark:bg-tech-surface">
+                    <div class="chart-container">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                    
+                    <!-- Legend (Dynamic Container) -->
+                    <div id="customLegend" class="mt-6 flex justify-center flex-wrap gap-3 text-xs font-medium border-t border-gray-100 dark:border-gray-700 pt-4 text-gray-600 dark:text-gray-400 select-none">
+                        <!-- Content generated by JS renderLegend() -->
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="bg-gray-50 dark:bg-gray-800/50 px-6 py-3 flex justify-end border-t border-gray-200 dark:border-gray-700">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 text-sm font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOGIC -->
+    <script>
+        // === 1. THEME LOGIC (REAL IMPLEMENTATION) ===
+        const html = document.documentElement;
+        
+        // Initialize theme based on localStorage or System pref
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+        } else {
+            html.classList.remove('dark');
+        }
+
+        function toggleTheme() {
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.theme = 'light';
+            } else {
+                html.classList.add('dark');
+                localStorage.theme = 'dark';
+            }
+            // Re-render chart to update colors for the new theme
+            if(!document.getElementById('statsModal').classList.contains('hidden')){
+                createChart();
+            }
+        }
+
+        // === 2. DATA & STATE ===
+        let currentChartType = 'radar';
+        
+        // Clean, standard data names
+        const LABELS = ['Razonamiento', 'Velocidad', 'Contexto', 'Coding', 'Eficiencia Costo'];
+
+        // Definimos los datos por defecto (Fallback) por si falla la carga del archivo
+        const defaultComparisonData = {
+            'gemini': {
+                label: 'Gemini 1.5 Pro',
+                data: [90, 85, 99, 85, 75], 
+                color: 'rgba(59, 130, 246, 0.2)', // Blue
+                borderColor: '#3b82f6',        
+            },
+            'gpt4': {
+                label: 'GPT-4o',
+                data: [88, 95, 60, 90, 60], 
+                color: 'rgba(6, 182, 212, 0.2)', // Cyan
+                borderColor: '#06b6d4',        
+            },
+            'claude': {
+                label: 'Claude 3.5 Sonnet',
+                data: [92, 80, 80, 95, 85], 
+                color: 'rgba(139, 92, 246, 0.2)', // Violet
+                borderColor: '#8b5cf6',        
+            }
+        };
+
+        // Inicializamos con los datos por defecto
+        let comparisonData = { ...defaultComparisonData };
+
+        // Estado de visibilidad (se genera dinámicamente)
+        let visibilityState = {};
+
+        // Función para inicializar visibilidad basada en las claves de datos actuales
+        function initVisibility() {
+            visibilityState = {};
+            Object.keys(comparisonData).forEach(key => {
+                visibilityState[key] = true;
+            });
+        }
+
+        // Ejecutar inicialización de visibilidad inicial
+        initVisibility();
+
+        // Función asíncrona para cargar el JSON local
+        async function loadLocalData() {
+            try {
+                // Intenta buscar el archivo en la carpeta especificada
+                const response = await fetch('comparacion modelos/data.json');
+                
+                if (response.ok) {
+                    const jsonData = await response.json();
+                    // Si la carga es exitosa, reemplazamos los datos
+                    comparisonData = jsonData;
+                    // Reinicializamos la visibilidad para los nuevos modelos cargados
+                    initVisibility();
+                    console.log('Datos cargados exitosamente desde "comparacion modelos/data.json"');
+                    
+                    // Si el modal está abierto, actualizamos la vista
+                    if (!document.getElementById('statsModal').classList.contains('hidden')) {
+                        renderLegend();
+                        createChart();
+                    }
+                } else {
+                    console.warn('No se encontró el archivo local, usando datos por defecto.');
+                }
+            } catch (error) {
+                console.error('Error cargando JSON local (posible bloqueo CORS o archivo faltante):', error);
+                // Mantenemos comparisonData con los valores por defecto
+            }
+        }
+
+        // Iniciamos la carga de datos
+        loadLocalData();
+
+        // === 3. CHART LOGIC ===
+        let myChart = null;
+        const ctx = document.getElementById('radarChart').getContext('2d');
+
+        // New function to toggle visibility
+        function toggleModel(key) {
+            visibilityState[key] = !visibilityState[key];
+            createChart();
+            renderLegend();
+        }
+
+        // New function to render interactive legend
+        function renderLegend() {
+            const container = document.getElementById('customLegend');
+            container.innerHTML = ''; // Clear current
+
+            Object.entries(comparisonData).forEach(([key, model]) => {
+                const isVisible = visibilityState[key];
+                
+                const btn = document.createElement('button');
+                btn.onclick = () => toggleModel(key);
+                btn.className = `flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all duration-200 ${
+                    isVisible 
+                    ? 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-600 shadow-sm opacity-100 scale-100' 
+                    : 'bg-transparent border-transparent opacity-50 scale-95 grayscale'
+                }`;
+                
+                // Color Dot
+                const dot = document.createElement('span');
+                dot.className = "w-2.5 h-2.5 rounded-full shadow-sm";
+                dot.style.backgroundColor = model.borderColor;
+
+                // Label Text
+                const text = document.createElement('span');
+                text.innerText = model.label;
+                text.className = isVisible 
+                    ? 'text-gray-700 dark:text-gray-200 font-semibold' 
+                    : 'text-gray-400 decoration-slice line-through';
+
+                btn.appendChild(dot);
+                btn.appendChild(text);
+                container.appendChild(btn);
+            });
+        }
+
+        function switchChartType(type) {
+            currentChartType = type;
+            
+            // Update UI buttons (Active State)
+            const activeClass = ['bg-white', 'dark:bg-gray-700', 'text-gray-900', 'dark:text-white', 'shadow-sm'];
+            const inactiveClass = ['text-gray-500', 'hover:text-gray-900', 'dark:text-gray-400', 'dark:hover:text-white'];
+            
+            // Reset all buttons
+            ['radar', 'bar', 'horizontalBar', 'line', 'polarArea', 'doughnut'].forEach(t => {
+                const btn = document.getElementById(`btn-${t}`);
+                if(btn) { // Safety check
+                    btn.classList.remove(...activeClass);
+                    btn.classList.add(...inactiveClass);
+                }
+            });
+
+            createChart();
+        }
+
+        function getChartConfig() {
+            // Check current theme for chart colors
+            const isDark = html.classList.contains('dark');
+            const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+            const textColor = isDark ? '#94a3b8' : '#64748b'; // Slate 400/500
+            const fontFamily = "'Inter', sans-serif";
+            
+            let chartType = currentChartType;
+            let options = {
+                responsive: true,
+                maintainAspectRatio: false,
+                layout: { padding: 10 },
+                plugins: {
+                    legend: { display: false }, // We have custom interactive legend
+                    tooltip: {
+                        backgroundColor: isDark ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+                        titleColor: isDark ? '#fff' : '#0f172a',
+                        titleFont: { family: fontFamily, weight: '600' },
+                        bodyColor: isDark ? '#cbd5e1' : '#334155',
+                        bodyFont: { family: fontFamily },
+                        borderColor: isDark ? '#334155' : '#e2e8f0',
+                        borderWidth: 1,
+                        padding: 10,
+                        displayColors: true,
+                    }
+                }
+            };
+            
+            let dataConfig = {};
+
+            // Filter active models based on visibilityState
+            const activeEntries = Object.entries(comparisonData).filter(([key]) => visibilityState[key]);
+
+            // === SPECIAL LOGIC FOR DOUGHNUT (Sectores) ===
+            // Shows "Total Score Share" instead of individual metrics
+            if (chartType === 'doughnut') {
+                const modelNames = activeEntries.map(([_, m]) => m.label);
+                const totalScores = activeEntries.map(([_, m]) => m.data.reduce((a, b) => a + b, 0));
+                const colors = activeEntries.map(([_, m]) => m.borderColor); // Use solid colors
+
+                dataConfig = {
+                    labels: modelNames,
+                    datasets: [{
+                        data: totalScores,
+                        backgroundColor: colors,
+                        borderColor: isDark ? '#1e293b' : '#fff',
+                        borderWidth: 2
+                    }]
+                };
+                
+                // Show standard legend for doughnut (bottom) BUT controlled by our custom buttons above still
+                // We'll actually hide the standard legend to rely solely on our custom interactive one for consistency
+                options.plugins.legend = { display: false }; 
+
+            } else {
+                // === STANDARD LOGIC (Multivariate) ===
+                
+                // Handle Horizontal Bar mapping
+                if (chartType === 'horizontalBar') {
+                    chartType = 'bar';
+                    options.indexAxis = 'y';
+                }
+
+                const datasets = activeEntries.map(([_, model]) => ({
+                    label: model.label,
+                    data: model.data,
+                    fill: chartType === 'radar',
+                    backgroundColor: (chartType === 'bar' || chartType === 'polarArea') ? model.borderColor : model.color,
+                    borderColor: model.borderColor,
+                    pointBackgroundColor: isDark ? '#1e293b' : '#fff',
+                    pointBorderColor: model.borderColor,
+                    borderWidth: 2,
+                    pointRadius: 4,
+                    tension: 0.3
+                }));
+
+                dataConfig = {
+                    labels: LABELS,
+                    datasets: datasets
+                };
+
+                // Scale Logic
+                if (chartType === 'radar' || chartType === 'polarArea') {
+                    options.scales = {
+                        r: {
+                            angleLines: { color: gridColor },
+                            grid: { color: gridColor },
+                            pointLabels: {
+                                color: textColor,
+                                font: { size: 11, family: fontFamily, weight: '500' }
+                            },
+                            ticks: { display: false, backdropColor: 'transparent' },
+                            suggestedMin: 0, // Reset for polar to look good
+                            suggestedMax: 100
+                        }
+                    };
+                    if(chartType === 'radar') options.scales.r.suggestedMin = 50;
+                } else {
+                    // Cartesian (Bar, Line)
+                    options.scales = {
+                        y: {
+                            beginAtZero: false,
+                            min: 50,
+                            max: 100,
+                            grid: { color: gridColor },
+                            ticks: { color: textColor, font: { family: fontFamily } },
+                            border: { display: false }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: textColor, font: { family: fontFamily } },
+                            border: { display: false }
+                        }
+                    };
+                    
+                    // Swap scales for Horizontal Bar
+                    if (options.indexAxis === 'y') {
+                         options.scales.x.min = 50;
+                         options.scales.x.max = 100;
+                         options.scales.x.grid = { color: gridColor };
+                         options.scales.y.grid = { display: false };
+                         options.scales.y.min = undefined;
+                         options.scales.y.max = undefined;
+                    }
+                }
+            }
+
+            return {
+                type: chartType,
+                data: dataConfig,
+                options: options
+            };
+        }
+
+        function createChart() {
+            if (myChart) {
+                myChart.destroy();
+            }
+            requestAnimationFrame(() => {
+                myChart = new Chart(ctx, getChartConfig());
+            });
+        }
+
+        // === 4. MODAL LOGIC ===
+        const modal = document.getElementById('statsModal');
+
+        function openModal() {
+            modal.classList.remove('hidden');
+            switchChartType('radar'); 
+            renderLegend(); // Render legend on open
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+            if (myChart) {
+                myChart.destroy();
+                myChart = null;
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
