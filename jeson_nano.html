@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" x-data="themeManager()" :class="{ 'dark': isDark }">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,123 +7,152 @@
     <meta name="description" content="Documentación técnica del montaje y configuración de NVIDIA Jetson Nano">
     <title>Documentación de Proyecto: Jetson Nano</title>
 
-    <!-- 
-    ★ ARQUITECTURA TÉCNICA Y JUSTIFICACIÓN DEL STACK ★
-    
-    1. Alpine.js: 
-       Seleccionado por su naturaleza "drop-in". Para iterar una lista y manejar estado simple 
-       en un solo archivo HTML, ofrece la mejor relación potencia/peso sin necesidad de bundlers (Webpack/Vite).
-    
-    2. Tailwind CSS:
-       Elegido para garantizar un sistema de diseño consistente (espaciados, tipografía, colores) 
-       y una adaptabilidad móvil (responsive) inmediata mediante clases utilitarias.
-    
-    3. GLightbox:
-       Seleccionado como motor de visualización. Es 'dependency-free', ligero y soporta 
-       gestos táctiles nativos, ideal para inspeccionar detalles de hardware en móviles.
-    -->
-
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Alpine.js (CORREGIDO: Se añade 'defer' para garantizar el orden de ejecución) -->
+
+    <!-- Configuración Tailwind -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: { 850: '#1e293b', 950: '#0f172a' }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Alpine.js -->
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    
     <!-- GLightbox CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
-    <!-- Google Fonts: Inter -->
+    <link href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Marked (Markdown) -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
     <style>
         body { font-family: 'Inter', sans-serif; }
-        /* Smooth placeholder transition */
-        .img-placeholder { background-color: #f3f4f6; display: flex; align-items: center; justify-content: center; color: #9ca3af; }
+        [x-cloak] { display: none !important; }
+        
+        /* Scrollbars */
+        .dark ::-webkit-scrollbar { width: 8px; }
+        .dark ::-webkit-scrollbar-track { background: #0f172a; }
+        .dark ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        .card-scroll::-webkit-scrollbar { width: 6px; }
+        .card-scroll::-webkit-scrollbar-track { background: transparent; }
+        .card-scroll::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; }
+        .dark .card-scroll::-webkit-scrollbar-thumb { background-color: #475569; }
+
+        /* Transition for height changes */
+        .height-transition {
+            transition-property: height, min-height;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 500ms;
+        }
+
+        .prose-dark strong { color: #e2e8f0; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800" x-data="projectDocs()">
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 transition-colors duration-300" x-data="projectDocs()">
 
     <!-- Header -->
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-10 shadow-sm">
-        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
-            <div>
-                <h1 class="text-xl md:text-2xl font-bold text-slate-900 tracking-tight">Montaje Jetson Nano</h1>
-                <p class="text-xs md:text-sm text-slate-500 font-medium mt-1">Configuración para IA & Edge Computing</p>
+    <header class="bg-white/90 dark:bg-slate-900/90 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-20 backdrop-blur-sm transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex-1">
+                <h1 class="text-xl md:text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Montaje Jetson Nano</h1>
+                <p class="text-xs md:text-sm text-slate-500 dark:text-slate-400 font-medium mt-1">Documentación Técnica</p>
             </div>
-            <div class="text-right hidden md:block">
-                <span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-2 py-1 rounded-full uppercase tracking-wider">v1.0 Release</span>
+            
+            <div class="flex items-center gap-3">
+                
+                <!-- BOTÓN DE CARGA DE DATOS LOCALES -->
+                <button 
+                    @click="loadDescriptions()" 
+                    x-show="!dataLoaded"
+                    class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs md:text-sm font-bold px-5 py-2.5 rounded-full flex items-center transition-all shadow-lg hover:shadow-indigo-500/30"
+                >
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    Mostrar Descripciones
+                </button>
+
+                <!-- Toggle Theme -->
+                <button 
+                    @click="toggleTheme()" 
+                    class="p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all focus:outline-none"
+                    title="Cambiar tema"
+                >
+                    <svg x-show="isDark" x-cloak class="w-6 h-6 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    <svg x-show="!isDark" class="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
             </div>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="max-w-4xl mx-auto px-4 py-8 space-y-8">
+    <!-- Main Content Grid -->
+    <!-- CAMBIO PRINCIPAL: max-w-7xl y GRID de 3 columnas -->
+    <main class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         
-        <!-- Loop de Tarjetas -->
         <template x-for="step in steps" :key="step.id">
             
-            <!-- Tarjeta Narrativa -->
-            <article class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col md:flex-row hover:shadow-md transition-shadow duration-300">
+            <!-- TARJETA -->
+            <!-- flex-col siempre. dataLoaded controla la altura fija para alinear el grid -->
+            <article class="bg-white dark:bg-slate-850 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden flex flex-col hover:shadow-md dark:hover:shadow-slate-900/50 transition-all duration-300 relative height-transition"
+                 :class="dataLoaded ? 'h-[32rem]' : 'h-auto'">
                 
-                <!-- Columna Visual (Izquierda/Arriba) -->
-                <div class="w-full md:w-5/12 h-64 md:h-auto relative bg-slate-100 group cursor-zoom-in">
-                    <!-- Enlace para Lightbox -->
+                <!-- Columna Visual: Siempre arriba -->
+                <div class="w-full relative bg-slate-100 dark:bg-slate-800 group cursor-zoom-in flex-shrink-0"
+                     :class="dataLoaded ? 'h-56' : 'h-64'">
+                    
                     <a :href="step.imagePath" class="glightbox block w-full h-full" :data-description="step.description" :data-title="step.title">
-                        
-                        <!-- Imagen con manejo de error -->
                         <img 
                             :src="step.imagePath" 
                             :alt="step.title"
                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                            x-on:error="$el.style.display='none'; $el.nextElementSibling.style.display='flex'"
+                            x-on:error="handleImageError($el)"
                         >
-                        
-                        <!-- Placeholder elegante si falla la imagen -->
-                        <div class="hidden w-full h-full absolute top-0 left-0 bg-slate-100 flex-col items-center justify-center text-slate-400 p-4 text-center border-r border-slate-200">
-                            <svg class="w-10 h-10 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <!-- Placeholder -->
+                        <div class="hidden w-full h-full absolute top-0 left-0 bg-slate-100 dark:bg-slate-800 flex-col items-center justify-center text-slate-400 dark:text-slate-500 p-4 text-center border-b border-slate-200 dark:border-slate-700 placeholder-div">
                             <span class="text-xs font-mono font-semibold" x-text="step.filename"></span>
-                            <span class="text-[10px] mt-1 text-slate-500">Archivo no encontrado</span>
+                            <span class="text-[10px] mt-1">Imagen no encontrada</span>
                         </div>
                     </a>
                     
-                    <!-- Badge de número de paso -->
-                    <div class="absolute top-3 left-3 bg-slate-900/80 text-white text-xs font-bold px-2 py-1 rounded backdrop-blur-sm">
-                        Paso <span x-text="step.id"></span>
+                    <div class="absolute top-3 left-3 bg-slate-900/90 dark:bg-black/80 text-white text-xs font-bold px-2 py-1 rounded backdrop-blur-sm z-10 border border-slate-700 dark:border-slate-600">
+                        <span x-text="step.id"></span>
                     </div>
                 </div>
 
-                <!-- Columna Narrativa (Derecha/Abajo) -->
-                <div class="w-full md:w-7/12 p-6 flex flex-col justify-center">
-                    <h2 class="text-lg font-bold text-slate-800 mb-2" x-text="step.title"></h2>
-                    <p class="text-slate-600 text-sm leading-relaxed text-justify" x-text="step.description"></p>
+                <!-- Columna Narrativa: Aparece abajo -->
+                <div class="w-full p-5 flex-1 overflow-y-auto card-scroll relative bg-white dark:bg-slate-850 border-t border-slate-100 dark:border-slate-700"
+                     x-show="dataLoaded"
+                     x-transition:enter="transition ease-out duration-500"
+                     x-transition:enter-start="opacity-0 translate-y-4"
+                     x-transition:enter-end="opacity-100 translate-y-0">
                     
-                    <!-- Metadatos técnicos extra (simulados) -->
-                    <div class="mt-4 pt-4 border-t border-slate-100 flex items-center space-x-4 text-xs text-slate-400 font-mono">
-                        <span class="flex items-center">
-                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            Est. 5 min
-                        </span>
-                        <span class="flex items-center text-emerald-600 font-medium" x-show="step.critical">
-                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                            Paso Crítico
-                        </span>
+                    <h2 class="text-lg font-bold text-slate-800 dark:text-slate-100 mb-2 transition-colors duration-300 sticky top-0 bg-white dark:bg-slate-850 pb-2 z-10" 
+                        x-text="step.title"></h2>
+                    
+                    <div class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed text-justify prose prose-sm dark:prose-dark max-w-none pb-2">
+                        <div x-html="renderMarkdown(step.description)"></div>
                     </div>
                 </div>
             </article>
         </template>
         
-        <!-- Empty State / Loading -->
-        <div x-show="steps.length === 0" class="text-center py-20 text-slate-400">
-            <p>Cargando documentación...</p>
-        </div>
-
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-white border-t border-slate-200 mt-12 py-8">
+    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 mt-12 py-8 transition-colors duration-300">
         <div class="max-w-4xl mx-auto px-4 text-center">
-            <p class="text-sm text-slate-500">
-                Documentación generada para uso interno.
-            </p>
-            <p class="text-xs text-slate-400 mt-2 font-mono">
-                Autor: <span class="font-bold text-slate-600">Roberto Monedero Alonso</span> &copy; <span x-text="new Date().getFullYear()"></span>
+            <p class="text-xs text-slate-400 dark:text-slate-500 mt-2 font-mono">
+                Autor: <span class="font-bold text-slate-600 dark:text-slate-300">Roberto Monedero Alonso</span>
             </p>
         </div>
     </footer>
@@ -131,92 +160,89 @@
     <!-- GLightbox JS -->
     <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
 
-    <!-- LÓGICA DE NEGOCIO -->
     <script>
-        // Configuración Global
         const CONFIG = {
-            TOTAL_IMAGENES: 20,
-            RUTA_BASE: './jetson nano/', // Cambiar si las fotos están en otra carpeta
+            TOTAL_IMAGENES: 41, 
+            RUTA_BASE: './jetson nano/', // Carpeta donde están las fotos y el JSON
             EXTENSION: '.jpg'
         };
 
-        // Contexto Narrativo (Simulación de IA Writer)
-        // Estos textos se asocian a las IDs ordenadas
-        const CONTEXTO_TECNICO = [
-            { t: "Recepción y Unboxing", d: "Verificación de la integridad del kit de desarrollo NVIDIA Jetson Nano. Se comprueba la presencia del módulo SOM, la placa base carrier board, y se inspeccionan visualmente los pines GPIO para descartar dobleces durante el transporte." },
-            { t: "Inspección de Interfaces", d: "Revisión detallada de los puertos de E/S: 4x USB 3.0, salida HDMI 2.0, DisplayPort y el puerto Gigabit Ethernet. Es fundamental localizar el puerto micro-USB que servirá para la alimentación en modo 5W o para la conexión serial." },
-            { t: "Preparación del Disipador", d: "La Jetson Nano genera calor considerable durante el entrenamiento de modelos. Verificamos que el disipador pasivo de aluminio esté correctamente anclado al SOM y no presente holguras." },
-            { t: "Selección de MicroSD", d: "Selección de una tarjeta microSD de clase UHS-1 de al menos 64GB. La velocidad de lectura/escritura es crítica para evitar cuellos de botella al cargar datasets grandes en memoria." },
-            { t: "Flasheo de JetPack SDK", d: "Proceso de escritura de la imagen del sistema operativo (Ubuntu 18.04 LTS con drivers de NVIDIA) utilizando Etcher. Se verifica la integridad del hash SHA256 de la imagen descargada antes de proceder." },
-            { t: "Inserción de MicroSD", d: "Colocación de la tarjeta en el slot ubicado bajo el módulo del disipador. Se utiliza un mecanismo de push-push; es vital asegurar que haga 'clic' para garantizar contacto en los pines de datos." },
-            { t: "Configuración del Jumper J48", d: "Paso Crítico: Para habilitar la alimentación por el Barrel Jack (necesario para modo MAXN 10W), se debe puentear el header J48. Esto deshabilita la alimentación por micro-USB." },
-            { t: "Conexión de Fuente de Alimentación", d: "Conexión de una fuente de 5V 4A al Barrel Jack. Una fuente inestable o con amperaje insuficiente provocará apagados repentinos cuando la GPU entre en carga." },
-            { t: "Instalación de Ventilador PWM", d: "Montaje de un ventilador Noctua de 40mm sobre el disipador. Se conecta al header de 4 pines de la placa base para permitir el control de revoluciones por software (jetson-stats)." },
-            { t: "Conexión de Periféricos", d: "Conexión de teclado y ratón USB, así como el monitor vía HDMI. Se recomienda no usar adaptadores VGA ya que pueden causar problemas con la detección EDID del monitor." },
-            { t: "Conectividad de Red", d: "Conexión del cable Ethernet Cat6 directo al router para garantizar la máxima velocidad de descarga de paquetes durante la actualización inicial (apt-get update)." },
-            { t: "Primer Boot (Cold Boot)", d: "Encendido inicial. Se observa el LED verde de encendido fijo. Si parpadea o se apaga inmediatamente, indicaría insuficiencia de corriente o cortocircuito." },
-            { t: "Pantalla de Inicio NVIDIA", d: "Verificación de la salida de video. El logo de NVIDIA debe aparecer en los primeros 10 segundos. Si no, se revisa la configuración del archivo extlinux.conf o el cable HDMI." },
-            { t: "Setup Inicial de Ubuntu (oem-config)", d: "Navegación por el asistente de configuración del sistema: selección de idioma, zona horaria y disposición del teclado. Se crea el usuario 'jetson' con privilegios sudo." },
-            { t: "Gestión de Particiones", d: "El sistema expande automáticamente el sistema de archivos para ocupar toda la tarjeta SD. Verificamos el espacio disponible con `df -h` para asegurar al menos 50GB libres." },
-            { t: "Configuración de Swapfile", d: "Dado que la Nano tiene 4GB de RAM compartida, se crea un archivo de intercambio (Swap) de 6GB para evitar cierres por 'Out of Memory' durante la compilación de librerías pesadas." },
-            { t: "Actualización de Repositorios", d: "Ejecución de `sudo apt update && sudo apt upgrade`. Es un proceso lento en arquitectura ARM64 pero necesario para parchear vulnerabilidades de seguridad." },
-            { t: "Instalación de Jetson Stats", d: "Instalación de la utilidad `jtop` para monitorizar en tiempo real el consumo de CPU, GPU, temperatura y uso de RAM. Esencial para benchmarking." },
-            { t: "Prueba 'Hello AI World'", d: "Ejecución del contenedor de demostración de NVIDIA. Se corre una inferencia de clasificación de imágenes (GoogLeNet) para verificar que los núcleos CUDA están activos." },
-            { t: "Sistema Operativo Listo", d: "El sistema está estable, refrigerado y configurado. La Jetson Nano está lista para iniciar el desarrollo de proyectos de visión artificial y robótica." }
-        ];
-
         document.addEventListener('alpine:init', () => {
+            Alpine.data('themeManager', () => ({
+                isDark: false,
+                init() {
+                    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                        this.isDark = true;
+                    }
+                },
+                toggleTheme() {
+                    this.isDark = !this.isDark;
+                    localStorage.setItem('color-theme', this.isDark ? 'dark' : 'light');
+                }
+            }));
+
             Alpine.data('projectDocs', () => ({
                 steps: [],
+                dataLoaded: false,
                 
                 init() {
-                    this.generateGalleryData();
-                    // Inicializar GLightbox después de que Alpine renderice el DOM
+                    this.initStructure();
                     this.$nextTick(() => {
-                        const lightbox = GLightbox({
-                            touchNavigation: true,
-                            loop: true,
-                            autoplayVideos: true,
-                            zoomable: true
-                        });
+                        GLightbox({ touchNavigation: true, loop: true, zoomable: true, selector: '.glightbox' });
                     });
                 },
 
-                // Lógica de Generación y Ordenamiento
-                generateGalleryData() {
+                handleImageError(el) {
+                    el.style.display='none'; 
+                    el.nextElementSibling.style.display='flex';
+                },
+
+                renderMarkdown(text) {
+                    return text ? marked.parse(text) : '';
+                },
+
+                initStructure() {
                     let rawList = [];
+                    for (let i = 1; i <= CONFIG.TOTAL_IMAGENES; i++) rawList.push(i.toString());
                     
-                    // 1. Generación de nombres de archivo
-                    for (let i = 1; i <= CONFIG.TOTAL_IMAGENES; i++) {
-                        rawList.push(i.toString()); // "1", "2", ... "20"
-                    }
+                    rawList.sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }));
 
-                    // 2. REQUISITO MANDATORIO: Ordenamiento Natural
-                    // Aunque el loop for ya los crea en orden, simulamos que vienen desordenados
-                    // y aplicamos la lógica de 'localeCompare' con {numeric: true}
-                    rawList.sort((a, b) => {
-                        return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
-                    });
-
-                    // 3. Mapeo a Objetos con Contexto
-                    this.steps = rawList.map((numStr, index) => {
+                    this.steps = rawList.map((numStr) => {
                         const id = parseInt(numStr);
-                        // Recuperar contexto o usar fallback si hay más de 20 imágenes
-                        const context = CONTEXTO_TECNICO[index] || { 
-                            t: `Fase de Configuración ${id}`, 
-                            d: "Procedimiento técnico estándar en la secuencia de montaje." 
-                        };
-
                         return {
                             id: id,
                             filename: numStr + CONFIG.EXTENSION,
                             imagePath: CONFIG.RUTA_BASE + numStr + CONFIG.EXTENSION,
-                            title: context.t,
-                            description: context.d,
-                            // Marcar pasos 6, 9 y 18 como críticos visualmente
-                            critical: [6, 9, 18].includes(id) 
+                            title: `Paso ${id}`,
+                            description: "...",
                         };
                     });
+                },
+
+                async loadDescriptions() {
+                    try {
+                        const jsonPath = CONFIG.RUTA_BASE + 'descripciones.json';
+                        const response = await fetch(jsonPath);
+                        
+                        if (!response.ok) throw new Error(`No se encontró el archivo en ${jsonPath}`);
+                        
+                        const data = await response.json();
+                        
+                        this.steps = this.steps.map(step => {
+                            const info = data.find(d => d.id === step.id);
+                            if (info) {
+                                step.title = info.titulo;
+                                step.description = info.descripcion;
+                            }
+                            return step;
+                        });
+
+                        this.dataLoaded = true;
+
+                    } catch (error) {
+                        alert("Error: " + error.message + "\n\nAsegúrate de que 'descripciones.json' está dentro de la carpeta 'jetson nano'.");
+                        console.error(error);
+                    }
                 }
             }));
         });

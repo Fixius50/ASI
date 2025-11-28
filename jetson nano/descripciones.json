@@ -1,0 +1,207 @@
+[
+    {
+        "id": 1,
+        "titulo": "Desembalaje del Kit",
+        "descripcion": "Vista inicial del kit de desarrollo NVIDIA Jetson Orin Nano recién sacado de la caja, junto con su fuente de alimentación. Es el punto de partida para verificar que disponemos de todo el hardware necesario para el montaje."
+    },
+    {
+        "id": 2,
+        "titulo": "Inspección de la Placa",
+        "descripcion": "Vista superior del módulo. Se identifican claramente el gran disipador térmico con ventilador (necesario para refrigerar la GPU), los 4 puertos USB, el puerto Ethernet Gigabit y la toma de alimentación DC."
+    },
+    {
+        "id": 3,
+        "titulo": "Instalación de SSD NVMe",
+        "descripcion": "Vista inferior de la carrier board. Se ha instalado un SSD Lexar NM610 PRO en la ranura M.2. Esto es crucial ya que proporciona un almacenamiento mucho más rápido y fiable que la tarjeta SD para el sistema operativo."
+    },
+    {
+        "id": 4,
+        "titulo": "Ubicación Ranura MicroSD",
+        "descripcion": "Detalle lateral crítico: La ranura para la tarjeta MicroSD se encuentra escondida justo debajo del módulo disipador principal. Es necesario tener cuidado al insertarla para asegurar que los pines hagan contacto correctamente."
+    },
+    {
+        "id": 5,
+        "titulo": "Inventario de Componentes",
+        "descripcion": "Despliegue de los elementos de conectividad: la placa base, el cable de alimentación dedicado (Barrel Jack) para asegurar 5V/4A estables, y un cable DisplayPort para la salida de vídeo de alta resolución."
+    },
+    {
+        "id": 6,
+        "titulo": "Conexión de Periféricos",
+        "descripcion": "Estado final del cableado físico. Se observa conectado: la alimentación (izquierda), el monitor vía DisplayPort, periféricos USB (teclado/ratón) y el cable de red Ethernet para garantizar conexión durante la instalación."
+    },
+    {
+        "id": 7,
+        "titulo": "Primer Arranque (Boot)",
+        "descripcion": "Monitor mostrando los logs del kernel de Linux durante el primer inicio. El sistema está cargando los servicios iniciales, detectando el hardware y lanzando el gestor de configuración (OEM config)."
+    },
+    {
+        "id": 8,
+        "titulo": "Configuración del Sistema",
+        "descripcion": "Interfaz gráfica del asistente de configuración de Ubuntu. En este paso se presentan y aceptan los acuerdos de licencia de usuario final (EULA) de NVIDIA antes de proceder a crear el usuario."
+    },
+    {
+        "id": 9,
+        "titulo": "Conectividad de Red",
+        "descripcion": "Configuración de la red inalámbrica. Se muestra el cuadro de diálogo de autenticación para conectar la Jetson a la red WiFi del aula, paso necesario para descargar actualizaciones si no se usa Ethernet."
+    },
+    {
+        "id": 10,
+        "titulo": "Instalación de Paquetes",
+        "descripcion": "Fase final de la post-instalación. El sistema operativo está descargando e instalando automáticamente el navegador Chromium y otras dependencias básicas mediante el gestor de paquetes snap."
+    },
+    {
+        "id": 11,
+        "titulo": "Integración de Cuentas",
+        "descripcion": "Configuración de cuentas en línea en Ubuntu (Single Sign-On, Google, etc.). Este paso permite sincronizar calendarios y archivos, aunque es opcional para el funcionamiento técnico del dispositivo."
+    },
+    {
+        "id": 12,
+        "titulo": "Actualización del Core",
+        "descripcion": "El actualizador de software está descargando parches críticos, incluyendo 'nvidia-l4t-core'. Esto actualiza los drivers específicos de Linux for Tegra necesarios para la aceleración por hardware."
+    },
+    {
+        "id": 13,
+        "titulo": "Recursos de NVIDIA AI",
+        "descripcion": "Navegación por el portal 'Jetson AI Lab'. Se está consultando la documentación oficial, específicamente la guía para configurar el almacenamiento SSD y el entorno Docker, vital para contenedores de IA."
+    },
+    {
+        "id": 14,
+        "titulo": "Herramientas de IA Local",
+        "descripcion": "Descarga de LM Studio desde su web oficial. Esta herramienta es fundamental para descargar, gestionar y ejecutar modelos de lenguaje (LLMs) como Llama o Mistral directamente en el hardware de la Jetson."
+    },
+    {
+        "id": 15,
+        "titulo": "Formateo del SSD",
+        "descripcion": "Uso de la terminal para formatear el disco NVMe nuevo. El comando `sudo mkfs.ext4 /dev/nvme0n1` crea un sistema de archivos ext4, borrando cualquier dato previo y preparándolo para Linux."
+    },
+    {
+        "id": 16,
+        "titulo": "Verificación de Particiones",
+        "descripcion": "Se crea el directorio de montaje (`mkdir /ssd`) y se verifica con `lsblk -f`. Se confirma que la partición ext4 existe y tiene un UUID asignado, lista para ser montada."
+    },
+    {
+        "id": 17,
+        "titulo": "Montaje Persistente",
+        "descripcion": "Edición del archivo `/etc/fstab` usando `nano`. Se añade la configuración del SSD para asegurar que se monte automáticamente en la carpeta /ssd cada vez que se reinicie el sistema."
+    },
+    {
+        "id": 18,
+        "titulo": "Dependencias FUSE",
+        "descripcion": "Instalación de `libfuse2` mediante apt. Esta librería es un requisito indispensable en Ubuntu 22.04 para poder ejecutar archivos .AppImage, formato en el que se distribuye LM Studio."
+    },
+    {
+        "id": 19,
+        "titulo": "Configuración LM Studio",
+        "descripcion": "Asistente de primer inicio de LM Studio. Se selecciona el nivel de usuario (Power User), lo que habilitará opciones avanzadas para controlar la carga de capas del modelo en la GPU."
+    },
+    {
+        "id": 20,
+        "titulo": "Entorno Listo",
+        "descripcion": "Interfaz principal de LM Studio cargada con éxito. La Jetson Nano ahora dispone de un entorno gráfico completo para buscar y ejecutar modelos de Inteligencia Artificial de manera local y privada."
+    },
+    {
+        "id": 21,
+        "titulo": "Pantalla de Bienvenida",
+        "descripcion": "LM Studio nos da la bienvenida invitándonos a descargar nuestro primer modelo. Detecta automáticamente las capacidades del hardware y sugiere modelos compatibles con la arquitectura ARM64 de la Jetson."
+    },
+    {
+        "id": 22,
+        "titulo": "Descarga de Qwen3-4B",
+        "descripcion": "Se inicia la descarga de un modelo ligero de la familia Qwen3 con 4 mil millones de parámetros (4B). Este tamaño es ideal para la Jetson Nano, balanceando velocidad de respuesta y calidad de texto."
+    },
+    {
+        "id": 23,
+        "titulo": "Interfaz de Chat",
+        "descripcion": "La interfaz de chat de LM Studio está vacía y lista. El icono central indica que el motor de inferencia local está a la espera de un modelo cargado para comenzar a procesar prompts."
+    },
+    {
+        "id": 24,
+        "titulo": "Búsqueda de Modelos VL",
+        "descripcion": "En el buscador de modelos (lupa), filtramos por 'GGUF' y buscamos `qwen/qwen3-vl-4b`. La etiqueta 'VL' indica que es un modelo Vision-Language, capaz de ver y entender imágenes."
+    },
+    {
+        "id": 25,
+        "titulo": "Filtrado por Compatibilidad",
+        "descripcion": "El menú desplegable permite ordenar por 'Best Match'. Es importante fijarse en la etiqueta azul 'Likely Fit' en verde, que confirma que el modelo cabe en la memoria RAM disponible del dispositivo."
+    },
+    {
+        "id": 26,
+        "titulo": "Detalles del Modelo",
+        "descripcion": "Ficha técnica del modelo `qwen3-vl-4b`. Vemos que tiene capacidades de 'Vision' y 'Tool Use'. Se confirma que pesa unos 3.33 GB, lo cual deja margen suficiente en la memoria de la Jetson."
+    },
+    {
+        "id": 27,
+        "titulo": "Características Técnicas",
+        "descripcion": "Lectura de las 'Key Features'. Destaca su capacidad de 'Visual Agent' (operar GUIs), 'Visual Coding' (generar código desde imágenes) y OCR avanzado para leer texto en imágenes."
+    },
+    {
+        "id": 28,
+        "titulo": "Confirmación de GGUF",
+        "descripcion": "Verificación del formato del archivo. GGUF es el formato estándar para ejecución local optimizada en CPU/GPU. Aseguramos que estamos descargando la versión cuantizada correcta (probablemente Q4_K_M)."
+    },
+    {
+        "id": 29,
+        "titulo": "Parámetros de Arquitectura",
+        "descripcion": "Panel lateral mostrando la arquitectura `qwen2_vl` y el tamaño de contexto. Estos datos técnicos son útiles para saber si necesitamos ajustar la configuración de la ventana de contexto antes de cargar el modelo."
+    },
+    {
+        "id": 30,
+        "titulo": "Descarga en Progreso",
+        "descripcion": "La barra de progreso verde en la parte inferior derecha indica que el modelo multimodal se está descargando ('Downloading 92%'). Una vez termine, la Jetson podrá analizar imágenes localmente sin internet."
+    },
+    {
+        "id": 31,
+        "titulo": "Opciones de Cuantización",
+        "descripcion": "Selector de descargas. Se elige la versión 'Q4_K_M' (cuantización a 4 bits). Esta técnica reduce el tamaño del modelo de 16GB a solo 3.39GB, permitiendo que corra rápido en la Jetson sin perder mucha 'inteligencia'."
+    },
+    {
+        "id": 32,
+        "titulo": "Descarga Completada",
+        "descripcion": "Notificación 'Download Completed'. El modelo `qwen/qwen3-vl-4b` está almacenado en el disco local y listo para ser cargado. El botón 'Load Model' nos permitirá subirlo a la memoria RAM."
+    },
+    {
+        "id": 33,
+        "titulo": "Iniciar Sesión de Chat",
+        "descripcion": "Con el modelo descargado y verificado (etiqueta verde 'Likely Fit'), pulsamos el botón 'Use in New Chat' para instanciar el motor de inferencia y abrir una sala de conversación limpia."
+    },
+    {
+        "id": 34,
+        "titulo": "Carga en Memoria",
+        "descripcion": "Barra de progreso azul superior. El sistema está transfiriendo los 3GB del modelo desde el SSD a la memoria RAM unificada de la Jetson. Este paso suele tardar unos segundos dependiendo de la velocidad del disco."
+    },
+    {
+        "id": 35,
+        "titulo": "Monitor de Recursos",
+        "descripcion": "Panel de control crítico: Vemos que el modelo cargado ocupa '3.13 GB / 7 GB'. Esto confirma que tenemos casi 4GB libres para el sistema operativo y el contexto de la conversación. ¡Optimización exitosa!"
+    },
+    {
+        "id": 36,
+        "titulo": "Prueba de Inferencia: Saludo",
+        "descripcion": "Primera interacción real. Escribimos 'HOLA' en la caja de chat. El sistema procesa el input (tokens de entrada) y se prepara para generar una respuesta utilizando la GPU integrada."
+    },
+    {
+        "id": 37,
+        "titulo": "Respuesta de la IA",
+        "descripcion": "La IA responde instantáneamente: '¡Hola! ¿En qué puedo ayudarte hoy?'. Esto confirma que el modelo no solo funciona, sino que entiende y genera español fluido correctamente."
+    },
+    {
+        "id": 38,
+        "titulo": "Test de Razonamiento",
+        "descripcion": "Sometemos a la IA a una prueba lógica compleja sobre una mesa de 4 patas desiguales. Queremos ver si 'razona' físicamente o si solo completa texto. El contador de tokens muestra una velocidad de 2.25 tok/sec."
+    },
+    {
+        "id": 39,
+        "titulo": "Proceso de Razonamiento",
+        "descripcion": "La IA empieza a desglosar el problema físico. Explica correctamente que para que una mesa sea estable, solo necesita 3 puntos de apoyo (un plano), por lo que siempre tocará el suelo aunque cojee."
+    },
+    {
+        "id": 40,
+        "titulo": "Conclusión Lógica Final",
+        "descripcion": "Veredicto de la IA: 'La respuesta es 100%'. El modelo ha demostrado capacidad de razonamiento espacial y sentido común, ejecutándose 100% localmente en la Jetson Nano sin enviar datos a la nube."
+    },
+    {
+        "id": 41,
+        "titulo": "Conclusión Filosófica de la IA",
+        "descripcion": "El modelo va más allá de la física y ofrece una reflexión casi filosófica: 'En la vida real, no hay problema si una pata es más larga, la mesa se mantiene estable'. Una demostración impresionante de abstracción."
+    }
+]
