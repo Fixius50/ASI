@@ -7,9 +7,8 @@ public class RenombrarImagenes {
 
     public static void main(String[] args) {
         // 1. Definir la ruta de la carpeta
-        // Nota: Asegúrate de que la carpeta esté en el mismo lugar donde ejecutas el código
-        // o pon la ruta absoluta (ej: "C:/Users/TuUsuario/Desktop/jetson nano")
-        String rutaCarpeta = "jetson nano";
+        
+        String rutaCarpeta = "jetson_nano";
         Path directorio = Paths.get(rutaCarpeta);
 
         // Validar que la carpeta existe
