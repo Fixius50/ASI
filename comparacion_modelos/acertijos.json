@@ -1,0 +1,110 @@
+[
+    {
+        "acertijo": "No tengo boca y hablo... (El Viento)",
+        "nombre_imagen": "7.jpg",
+        "modelo_detectado": "modelo_1_granite4-h-tiny",
+        "valor_resultado": "43.03 tok/sec • 233 tokens • 0.21s to first token"
+    },
+    {
+        "acertijo": "Me ves en el agua, pero nunca me mojo... (El Reflejo)",
+        "nombre_imagen": "8.jpg",
+        "modelo_detectado": "modelo_1_granite4-h-tiny",
+        "valor_resultado": "42.77 tok/sec • 169 tokens • 0.49s to first token"
+    },
+    {
+        "acertijo": "¿Qué sube pero nunca baja? (La Montaña)",
+        "nombre_imagen": "9.jpg",
+        "modelo_detectado": "modelo_1_granite4-h-tiny",
+        "valor_resultado": "43.12 tok/sec • 146 tokens • 0.23s to first token"
+    },
+    {
+        "acertijo": "¿Qué sube pero nunca baja? (La Edad)",
+        "nombre_imagen": "11.jpg",
+        "modelo_detectado": "modelo_2_qwen3-vl-8b",
+        "valor_resultado": "12.31 tok/sec • 336 tokens • 4.79s to first token"
+    },
+    {
+        "acertijo": "Me ves en el agua, pero nunca me mojo... (El Reflejo)",
+        "nombre_imagen": "13.jpg",
+        "modelo_detectado": "modelo_2_qwen3-vl-8b",
+        "valor_resultado": "12.22 tok/sec • 354 tokens • 2.95s to first token"
+    },
+    {
+        "acertijo": "No tengo boca y hablo... (El Eco)",
+        "nombre_imagen": "15.jpg",
+        "modelo_detectado": "modelo_2_qwen3-vl-8b",
+        "valor_resultado": "12.13 tok/sec • 312 tokens • 4.76s to first token"
+    },
+    {
+        "acertijo": "¿Qué sube pero nunca baja? (La Vida/Años)",
+        "nombre_imagen": "16.jpg",
+        "modelo_detectado": "modelo_3_deepseek-r1",
+        "valor_resultado": "11.92 tok/sec • 1940 tokens • 0.95s to first token"
+    },
+    {
+        "acertijo": "Me ves en el agua, pero nunca me mojo... (Barco/Sombra)",
+        "nombre_imagen": "17.jpg",
+        "modelo_detectado": "modelo_3_deepseek-r1",
+        "valor_resultado": "12.18 tok/sec • 464 tokens • 0.40s to first token"
+    },
+    {
+        "acertijo": "No tengo boca y hablo... (Una campana)",
+        "nombre_imagen": "18.jpg",
+        "modelo_detectado": "modelo_3_deepseek-r1",
+        "valor_resultado": "12.11 tok/sec • 568 tokens • 1.03s to first token"
+    },
+    {
+        "acertijo": "¿Qué sube pero nunca baja? (La Edad)",
+        "nombre_imagen": "19.jpg",
+        "modelo_detectado": "modelo_4_gemma-3-12b",
+        "valor_resultado": "14.33 tok/sec • 237 tokens • 1.07s to first token"
+    },
+    {
+        "acertijo": "Me ves en el agua, pero nunca me mojo... (La Sombra)",
+        "nombre_imagen": "20.jpg",
+        "modelo_detectado": "modelo_4_gemma-3-12b",
+        "valor_resultado": "14.22 tok/sec • 236 tokens • 0.58s to first token"
+    },
+    {
+        "acertijo": "No tengo boca y hablo... (El Eco)",
+        "nombre_imagen": "21.jpg",
+        "modelo_detectado": "modelo_4_gemma-3-12b",
+        "valor_resultado": "13.96 tok/sec • 308 tokens • 0.78s to first token"
+    },
+    {
+        "acertijo": "¿Qué sube pero nunca baja? (El Precio)",
+        "nombre_imagen": "22.jpg",
+        "modelo_detectado": "modelo_5_ministral-3-14b",
+        "valor_resultado": "9.00 tok/sec • 193 tokens • 1.07s to first token"
+    },
+    {
+        "acertijo": "Me ves en el agua, pero nunca me mojo... (El Reflejo)",
+        "nombre_imagen": "23.jpg",
+        "modelo_detectado": "modelo_5_ministral-3-14b",
+        "valor_resultado": "9.04 tok/sec • 128 tokens • 0.74s to first token"
+    },
+    {
+        "acertijo": "No tengo boca y hablo... (El Eco)",
+        "nombre_imagen": "24.jpg",
+        "modelo_detectado": "modelo_5_ministral-3-14b",
+        "valor_resultado": "9.09 tok/sec • 169 tokens • 1.39s to first token"
+    },
+    {
+        "acertijo": "Me ves en el agua, pero nunca me mojo... (Tu reflejo)",
+        "nombre_imagen": "25.jpg",
+        "modelo_detectado": "modelo_6_gpt-oss-20-b",
+        "valor_resultado": "33.75 tok/sec • 77 tokens • 0.78s to first token"
+    },
+    {
+        "acertijo": "No tengo boca y hablo... (El Eco)",
+        "nombre_imagen": "27.jpg",
+        "modelo_detectado": "modelo_6_gpt-oss-20-b",
+        "valor_resultado": "34.02 tok/sec • 93 tokens • 0.90s to first token"
+    },
+    {
+        "acertijo": "¿Qué sube pero nunca baja? (La Edad)",
+        "nombre_imagen": "28.jpg",
+        "modelo_detectado": "modelo_6_gpt-oss-20-b",
+        "valor_resultado": "33.60 tok/sec • 74 tokens • 13.81s to first token"
+    }
+]

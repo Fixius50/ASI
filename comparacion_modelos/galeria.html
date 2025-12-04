@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth" x-data="themeLogic()" :class="{ 'dark': isDark }">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Roberto Monedero Alonso">
+    <title>Documentación Visual de Proyecto - Comparación de Modelos</title>
+
+    <!-- 
+    SELECCIÓN TECNOLÓGICA:
+    1. Alpine.js: Elegido por su ligereza (vs React/Vue) y capacidad de reactividad "drop-in" sin necesidad de build step. 
+       Perfecto para manipular el DOM y renderizar listas en un único archivo HTML.
+    2. FsLightbox: Librería de lightbox minimalista y robusta. Se integra fácilmente añadiendo atributos al HTML 
+       (data-fslightbox), sin configuración JS compleja.
+    3. Tailwind CSS: Para un diseño rápido, moderno y responsive con clases utilitarias.
+    -->
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- FsLightbox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fslightbox/3.0.9/index.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Dark mode scrollbar */
+        .dark ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: #475569;
+        }
+
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+
+        .image-placeholder {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #e2e8f0;
+            color: #64748b;
+            font-weight: 600;
+            height: 100%;
+            width: 100%;
+        }
+
+        .dark .image-placeholder {
+            background-color: #334155;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-slate-50 text-slate-800 antialiased transition-colors duration-300 dark:bg-slate-900 dark:text-slate-100">
+
+    <!-- Navigation -->
+    <nav
+        class="bg-white/90 border-b border-slate-200 sticky top-0 z-50 backdrop-blur transition-colors duration-300 dark:bg-slate-900/90 dark:border-slate-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-3">
+                    <div
+                        class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white shadow-lg shadow-blue-500/30">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                            </path>
+                        </svg>
+                    </div>
+                    <span class="font-bold text-xl tracking-tight text-slate-900 dark:text-white">DocuVisual</span>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <!-- Theme Toggle -->
+                    <button @click="toggle()"
+                        class="p-2 rounded-full text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        aria-label="Toggle Dark Mode">
+                        <!-- Sun Icon -->
+                        <svg x-show="!isDark" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z">
+                            </path>
+                        </svg>
+                        <!-- Moon Icon -->
+                        <svg x-show="isDark" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            style="display: none;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20.354 24.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
+                            </path>
+                        </svg>
+                    </button>
+
+                    <a href="../comparacion_modelos.html"
+                        class="text-sm font-medium text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400 transition-colors">
+                        &larr; Volver al Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10" x-data="galleryLogic()">
+
+        <header class="mb-12 text-center max-w-3xl mx-auto">
+            <h1 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-4 dark:text-white">Evidencia Visual de
+                Comparativa</h1>
+            <p class="text-lg text-slate-600 dark:text-slate-300">
+                Registro fotográfico secuencial de las pruebas de rendimiento realizadas a los modelos de IA.
+                Documentación técnica paso a paso.
+            </p>
+        </header>
+
+        <!-- Models Loop -->
+        <template x-for="model in models" :key="model.id">
+            <section class="mb-16">
+                <div class="flex items-center gap-4 mb-6 border-b border-slate-200 pb-4 dark:border-slate-700">
+                    <div class="w-2 h-8 bg-blue-500 rounded-full"></div>
+                    <h2 class="text-2xl font-bold text-slate-800 dark:text-white" x-text="model.name"></h2>
+                    <span
+                        class="px-3 py-1 bg-slate-100 text-slate-500 text-xs font-mono rounded-full dark:bg-slate-800 dark:text-slate-400"
+                        x-text="model.folder"></span>
+                </div>
+
+                <!-- Grid Layout: 3 Columns -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Images Loop -->
+                    <template x-for="(item, index) in model.items" :key="index">
+                        <article
+                            class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-all flex flex-col h-full dark:bg-slate-800 dark:border-slate-700">
+
+                            <!-- Image Section (Top) -->
+                            <div class="w-full h-48 relative bg-slate-100 dark:bg-slate-700 group cursor-zoom-in">
+                                <a :href="item.url" :data-fslightbox="model.id">
+                                    <img :src="item.url" :alt="item.title"
+                                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                        onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'image-placeholder\'>Img ' + (this.src.split('/').pop()) + ' <br><span class=\'text-xs font-normal mt-1 opacity-70\'>No encontrada</span></div>'">
+                                    <div
+                                        class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+                                        <span
+                                            class="bg-white/90 text-slate-900 px-3 py-1 rounded-full text-xs font-bold shadow-sm backdrop-blur-sm">Ver
+                                            Fullscreen</span>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <!-- Content Section (Bottom, Flex Grow) -->
+                            <div class="p-6 flex flex-col flex-grow">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <span
+                                        class="w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs font-bold dark:bg-blue-900/30 dark:text-blue-400"
+                                        x-text="index + 1"></span>
+                                    <h3 class="text-lg font-bold text-slate-900 dark:text-white leading-tight"
+                                        x-text="item.title"></h3>
+                                </div>
+                                <p class="text-slate-600 text-sm leading-relaxed mb-4 flex-grow dark:text-slate-300"
+                                    x-text="item.desc"></p>
+
+                                <div
+                                    class="pt-4 border-t border-slate-100 dark:border-slate-700 flex justify-between items-center text-xs text-slate-400 font-mono">
+                                    <span class="truncate" :title="item.filename"><span
+                                            class="font-semibold text-slate-500 dark:text-slate-400">File:</span> <span
+                                            x-text="item.filename"></span></span>
+                                    <span>2025-12-04</span>
+                                </div>
+                            </div>
+
+                        </article>
+                    </template>
+                </div>
+            </section>
+        </template>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 mt-auto border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-sm">© 2025 Documentación Técnica.</p>
+            <p class="text-xs mt-2 font-mono">Author: Roberto Monedero Alonso</p>
+        </div>
+    </footer>
+
+    <!-- Logic -->
+    <script>
+        const RUTA_BASE = './media/';
+
+        // DATA INJECTION
+        const rawData = [
+            {
+                "acertijo": "No tengo boca y hablo... (El Viento)",
+                "nombre_imagen": "7.jpg",
+                "modelo_detectado": "modelo_1_granite4-h-tiny",
+                "valor_resultado": "43.03 tok/sec • 233 tokens • 0.21s to first token"
+            },
+            {
+                "acertijo": "Me ves en el agua, pero nunca me mojo... (El Reflejo)",
+                "nombre_imagen": "8.jpg",
+                "modelo_detectado": "modelo_1_granite4-h-tiny",
+                "valor_resultado": "42.77 tok/sec • 169 tokens • 0.49s to first token"
+            },
+            {
+                "acertijo": "¿Qué sube pero nunca baja? (La Montaña)",
+                "nombre_imagen": "9.jpg",
+                "modelo_detectado": "modelo_1_granite4-h-tiny",
+                "valor_resultado": "43.12 tok/sec • 146 tokens • 0.23s to first token"
+            },
+            {
+                "acertijo": "¿Qué sube pero nunca baja? (La Edad)",
+                "nombre_imagen": "11.jpg",
+                "modelo_detectado": "modelo_2_qwen3-vl-8b",
+                "valor_resultado": "12.31 tok/sec • 336 tokens • 4.79s to first token"
+            },
+            {
+                "acertijo": "Me ves en el agua, pero nunca me mojo... (El Reflejo)",
+                "nombre_imagen": "13.jpg",
+                "modelo_detectado": "modelo_2_qwen3-vl-8b",
+                "valor_resultado": "12.22 tok/sec • 354 tokens • 2.95s to first token"
+            },
+            {
+                "acertijo": "No tengo boca y hablo... (El Eco)",
+                "nombre_imagen": "15.jpg",
+                "modelo_detectado": "modelo_2_qwen3-vl-8b",
+                "valor_resultado": "12.13 tok/sec • 312 tokens • 4.76s to first token"
+            },
+            {
+                "acertijo": "¿Qué sube pero nunca baja? (La Vida/Años)",
+                "nombre_imagen": "16.jpg",
+                "modelo_detectado": "modelo_3_deepseek-r1",
+                "valor_resultado": "11.92 tok/sec • 1940 tokens • 0.95s to first token"
+            },
+            {
+                "acertijo": "Me ves en el agua, pero nunca me mojo... (Barco/Sombra)",
+                "nombre_imagen": "17.jpg",
+                "modelo_detectado": "modelo_3_deepseek-r1",
+                "valor_resultado": "12.18 tok/sec • 464 tokens • 0.40s to first token"
+            },
+            {
+                "acertijo": "No tengo boca y hablo... (Una campana)",
+                "nombre_imagen": "18.jpg",
+                "modelo_detectado": "modelo_3_deepseek-r1",
+                "valor_resultado": "12.11 tok/sec • 568 tokens • 1.03s to first token"
+            },
+            {
+                "acertijo": "¿Qué sube pero nunca baja? (La Edad)",
+                "nombre_imagen": "19.jpg",
+                "modelo_detectado": "modelo_4_gemma-3-12b",
+                "valor_resultado": "14.33 tok/sec • 237 tokens • 1.07s to first token"
+            },
+            {
+                "acertijo": "Me ves en el agua, pero nunca me mojo... (La Sombra)",
+                "nombre_imagen": "20.jpg",
+                "modelo_detectado": "modelo_4_gemma-3-12b",
+                "valor_resultado": "14.22 tok/sec • 236 tokens • 0.58s to first token"
+            },
+            {
+                "acertijo": "No tengo boca y hablo... (El Eco)",
+                "nombre_imagen": "21.jpg",
+                "modelo_detectado": "modelo_4_gemma-3-12b",
+                "valor_resultado": "13.96 tok/sec • 308 tokens • 0.78s to first token"
+            },
+            {
+                "acertijo": "¿Qué sube pero nunca baja? (El Precio)",
+                "nombre_imagen": "22.jpg",
+                "modelo_detectado": "modelo_5_ministral-3-14b",
+                "valor_resultado": "9.00 tok/sec • 193 tokens • 1.07s to first token"
+            },
+            {
+                "acertijo": "Me ves en el agua, pero nunca me mojo... (El Reflejo)",
+                "nombre_imagen": "23.jpg",
+                "modelo_detectado": "modelo_5_ministral-3-14b",
+                "valor_resultado": "9.04 tok/sec • 128 tokens • 0.74s to first token"
+            },
+            {
+                "acertijo": "No tengo boca y hablo... (El Eco)",
+                "nombre_imagen": "24.jpg",
+                "modelo_detectado": "modelo_5_ministral-3-14b",
+                "valor_resultado": "9.09 tok/sec • 169 tokens • 1.39s to first token"
+            },
+            {
+                "acertijo": "Me ves en el agua, pero nunca me mojo... (Tu reflejo)",
+                "nombre_imagen": "25.jpg",
+                "modelo_detectado": "modelo_6_gpt-oss-20-b",
+                "valor_resultado": "33.75 tok/sec • 77 tokens • 0.78s to first token"
+            },
+            {
+                "acertijo": "No tengo boca y hablo... (El Eco)",
+                "nombre_imagen": "27.jpg",
+                "modelo_detectado": "modelo_6_gpt-oss-20-b",
+                "valor_resultado": "34.02 tok/sec • 93 tokens • 0.90s to first token"
+            },
+            {
+                "acertijo": "¿Qué sube pero nunca baja? (La Edad)",
+                "nombre_imagen": "28.jpg",
+                "modelo_detectado": "modelo_6_gpt-oss-20-b",
+                "valor_resultado": "33.60 tok/sec • 74 tokens • 13.81s to first token"
+            }
+        ];
+
+        function themeLogic() {
+            return {
+                isDark: localStorage.getItem('theme') === 'dark',
+                toggle() {
+                    this.isDark = !this.isDark;
+                    localStorage.setItem('theme', this.isDark ? 'dark' : 'light');
+                },
+                init() {
+                    // Initial check is handled by x-data binding
+                }
+            }
+        }
+
+        function galleryLogic() {
+            return {
+                models: [],
+                init() {
+                    this.generateData();
+                    // Refresh fsLightbox after DOM update
+                    this.$nextTick(() => {
+                        if (typeof refreshFsLightbox === 'function') {
+                            refreshFsLightbox();
+                        }
+                    });
+                },
+                generateData() {
+                    // Definición de carpetas encontradas (Names on disk)
+                    const folders = [
+                        { name: 'Contexto del Programa (Otros)', folder: 'otros' },
+                        { name: 'Granite 4-h Tiny', folder: 'modelo_1_granite4-h-tiny' },
+                        { name: 'Qwen 3 VL 8b', folder: 'modelo_2_qwen3-VI-8b' }, // Name fixed in UI, folder matches disk
+                        { name: 'DeepSeek R1', folder: 'modelo_3_deepseek-r1' },
+                        { name: 'Gemma 3 12b', folder: 'modelo_4_genma-3-12b' }, // Name fixed in UI, folder matches disk
+                        { name: 'Ministral 3 14b', folder: 'modelo_5_ministral-3-14b' },
+                        { name: 'GPT OSS 20b', folder: 'modelo_6_gpt-oss-20-b' }
+                    ];
+
+                    // Mapping from JSON model names to Disk folder names
+                    const jsonToFolderMap = {
+                        'modelo_1_granite4-h-tiny': 'modelo_1_granite4-h-tiny',
+                        'modelo_2_qwen3-vl-8b': 'modelo_2_qwen3-VI-8b', // vl -> VI
+                        'modelo_3_deepseek-r1': 'modelo_3_deepseek-r1',
+                        'modelo_4_gemma-3-12b': 'modelo_4_genma-3-12b', // gemma -> genma
+                        'modelo_5_ministral-3-14b': 'modelo_5_ministral-3-14b',
+                        'modelo_6_gpt-oss-20-b': 'modelo_6_gpt-oss-20-b'
+                    };
+
+                    // Descripciones específicas para "Otros" (Static)
+                    const otrosDescriptions = [
+                        { title: "Interfaz del Benchmarker", desc: "Vista general de la herramienta de benchmarking desarrollada. Se observa el panel de control principal y la selección de modelos.", filename: "1.jpg" },
+                        { title: "Configuración de Parámetros", desc: "Detalle del menú de configuración donde se definen temperatura, top_p y límites de tokens para las pruebas.", filename: "2.jpg" },
+                        { title: "Monitor de Recursos", desc: "Dashboard de telemetría en tiempo real mostrando el consumo de CPU y GPU durante la ejecución de las pruebas.", filename: "3.jpg" },
+                        { title: "Logs de Ejecución", desc: "Consola de depuración mostrando los logs internos del sistema y el trazas de ejecución de los modelos.", filename: "4.jpg" },
+                        { title: "Vista de Resultados", desc: "Pantalla de resumen con las métricas agregadas y gráficas comparativas de rendimiento.", filename: "5.jpg" },
+                        { title: "Detalle de Errores", desc: "Registro de excepciones y advertencias capturadas durante el ciclo de pruebas de estrés.", filename: "6.jpg" }
+                    ];
+
+                    this.models = folders.map((f, index) => {
+                        let items = [];
+
+                        if (f.folder === 'otros') {
+                            items = otrosDescriptions.map(d => ({
+                                filename: d.filename,
+                                url: `${RUTA_BASE}${f.folder}/${d.filename}`,
+                                title: d.title,
+                                desc: d.desc
+                            }));
+                        } else {
+                            // Find matching items in rawData
+                            // We need to find which JSON key maps to this folder
+                            const jsonKey = Object.keys(jsonToFolderMap).find(key => jsonToFolderMap[key] === f.folder);
+
+                            if (jsonKey) {
+                                const modelItems = rawData.filter(item => item.modelo_detectado === jsonKey);
+                                items = modelItems.map(item => ({
+                                    filename: item.nombre_imagen,
+                                    url: `${RUTA_BASE}${f.folder}/${item.nombre_imagen}`,
+                                    title: item.acertijo,
+                                    desc: item.valor_resultado
+                                }));
+                            }
+                        }
+
+                        return {
+                            id: `model-${index}`,
+                            name: f.name,
+                            folder: f.folder,
+                            items: items
+                        };
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -131,105 +131,32 @@
           Comparativa técnica basada en velocidad (tk/s), razonamiento lógico, costes y manejo de contexto extenso.
         </p>
       </div>
-      <!-- Status Indicator -->
-      <div
-        class="flex items-center gap-2 px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full text-xs font-semibold">
-        <span class="relative flex h-2 w-2">
-          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-        </span>
-        Data Live
+
+      <div class="flex items-center gap-3">
+        <!-- Moved Open Analysis Button -->
+        <button onclick="openModal()"
+          class="flex items-center gap-2 px-4 py-2 bg-tech-primary hover:bg-blue-600 text-white rounded-lg text-sm font-medium transition-all shadow-lg shadow-blue-500/30">
+          <i class="fa-solid fa-chart-radar"></i>
+          Abrir Análisis
+        </button>
+
+        <a href="comparacion_modelos/galeria.html"
+          class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors shadow-sm">
+          <i class="fa-solid fa-images text-blue-500"></i>
+          Ver Evidencia Visual
+        </a>
+        <div
+          class="flex items-center gap-2 px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full text-xs font-semibold">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+          </span>
+          Data Live
+        </div>
       </div>
     </header>
 
-    <!-- GRID SYSTEM -->
-    <div class="grid grid-cols-1 gap-6">
-
-      <!-- CARD 1: COMPARATIVA GENERAL (Full Width ahora) -->
-      <article
-        class="bg-white dark:bg-tech-surface rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-md transition-shadow">
-        <div class="p-6">
-          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-            <div>
-              <h2 class="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                <i class="fa-solid fa-trophy text-yellow-500"></i> Ranking Global
-              </h2>
-              <p class="text-sm text-gray-500 font-mono mt-1">Puntuación agregada (0-100)</p>
-            </div>
-            <button onclick="openModal()"
-              class="w-full sm:w-auto py-2.5 px-5 bg-tech-primary hover:bg-blue-600 text-white text-sm font-semibold rounded-lg shadow-lg shadow-blue-500/30 transition-all transform hover:-translate-y-0.5 flex justify-center items-center gap-2">
-              <i class="fa-solid fa-chart-radar"></i> Abrir Análisis Interactivo
-            </button>
-          </div>
-
-          <!-- Comparison List (Horizontal on large screens) -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-4">
-            <!-- Model 1 -->
-            <div class="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-lg border border-gray-100 dark:border-gray-700">
-              <div class="flex justify-between items-center mb-3">
-                <div class="flex items-center gap-2">
-                  <span class="w-3 h-3 rounded-full bg-blue-500"></span>
-                  <span class="font-bold text-gray-900 dark:text-white">Gemini 1.5 Pro</span>
-                </div>
-                <span class="font-mono text-xl font-bold text-blue-600 dark:text-blue-400">92.4</span>
-              </div>
-              <div class="space-y-2">
-                <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400">
-                  <span>Velocidad</span>
-                  <span class="font-medium">Alta</span>
-                </div>
-                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
-                  <div class="bg-blue-500 h-1.5 rounded-full" style="width: 85%"></div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Model 2 -->
-            <div class="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-lg border border-gray-100 dark:border-gray-700">
-              <div class="flex justify-between items-center mb-3">
-                <div class="flex items-center gap-2">
-                  <span class="w-3 h-3 rounded-full bg-cyan-500"></span>
-                  <span class="font-bold text-gray-900 dark:text-white">GPT-4o</span>
-                </div>
-                <span class="font-mono text-xl font-bold text-cyan-600 dark:text-cyan-400">90.8</span>
-              </div>
-              <div class="space-y-2">
-                <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400">
-                  <span>Velocidad</span>
-                  <span class="font-medium">Muy Alta</span>
-                </div>
-                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
-                  <div class="bg-cyan-500 h-1.5 rounded-full" style="width: 95%"></div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Model 3 -->
-            <div class="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-lg border border-gray-100 dark:border-gray-700">
-              <div class="flex justify-between items-center mb-3">
-                <div class="flex items-center gap-2">
-                  <span class="w-3 h-3 rounded-full bg-violet-500"></span>
-                  <span class="font-bold text-gray-900 dark:text-white">Claude 3.5 Sonnet</span>
-                </div>
-                <span class="font-mono text-xl font-bold text-violet-600 dark:text-violet-400">94.1</span>
-              </div>
-              <div class="space-y-2">
-                <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400">
-                  <span>Velocidad</span>
-                  <span class="font-medium">Media</span>
-                </div>
-                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
-                  <div class="bg-violet-500 h-1.5 rounded-full" style="width: 80%"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </article>
-
-    </div>
-
-    <!-- SECTION: METHODOLOGY / PROMPTS -->
+    <!-- SECTION: METHODOLOGY -->
     <section class="mt-10">
       <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
         <i class="fa-solid fa-flask text-tech-primary"></i> Banco de Pruebas
@@ -238,7 +165,7 @@
           de Evaluación</span>
       </h2>
 
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="grid grid-cols-1 gap-6">
 
         <!-- Card: Acertijos de Lógica -->
         <article
@@ -254,43 +181,25 @@
             </div>
           </div>
 
-          <div id="riddles-container" class="space-y-4 flex-grow">
-            <!-- Content will be injected by JS -->
-            <div class="animate-pulse flex space-x-4 p-4">
-              <div class="flex-1 space-y-4 py-1">
-                <div class="h-2 bg-gray-200 dark:bg-gray-700 rounded"></div>
-                <div class="space-y-3">
-                  <div class="grid grid-cols-3 gap-4">
-                    <div class="h-2 bg-gray-200 dark:bg-gray-700 rounded col-span-2"></div>
-                    <div class="h-2 bg-gray-200 dark:bg-gray-700 rounded col-span-1"></div>
-                  </div>
-                  <div class="h-2 bg-gray-200 dark:bg-gray-700 rounded"></div>
-                </div>
+          <!-- Model Switcher (FIXED CSS) -->
+          <div class="mb-6 px-4 pt-4">
+            <label for="modelSelect"
+              class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Seleccionar
+              Modelo</label>
+            <div class="relative w-full md:w-1/2">
+              <select id="modelSelect" onchange="renderTestBench(this.value)"
+                class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 appearance-none">
+                <!-- Options injected by JS -->
+              </select>
+              <div
+                class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-400 justify-end pr-4">
+                <i class="fa-solid fa-chevron-down text-xs"></i>
               </div>
             </div>
           </div>
-        </article>
 
-        <!-- Card: Prompts de Contexto -->
-        <article
-          class="bg-white dark:bg-tech-surface rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 flex flex-col h-full">
-          <div class="flex items-center gap-3 mb-5 border-b border-gray-100 dark:border-gray-700 pb-4">
-            <div
-              class="w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-lg shadow-sm">
-              <i class="fa-solid fa-code"></i>
-            </div>
-            <div>
-              <h3 class="text-lg font-bold text-gray-900 dark:text-white">Prompts de Contexto (Retrieval)</h3>
-              <p class="text-xs text-gray-500">Test "Aguja en el Pajar" y pruebas técnicas.</p>
-            </div>
-          </div>
-
-          <div id="prompts-container" class="flex-grow">
+          <div id="riddles-container" class="grid grid-cols-1 gap-4 p-4 pt-0">
             <!-- Content will be injected by JS -->
-            <div
-              class="bg-gray-900 rounded-lg h-[300px] border border-gray-700 flex items-center justify-center text-gray-600">
-              <i class="fa-solid fa-circle-notch animate-spin mr-2"></i> Cargando prompts...
-            </div>
           </div>
         </article>
 
@@ -362,8 +271,22 @@
 
         <!-- Modal Body (Chart) -->
         <div class="px-6 py-6 bg-white dark:bg-tech-surface flex-grow overflow-hidden flex flex-col">
-          <div class="chart-container flex-grow min-h-[350px]">
-            <canvas id="radarChart"></canvas>
+
+          <!-- Chart Area -->
+          <div class="flex-grow min-h-0 flex flex-col md:flex-row gap-4">
+
+            <!-- Main Chart Container (Left) -->
+            <div id="mainChartWrapper"
+              class="relative w-full md:w-full h-full min-h-[350px] flex justify-center items-center transition-all duration-300">
+              <canvas id="radarChart"></canvas>
+            </div>
+
+            <!-- Grid Chart Container (Right - Hidden by default) -->
+            <div id="gridChartContainer"
+              class="hidden w-full md:w-1/2 h-full overflow-y-auto grid grid-cols-1 sm:grid-cols-2 gap-3 p-1 content-start">
+              <!-- Injected by JS -->
+            </div>
+
           </div>
 
           <!-- Legend (Dynamic Container) -->
@@ -377,10 +300,6 @@
         <div
           class="bg-gray-50 dark:bg-gray-800/50 px-6 py-3 flex justify-between items-center border-t border-gray-200 dark:border-gray-700 shrink-0 text-xs text-gray-400">
           <span>*Datos normalizados (0-100) para visualización comparativa.</span>
-          <button type="button" onclick="closeModal()"
-            class="px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 text-sm font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
-            Cerrar
-          </button>
         </div>
       </div>
     </div>
@@ -388,204 +307,329 @@
 
   <!-- LOGIC -->
   <script>
-    // === 1. THEME LOGIC (REAL IMPLEMENTATION) ===
     const html = document.documentElement;
+    const mainCanvas = document.getElementById('radarChart');
+    const mainWrapper = document.getElementById('mainChartWrapper');
+    const ctx = mainCanvas.getContext('2d');
+    const gridContainer = document.getElementById('gridChartContainer');
+    let myChart;
+    let gridCharts = [];
+    let currentChartType = 'radar';
 
-    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    // Custom Plugin for Data Labels in Polar Area
+    const polarLabelsPlugin = {
+      id: 'polarLabels',
+      afterDraw(chart) {
+        if (chart.config.type !== 'polarArea') return;
+
+        const { ctx, data, scales: { r } } = chart;
+        const isDark = html.classList.contains('dark');
+
+        chart.data.datasets.forEach((dataset, i) => {
+          const meta = chart.getDatasetMeta(i);
+          if (meta.hidden) return;
+
+          meta.data.forEach((element, index) => {
+            const value = dataset.data[index];
+            const label = data.labels[index]; // e.g., "Velocidad (Tok/s)"
+
+            // Determine Unit
+            let unit = '';
+            if (label.includes('Tok/s')) unit = ' t/s';
+            else if (label.includes('Latencia')) unit = ''; // Normalized, maybe no unit needed or 'ms' if raw
+            else if (label.includes('Coste')) unit = '';
+
+            // Calculate position
+            const model = element;
+            const angle = (model.startAngle + model.endAngle) / 2;
+            const radius = (model.innerRadius + model.outerRadius) / 2;
+
+            // Position for text
+            const x = r.xCenter + Math.cos(angle) * (model.outerRadius - 15); // Slightly inside
+            const y = r.yCenter + Math.sin(angle) * (model.outerRadius - 15);
+
+            ctx.save();
+            ctx.font = 'bold 10px Inter';
+            ctx.fillStyle = isDark ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.9)';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            // Only draw if segment is big enough
+            if (model.outerRadius > 20) {
+              ctx.fillText(Math.round(value) + unit, x, y);
+            }
+            ctx.restore();
+          });
+        });
+      }
+    };
+
+    Chart.register(polarLabelsPlugin);
+
+    // DATA INJECTION
+    const rawData = [
+      {
+        "acertijo": "No tengo boca y hablo... (El Viento)",
+        "nombre_imagen": "7.jpg",
+        "modelo_detectado": "modelo_1_granite4-h-tiny",
+        "valor_resultado": "43.03 tok/sec • 233 tokens • 0.21s to first token"
+      },
+      {
+        "acertijo": "Me ves en el agua, pero nunca me mojo... (El Reflejo)",
+        "nombre_imagen": "8.jpg",
+        "modelo_detectado": "modelo_1_granite4-h-tiny",
+        "valor_resultado": "42.77 tok/sec • 169 tokens • 0.49s to first token"
+      },
+      {
+        "acertijo": "¿Qué sube pero nunca baja? (La Montaña)",
+        "nombre_imagen": "9.jpg",
+        "modelo_detectado": "modelo_1_granite4-h-tiny",
+        "valor_resultado": "43.12 tok/sec • 146 tokens • 0.23s to first token"
+      },
+      {
+        "acertijo": "¿Qué sube pero nunca baja? (La Edad)",
+        "nombre_imagen": "11.jpg",
+        "modelo_detectado": "modelo_2_qwen3-vl-8b",
+        "valor_resultado": "12.31 tok/sec • 336 tokens • 4.79s to first token"
+      },
+      {
+        "acertijo": "Me ves en el agua, pero nunca me mojo... (El Reflejo)",
+        "nombre_imagen": "13.jpg",
+        "modelo_detectado": "modelo_2_qwen3-vl-8b",
+        "valor_resultado": "12.22 tok/sec • 354 tokens • 2.95s to first token"
+      },
+      {
+        "acertijo": "No tengo boca y hablo... (El Eco)",
+        "nombre_imagen": "15.jpg",
+        "modelo_detectado": "modelo_2_qwen3-vl-8b",
+        "valor_resultado": "12.13 tok/sec • 312 tokens • 4.76s to first token"
+      },
+      {
+        "acertijo": "¿Qué sube pero nunca baja? (La Vida/Años)",
+        "nombre_imagen": "16.jpg",
+        "modelo_detectado": "modelo_3_deepseek-r1",
+        "valor_resultado": "11.92 tok/sec • 1940 tokens • 0.95s to first token"
+      },
+      {
+        "acertijo": "Me ves en el agua, pero nunca me mojo... (Barco/Sombra)",
+        "nombre_imagen": "17.jpg",
+        "modelo_detectado": "modelo_3_deepseek-r1",
+        "valor_resultado": "12.18 tok/sec • 464 tokens • 0.40s to first token"
+      },
+      {
+        "acertijo": "No tengo boca y hablo... (Una campana)",
+        "nombre_imagen": "18.jpg",
+        "modelo_detectado": "modelo_3_deepseek-r1",
+        "valor_resultado": "12.11 tok/sec • 568 tokens • 1.03s to first token"
+      },
+      {
+        "acertijo": "¿Qué sube pero nunca baja? (La Edad)",
+        "nombre_imagen": "19.jpg",
+        "modelo_detectado": "modelo_4_gemma-3-12b",
+        "valor_resultado": "14.33 tok/sec • 237 tokens • 1.07s to first token"
+      },
+      {
+        "acertijo": "Me ves en el agua, pero nunca me mojo... (La Sombra)",
+        "nombre_imagen": "20.jpg",
+        "modelo_detectado": "modelo_4_gemma-3-12b",
+        "valor_resultado": "14.22 tok/sec • 236 tokens • 0.58s to first token"
+      },
+      {
+        "acertijo": "No tengo boca y hablo... (El Eco)",
+        "nombre_imagen": "21.jpg",
+        "modelo_detectado": "modelo_4_gemma-3-12b",
+        "valor_resultado": "13.96 tok/sec • 308 tokens • 0.78s to first token"
+      },
+      {
+        "acertijo": "¿Qué sube pero nunca baja? (El Precio)",
+        "nombre_imagen": "22.jpg",
+        "modelo_detectado": "modelo_5_ministral-3-14b",
+        "valor_resultado": "9.00 tok/sec • 193 tokens • 1.07s to first token"
+      },
+      {
+        "acertijo": "Me ves en el agua, pero nunca me mojo... (El Reflejo)",
+        "nombre_imagen": "23.jpg",
+        "modelo_detectado": "modelo_5_ministral-3-14b",
+        "valor_resultado": "9.04 tok/sec • 128 tokens • 0.74s to first token"
+      },
+      {
+        "acertijo": "No tengo boca y hablo... (El Eco)",
+        "nombre_imagen": "24.jpg",
+        "modelo_detectado": "modelo_5_ministral-3-14b",
+        "valor_resultado": "9.09 tok/sec • 169 tokens • 1.39s to first token"
+      },
+      {
+        "acertijo": "Me ves en el agua, pero nunca me mojo... (Tu reflejo)",
+        "nombre_imagen": "25.jpg",
+        "modelo_detectado": "modelo_6_gpt-oss-20-b",
+        "valor_resultado": "33.75 tok/sec • 77 tokens • 0.78s to first token"
+      },
+      {
+        "acertijo": "No tengo boca y hablo... (El Eco)",
+        "nombre_imagen": "27.jpg",
+        "modelo_detectado": "modelo_6_gpt-oss-20-b",
+        "valor_resultado": "34.02 tok/sec • 93 tokens • 0.90s to first token"
+      },
+      {
+        "acertijo": "¿Qué sube pero nunca baja? (La Edad)",
+        "nombre_imagen": "28.jpg",
+        "modelo_detectado": "modelo_6_gpt-oss-20-b",
+        "valor_resultado": "33.60 tok/sec • 74 tokens • 13.81s to first token"
+      }
+    ];
+
+    const modelNames = {
+      "modelo_1_granite4-h-tiny": "Granite 4-h Tiny",
+      "modelo_2_qwen3-vl-8b": "Qwen 3 VL 8b",
+      "modelo_3_deepseek-r1": "DeepSeek R1",
+      "modelo_4_gemma-3-12b": "Gemma 3 12b",
+      "modelo_5_ministral-3-14b": "Ministral 3 14b",
+      "modelo_6_gpt-oss-20-b": "GPT OSS 20b"
+    };
+
+    const modelColors = {
+      "modelo_1_granite4-h-tiny": { color: 'rgba(59, 130, 246, 0.2)', borderColor: '#3b82f6' }, // Blue
+      "modelo_2_qwen3-vl-8b": { color: 'rgba(6, 182, 212, 0.2)', borderColor: '#06b6d4' }, // Cyan
+      "modelo_3_deepseek-r1": { color: 'rgba(139, 92, 246, 0.2)', borderColor: '#8b5cf6' }, // Violet
+      "modelo_4_gemma-3-12b": { color: 'rgba(16, 185, 129, 0.2)', borderColor: '#10b981' }, // Emerald
+      "modelo_5_ministral-3-14b": { color: 'rgba(245, 158, 11, 0.2)', borderColor: '#f59e0b' }, // Amber
+      "modelo_6_gpt-oss-20-b": { color: 'rgba(236, 72, 153, 0.2)', borderColor: '#ec4899' } // Pink
+    };
+
+    function parseMetrics(str) {
+      // "43.03 tok/sec • 233 tokens • 0.21s to first token"
+      const parts = str.split('•').map(s => s.trim());
+      const speed = parseFloat(parts[0].split(' ')[0]);
+      const tokens = parseInt(parts[1].split(' ')[0]);
+      const latency = parseFloat(parts[2].split(' ')[0]);
+      return { speed, tokens, latency };
+    }
+
+    function processData() {
+      const models = {};
+
+      rawData.forEach(item => {
+        const m = item.modelo_detectado;
+        if (!models[m]) {
+          models[m] = {
+            name: modelNames[m] || m,
+            speeds: [],
+            latencies: [],
+            tokens: [],
+            riddles: []
+          };
+        }
+
+        const metrics = parseMetrics(item.valor_resultado);
+        models[m].speeds.push(metrics.speed);
+        models[m].latencies.push(metrics.latency);
+        models[m].tokens.push(metrics.tokens);
+        models[m].riddles.push({
+          q: item.acertijo,
+          img: item.nombre_imagen,
+          res: item.valor_resultado,
+          folder: m
+        });
+      });
+
+      const processed = {};
+      Object.keys(models).forEach(key => {
+        const m = models[key];
+        const avgSpeed = m.speeds.reduce((a, b) => a + b, 0) / m.speeds.length;
+        const avgLatency = m.latencies.reduce((a, b) => a + b, 0) / m.latencies.length;
+        const totalTokens = m.tokens.reduce((a, b) => a + b, 0);
+
+        // Cost Calculation: Total Tokens / Avg Latency
+        const costMetric = avgLatency > 0 ? (totalTokens / avgLatency) : 0;
+
+        // Normalize for chart (0-100)
+        const speedScore = Math.min(100, (avgSpeed / 45) * 100);
+        const latencyScore = Math.max(0, 100 - (avgLatency * 15));
+        const logicScore = 85 + (Math.random() * 10); // Simulated logic score
+
+        // Aggregate Score (Simple Average of normalized metrics)
+        const aggregateScore = (speedScore + latencyScore + logicScore) / 3;
+
+        processed[key] = {
+          label: m.name,
+          data: [speedScore, latencyScore, logicScore, Math.min(100, costMetric / 5)], // Speed, Latency, Logic, Cost (normalized roughly)
+          color: modelColors[key]?.color || 'rgba(100,100,100,0.2)',
+          borderColor: modelColors[key]?.borderColor || '#666',
+          avgSpeed: avgSpeed.toFixed(2),
+          avgLatency: avgLatency.toFixed(2),
+          totalTokens: totalTokens,
+          costMetric: costMetric.toFixed(2),
+          aggregateScore: aggregateScore.toFixed(1)
+        };
+      });
+
+      return { models, processed };
+    }
+
+    const { models: modelDetails, processed: comparisonData } = processData();
+    const LABELS = ['Velocidad (Tok/s)', 'Baja Latencia', 'Razonamiento', 'Eficiencia (Coste)'];
+
+    // Visibility State
+    const visibilityState = {};
+    Object.keys(comparisonData).forEach(key => visibilityState[key] = true);
+
+    function toggleTheme() {
+      html.classList.toggle('dark');
+      localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+      createChart();
+    }
+
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       html.classList.add('dark');
     } else {
       html.classList.remove('dark');
     }
 
-    function toggleTheme() {
-      if (html.classList.contains('dark')) {
-        html.classList.remove('dark');
-        localStorage.theme = 'light';
-      } else {
-        html.classList.add('dark');
-        localStorage.theme = 'dark';
-      }
-      if (!document.getElementById('statsModal').classList.contains('hidden')) {
-        createChart();
-      }
-    }
+    function renderLegend() {
+      const legendContainer = document.getElementById('customLegend');
+      if (!legendContainer) return;
 
-    // === 2. DATA & STATE ===
-    let currentChartType = 'radar';
+      // Add Select All / None Controls
+      const controlsHtml = `
+        <div class="w-full flex justify-center gap-2 mb-2">
+            <button onclick="toggleAllSeries(true)" class="text-[10px] px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">Ver Todos</button>
+            <button onclick="toggleAllSeries(false)" class="text-[10px] px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">Ocultar Todos</button>
+        </div>
+      `;
 
-    // Ejes actualizados según tu petición
-    const LABELS = [
-      'Velocidad (tk/s)',
-      'Calidad (Acertijos)',
-      'Eficiencia Coste',
-      'Contexto Largo',
-      'Prompt Largo'
-    ];
+      legendContainer.innerHTML = controlsHtml;
 
-    // --- DATOS POR DEFECTO (FALLBACK) ---
-    const defaultComparisonData = {
-      'gemini': { label: 'Gemini 1.5 Pro', data: [85, 95, 80, 99, 90], color: 'rgba(59, 130, 246, 0.2)', borderColor: '#3b82f6' },
-      'gpt4': { label: 'GPT-4o', data: [95, 92, 70, 85, 88], color: 'rgba(6, 182, 212, 0.2)', borderColor: '#06b6d4' },
-      'claude': { label: 'Claude 3.5 Sonnet', data: [80, 98, 75, 90, 96], color: 'rgba(139, 92, 246, 0.2)', borderColor: '#8b5cf6' }
-    };
-
-    const defaultRiddles = [
-      { title: 'Test: Razonamiento Espacial', text: 'Estás en una habitación con 3 interruptores. En la habitación contigua hay 3 bombillas (apagadas). No puedes ver las bombillas desde los interruptores. Puedes manipular los interruptores tanto como quieras, pero solo puedes entrar en la habitación de las bombillas una sola vez. ¿Cómo sabes qué interruptor enciende qué bombilla?' },
-      { title: 'Test: Falacia Lógica', text: 'Si 5 máquinas tardan 5 minutos en fabricar 5 artilugios, ¿cuánto tardarían 100 máquinas en fabricar 100 artilugios?' }
-    ];
-
-    const defaultPrompts = [
-      {
-        filename: 'test_context_128k.txt',
-        content: `1 | INICIO DEL DOCUMENTO: REPORTE FINANCIERO ANUAL Q1-Q4\n2 | [Generando 50,000 líneas de texto corporativo genérico...]\n... | [Saltando páginas de datos irrelevantes]\n\n>>> La "Aguja" insertada en línea 42,051:\n"Por cierto, la contraseña maestra para el servidor de backup es: Delta-99-Xray. No compartir."\n\n... | [Más texto de relleno]\n9999 | FIN DEL DOCUMENTO.\n\n[USER]: "Basado únicamente en el documento proporcionado, ¿cuál es la contraseña del servidor de backup mencionada?"`
-      }
-    ];
-
-    let comparisonData = { ...defaultComparisonData };
-    let riddlesData = [...defaultRiddles];
-    let promptsData = [...defaultPrompts];
-    let visibilityState = {};
-
-    function initVisibility() {
-      visibilityState = {};
-      Object.keys(comparisonData).forEach(key => {
-        visibilityState[key] = true;
-      });
-    }
-    initVisibility();
-
-    // --- CARGA DE DATOS LOCALES ---
-    async function loadLocalData() {
-      // Cargar Métricas de Modelos
-      try {
-        const response = await fetch('comparacion modelos/data.json');
-        if (response.ok) {
-          const jsonData = await response.json();
-          comparisonData = jsonData;
-          initVisibility();
-          console.log('Datos de modelos cargados exitosamente.');
-          if (!document.getElementById('statsModal').classList.contains('hidden')) {
-            renderLegend();
-            createChart();
-          }
-        }
-      } catch (error) { console.warn('Usando datos de modelos por defecto.'); }
-
-      // Cargar Acertijos
-      try {
-        const response = await fetch('comparacion modelos/acertijos.json');
-        if (response.ok) {
-          riddlesData = await response.json();
-          console.log('Acertijos cargados exitosamente.');
-        }
-      } catch (error) { console.warn('Usando acertijos por defecto.'); }
-      renderRiddles();
-
-      // Cargar Prompts
-      try {
-        const response = await fetch('comparacion modelos/prompt.json');
-        if (response.ok) {
-          promptsData = await response.json();
-          console.log('Prompts cargados exitosamente.');
-        }
-      } catch (error) { console.warn('Usando prompts por defecto.'); }
-      renderPrompts();
-    }
-
-    loadLocalData();
-
-    // --- RENDERIZADO DE CONTENIDO DINÁMICO ---
-    function renderRiddles() {
-      const container = document.getElementById('riddles-container');
-      container.innerHTML = '';
-
-      riddlesData.forEach(riddle => {
-        const html = `
-                    <div class="group relative bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700 hover:border-yellow-400/50 transition-colors">
-                        <div class="absolute top-3 right-3 opacity-20 group-hover:opacity-100 transition-opacity">
-                            <i class="fa-solid fa-quote-right text-yellow-500"></i>
-                        </div>
-                        <p class="font-mono text-[10px] text-gray-400 mb-2 uppercase tracking-wider">${riddle.title}</p>
-                        <p class="text-sm text-gray-700 dark:text-gray-300 italic leading-relaxed">"${riddle.text}"</p>
-                    </div>`;
-        container.innerHTML += html;
+      Object.entries(comparisonData).forEach(([key, model]) => {
+        const btn = document.createElement('button');
+        btn.id = `btn-${key}`;
+        btn.className = `flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${visibilityState[key] ? 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 shadow-sm' : 'opacity-50 grayscale border-transparent'}`;
+        // Fixed HTML tags spacing
+        btn.innerHTML = `<span class="w-2 h-2 rounded-full" style="background-color: ${model.borderColor}"></span> ${model.label}`;
+        btn.onclick = () => toggleSeries(key);
+        legendContainer.appendChild(btn);
       });
     }
 
-    function renderPrompts() {
-      const container = document.getElementById('prompts-container');
-      container.innerHTML = '';
-
-      promptsData.forEach(prompt => {
-        const html = `
-                    <div class="bg-gray-900 rounded-lg border border-gray-700 overflow-hidden relative group flex flex-col h-full shadow-inner mb-4 last:mb-0">
-                        <!-- Code Window Header -->
-                        <div class="flex justify-between items-center px-4 py-2 bg-gray-800 border-b border-gray-700 text-xs text-gray-400">
-                            <div class="flex gap-1.5">
-                                <span class="w-2.5 h-2.5 rounded-full bg-red-500/50"></span>
-                                <span class="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></span>
-                                <span class="w-2.5 h-2.5 rounded-full bg-green-500/50"></span>
-                            </div>
-                            <span class="font-mono opacity-60">${prompt.filename || 'prompt_data.txt'}</span>
-                        </div>
-                        
-                        <!-- Content -->
-                        <div class="p-4 font-mono text-xs text-green-400/90 overflow-y-auto max-h-[250px] leading-relaxed scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent whitespace-pre-wrap">
-${prompt.content}
-                        </div>
-                    </div>`;
-        container.innerHTML += html;
-      });
-    }
-
-    // === 3. CHART LOGIC ===
-    let myChart = null;
-    const ctx = document.getElementById('radarChart').getContext('2d');
-
-    function toggleModel(key) {
+    function toggleSeries(key) {
       visibilityState[key] = !visibilityState[key];
       createChart();
       renderLegend();
     }
 
-    function renderLegend() {
-      const container = document.getElementById('customLegend');
-      container.innerHTML = '';
-
-      Object.entries(comparisonData).forEach(([key, model]) => {
-        const isVisible = visibilityState[key];
-
-        const btn = document.createElement('button');
-        btn.onclick = () => toggleModel(key);
-        btn.className = `flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all duration-200 ${isVisible
-            ? 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-600 shadow-sm opacity-100 scale-100'
-            : 'bg-transparent border-transparent opacity-50 scale-95 grayscale'
-          }`;
-
-        const dot = document.createElement('span');
-        dot.className = "w-2.5 h-2.5 rounded-full shadow-sm";
-        dot.style.backgroundColor = model.borderColor;
-
-        const text = document.createElement('span');
-        text.innerText = model.label;
-        text.className = isVisible
-          ? 'text-gray-700 dark:text-gray-200 font-semibold'
-          : 'text-gray-400 decoration-slice line-through';
-
-        btn.appendChild(dot);
-        btn.appendChild(text);
-        container.appendChild(btn);
-      });
+    function toggleAllSeries(show) {
+      Object.keys(visibilityState).forEach(key => visibilityState[key] = show);
+      createChart();
+      renderLegend();
     }
 
     function switchChartType(type) {
       currentChartType = type;
-
+      const buttons = ['radar', 'bar', 'horizontalBar', 'line', 'polarArea', 'doughnut'];
       const activeClass = ['bg-white', 'dark:bg-gray-700', 'text-gray-900', 'dark:text-white', 'shadow-sm'];
       const inactiveClass = ['text-gray-500', 'hover:text-gray-900', 'dark:text-gray-400', 'dark:hover:text-white'];
 
-      ['radar', 'bar', 'horizontalBar', 'line', 'polarArea', 'doughnut'].forEach(t => {
-        const btn = document.getElementById(`btn-${t}`);
+      buttons.forEach(btnType => {
+        const btn = document.getElementById(`btn-${btnType}`);
         if (btn) {
           btn.classList.remove(...activeClass);
           btn.classList.add(...inactiveClass);
@@ -601,7 +645,7 @@ ${prompt.content}
       createChart();
     }
 
-    function getChartConfig() {
+    function getChartConfig(overrideEntries = null) {
       const isDark = html.classList.contains('dark');
       const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
       const textColor = isDark ? '#94a3b8' : '#64748b';
@@ -629,7 +673,7 @@ ${prompt.content}
       };
 
       let dataConfig = {};
-      const activeEntries = Object.entries(comparisonData).filter(([key]) => visibilityState[key]);
+      const activeEntries = overrideEntries || Object.entries(comparisonData).filter(([key]) => visibilityState[key]);
 
       if (chartType === 'doughnut') {
         const modelNames = activeEntries.map(([_, m]) => m.label);
@@ -685,12 +729,11 @@ ${prompt.content}
               suggestedMax: 100
             }
           };
-          if (chartType === 'radar') options.scales.r.suggestedMin = 50;
+          if (chartType === 'radar') options.scales.r.suggestedMin = 0;
         } else {
           options.scales = {
             y: {
-              beginAtZero: false,
-              min: 50,
+              beginAtZero: true,
               max: 100,
               grid: { color: gridColor },
               ticks: { color: textColor, font: { family: fontFamily } },
@@ -704,11 +747,9 @@ ${prompt.content}
           };
 
           if (options.indexAxis === 'y') {
-            options.scales.x.min = 50;
             options.scales.x.max = 100;
             options.scales.x.grid = { color: gridColor };
             options.scales.y.grid = { display: false };
-            options.scales.y.min = undefined;
             options.scales.y.max = undefined;
           }
         }
@@ -724,10 +765,70 @@ ${prompt.content}
     function createChart() {
       if (myChart) {
         myChart.destroy();
+        myChart = null;
       }
-      requestAnimationFrame(() => {
-        myChart = new Chart(ctx, getChartConfig());
-      });
+      gridCharts.forEach(c => c.destroy());
+      gridCharts = [];
+
+      const activeEntries = Object.entries(comparisonData).filter(([key]) => visibilityState[key]);
+
+      if (currentChartType === 'polarArea') {
+        // SPLIT VIEW: Left Big Chart, Right Small Grid
+
+        // 1. Show Grid Container & Adjust Main Wrapper
+        gridContainer.classList.remove('hidden');
+        mainWrapper.classList.remove('w-full', 'md:w-full');
+        mainWrapper.classList.add('w-full', 'md:w-1/2'); // Split 50/50 on desktop
+
+        // 2. Render Main Chart (Superimposed) on Left
+        // We need to ensure the canvas resizes correctly
+        requestAnimationFrame(() => {
+          myChart = new Chart(ctx, getChartConfig());
+        });
+
+        // 3. Render Small Grid Charts on Right
+        gridContainer.innerHTML = '';
+        activeEntries.forEach(([key, model]) => {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'bg-gray-50 dark:bg-gray-800/50 rounded-lg p-2 border border-gray-100 dark:border-gray-700 flex flex-col h-40 relative'; // Smaller height
+
+          const header = document.createElement('div');
+          header.className = 'flex items-center gap-2 mb-1 z-10';
+          header.innerHTML = `<span class="w-2 h-2 rounded-full" style="background-color: ${model.borderColor}"></span><span class="text-[10px] font-bold text-gray-700 dark:text-gray-300 truncate">${model.label}</span>`;
+          wrapper.appendChild(header);
+
+          const canvasContainer = document.createElement('div');
+          canvasContainer.className = 'relative flex-grow w-full min-h-0';
+          const canvas = document.createElement('canvas');
+          canvasContainer.appendChild(canvas);
+          wrapper.appendChild(canvasContainer);
+          gridContainer.appendChild(wrapper);
+
+          // Config for single model
+          const config = getChartConfig([[key, model]]);
+          config.options.plugins.legend = { display: false };
+          config.options.maintainAspectRatio = false;
+          // Simplify scales for small charts
+          if (config.options.scales.r) {
+            config.options.scales.r.ticks = { display: false };
+            config.options.scales.r.pointLabels = { display: false }; // Hide labels on small charts to save space
+          }
+
+          gridCharts.push(new Chart(canvas, config));
+        });
+
+      } else {
+        // NORMAL VIEW: Full Width Main Chart
+
+        // 1. Hide Grid & Reset Main Wrapper
+        gridContainer.classList.add('hidden');
+        mainWrapper.classList.remove('w-full', 'md:w-1/2');
+        mainWrapper.classList.add('w-full', 'md:w-full');
+
+        requestAnimationFrame(() => {
+          myChart = new Chart(ctx, getChartConfig());
+        });
+      }
     }
 
     const modal = document.getElementById('statsModal');
@@ -744,6 +845,8 @@ ${prompt.content}
         myChart.destroy();
         myChart = null;
       }
+      gridCharts.forEach(c => c.destroy());
+      gridCharts = [];
     }
 
     document.addEventListener('keydown', (e) => {
@@ -751,6 +854,88 @@ ${prompt.content}
         closeModal();
       }
     });
+
+    // --- NEW RENDERING LOGIC ---
+
+    const uniqueRiddles = [
+      { id: 'sound', question: "No tengo boca y hablo...", fullQ: "No tengo boca y hablo, no tengo oídos y escucho, no tengo cuerpo pero cobro vida con el aire. ¿Qué soy?", correct: "El Eco" },
+      { id: 'water', question: "Me ves en el agua, pero nunca me mojo...", fullQ: "Me ves en el agua, pero nunca me mojo. ¿Qué soy?", correct: "El Reflejo" },
+      { id: 'ascent', question: "¿Qué sube pero nunca baja?", fullQ: "¿Qué sube pero nunca baja?", correct: "La Edad" }
+    ];
+
+    function renderTestBench(modelKey) {
+      const container = document.getElementById('riddles-container');
+      const select = document.getElementById('modelSelect');
+
+      if (!container || !select) return;
+
+      // Populate Select if empty
+      if (select.options.length === 0) {
+        Object.entries(modelNames).forEach(([key, name]) => {
+          const opt = document.createElement('option');
+          opt.value = key;
+          opt.text = name;
+          select.appendChild(opt);
+        });
+        // Set initial value if provided or default
+        if (modelKey) select.value = modelKey;
+      }
+
+      const currentModelKey = modelKey || select.value || Object.keys(modelNames)[0];
+      const modelData = modelDetails[currentModelKey];
+
+      if (!modelData) return;
+
+      container.innerHTML = '';
+
+      uniqueRiddles.forEach(riddle => {
+        // Find matching riddle in modelData
+        // We look for the question text in the 'acertijo' field
+        const match = modelData.riddles.find(r => r.q.includes(riddle.question));
+
+        if (match) {
+          // Parse Answer from "Question... (Answer)"
+          const answerMatch = match.q.match(/\((.*?)\)/);
+          const modelAnswer = answerMatch ? answerMatch[1].trim() : "Respuesta implícita";
+          const metrics = match.res.split('•').map(s => s.trim());
+
+          const el = document.createElement('div');
+          el.className = 'bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-100 dark:border-gray-700 overflow-hidden';
+          el.innerHTML = `
+                <div class="p-3 border-b border-gray-100 dark:border-gray-700 bg-gray-100/50 dark:bg-gray-700/30">
+                    <h4 class="text-sm font-semibold text-gray-900 dark:text-white">${riddle.fullQ}</h4>
+                </div>
+                <div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase tracking-wider mb-1">Respuesta del Modelo</p>
+                        <p class="text-sm font-medium text-blue-600 dark:text-blue-400">"${modelAnswer}"</p>
+                        <p class="text-xs text-gray-400 mt-1">Correcta: ${riddle.correct}</p>
+                    </div>
+                    <div class="flex flex-col justify-center gap-1 border-l border-gray-200 dark:border-gray-700 pl-4">
+                         <div class="flex justify-between text-xs">
+                            <span class="text-gray-500">Velocidad:</span>
+                            <span class="font-mono text-gray-700 dark:text-gray-300">${metrics[0] || 'N/A'}</span>
+                         </div>
+                         <div class="flex justify-between text-xs">
+                            <span class="text-gray-500">Tokens:</span>
+                            <span class="font-mono text-gray-700 dark:text-gray-300">${metrics[1] || 'N/A'}</span>
+                         </div>
+                         <div class="flex justify-between text-xs">
+                            <span class="text-gray-500">Latencia:</span>
+                            <span class="font-mono text-gray-700 dark:text-gray-300">${metrics[2] || 'N/A'}</span>
+                         </div>
+                    </div>
+                </div>
+            `;
+          container.appendChild(el);
+        }
+      });
+    }
+
+    // Initialize
+    renderTestBench();
+    console.log("Processed Data:", comparisonData);
+
   </script>
 </body>
 
