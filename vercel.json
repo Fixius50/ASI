@@ -41,6 +41,11 @@
       "source": "/",
       "destination": "/jetson/",
       "permanent": false
+    },
+    {
+      "source": "/favicon.ico",
+      "destination": "https://via.placeholder.com/1",
+      "permanent": true
     }
   ]
 }
