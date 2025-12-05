@@ -1,27 +1,45 @@
 {
+  "trailingSlash": true,
+  "cleanUrls": true,
+  "headers": [
+    {
+      "source": "/(.*)\\.(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, immutable"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        }
+      ]
+    }
+  ],
   "rewrites": [
     {
-      "source": "/jetson","destination": "/jetson_nano/index.html"
+      "source": "/jetson/", "destination": "/jetson_nano/index.html"
     },
     {
-      "source": "/jetson/:match*","destination": "/jetson_nano/:match*"
+      "source": "/jetson/:match*", "destination": "/jetson_nano/:match*"
     },
     {
-      "source": "/mac","destination": "/mac_raspi/index.html"
+      "source": "/mac/", "destination": "/mac_raspi/index.html"
     },
     {
-      "source": "/mac/:match*","destination": "/mac_raspi/:match*"
+      "source": "/mac/:match*", "destination": "/mac_raspi/:match*"
     },
     {
-      "source": "/comparacion","destination": "/comparacion_modelos/index.html"
+      "source": "/comparacion/", "destination": "/comparacion_modelos/index.html"
     },
     {
-      "source": "/comparacion/:match*","destination": "/comparacion_modelos/:match*"
+      "source": "/comparacion/:match*", "destination": "/comparacion_modelos/:match*"
     }
   ],
   "redirects": [
     {
-      "source": "/","destination": "/jetson",
+      "source": "/",
+      "destination": "/jetson/",
       "permanent": false
     }
   ]
