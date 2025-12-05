@@ -1,9 +1,16 @@
 {
-  "redirects": [
+  "rewrites": [
     { 
-      "source": "/", 
-      "destination": "/jetson_nano/", 
-      "permanent": false 
+      "source": "/jetson", 
+      "destination": "/jetson_nano/index.html" 
+    },
+    { 
+      "source": "/mac", 
+      "destination": "/mac_raspi/index.html" 
+    },
+    {
+      "source": "/comparacion",
+      "destination": "/comparacion_modelos/index.html"
     }
   ]
 }
