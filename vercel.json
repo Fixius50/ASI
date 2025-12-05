@@ -18,19 +18,19 @@
   ],
   "rewrites": [
     {
-      "source": "/jetson/", "destination": "/jetson_nano/index.html"
+      "source": "/jetson/", "destination": "/jetson_nano/" 
     },
     {
       "source": "/jetson/:match*", "destination": "/jetson_nano/:match*"
     },
     {
-      "source": "/mac/", "destination": "/mac_raspi/index.html"
+      "source": "/mac/", "destination": "/mac_raspi/" 
     },
     {
       "source": "/mac/:match*", "destination": "/mac_raspi/:match*"
     },
     {
-      "source": "/comparacion/", "destination": "/comparacion_modelos/index.html"
+      "source": "/comparacion/", "destination": "/comparacion_modelos/" 
     },
     {
       "source": "/comparacion/:match*", "destination": "/comparacion_modelos/:match*"
