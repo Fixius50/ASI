@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    { 
+      "source": "/", 
+      "destination": "/jetson_nano/", 
+      "permanent": false 
+    }
+  ]
+}
