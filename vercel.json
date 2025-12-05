@@ -39,7 +39,7 @@
   "redirects": [
     {
       "source": "/",
-      "destination": "/jetson/",
+      "destination": "/comparacion/",
       "permanent": false
     },
     {
