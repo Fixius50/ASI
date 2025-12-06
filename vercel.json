@@ -18,7 +18,7 @@
   ],
   "rewrites": [
     {
-      "source": "/jetson/index.html",
+      "source": "/jetson/",
       "destination": "/jetson_nano/"
     },
     {
