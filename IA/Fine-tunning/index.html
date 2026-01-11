@@ -10,15 +10,18 @@
     href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
     rel="stylesheet">
   <script type="importmap">
-        {
-            "imports": {
-                "react": "https://esm.sh/react@18.2.0",
-                "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
-                "lucide-react": "https://esm.sh/lucide-react@0.263.1"
-            }
-        }
-    </script>
-  <script type="module" src="https://esm.sh/run"></script>
+    {
+      "imports": {
+        "react": "https://cdn.jsdelivr.net/npm/react@18.2.0/+esm",
+        "react-dom/client": "https://cdn.jsdelivr.net/npm/react-dom@18.2.0/client/+esm",
+        "lucide-react": "https://cdn.jsdelivr.net/npm/lucide-react@0.263.1/+esm"
+      }
+    }
+  </script>
+  <script type="module">
+    import React from 'https://cdn.jsdelivr.net/npm/react@18.2.0/+esm';
+    import ReactDOM from 'https://cdn.jsdelivr.net/npm/react-dom@18.2.0/client/+esm';
+  </script>
 </head>
 
 <body class="bg-[#020617] text-slate-300">
