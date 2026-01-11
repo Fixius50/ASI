@@ -443,10 +443,25 @@ Assistant: Respuestas basadas ÚNICAMENTE en los datos inventados.`
 
     // HELPER FUNCTIONS
     function renderImage(src, caption) {
+      // Fix for Vercel routing: ensure we use the full path including the project folder or relative base
+      let basePath = "";
+      if (window.location.protocol !== 'file:') {
+        // Removes index.html and trailing slash to get the "folder" path
+        const path = window.location.pathname.replace(/\/index\.html$/, '').replace(/\/$/, '');
+        // If we are not at root, use the path as base
+        if (path !== "") {
+          basePath = path + "/";
+        }
+      }
+
+      // If local file, use relative. If web, use absolute path derived above.
+      // If basePath is encoded (e.g. %20), it should be fine for src.
+      const fullSrc = (basePath ? basePath : "") + "Imágenes/" + src;
+
       return `
                 <div class="my-[1.5rem] bg-slate-950/50 rounded-[0.75rem] border border-slate-800 p-[0.5rem] group">
                     <div class="relative aspect-video rounded-[0.5rem] overflow-hidden bg-slate-900 flex items-center justify-center">
-                        <img src="Imágenes/${src}" alt="${caption}" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                        <img src="${fullSrc}" alt="${caption}" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
                         <div class="hidden absolute inset-0 flex-col items-center justify-center text-slate-500 bg-slate-900/80" style="display: none;">
                             <span class="text-[0.8rem] font-mono">Image Not Found</span>
                         </div>
