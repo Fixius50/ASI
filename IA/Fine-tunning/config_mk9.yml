@@ -1,0 +1,17 @@
+
+base_model: Qwen/Qwen2.5-1.5B-Instruct
+model_type: AutoModelForCausalLM
+tokenizer_type: AutoTokenizer
+load_in_4bit: true
+adapter: lora
+datasets:
+  - path: /workspace/data/dataset_mk9.jsonl
+    type: alpaca
+sequence_len: 1024
+lora_r: 16
+lora_alpha: 32
+lora_target_modules: [q_proj, v_proj]
+num_epochs: 3
+optimizer: adamw_torch
+flash_attention: false
+output_dir: /workspace/outputs/modelo-mk9
