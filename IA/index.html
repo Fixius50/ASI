@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roberto Monedero Alonso | Arquitectura de Soluciones Digitales</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             --accent-primary: #00f2ff;
@@ -23,7 +26,7 @@
 
         /* Fondo dinámico sutil */
         .ambient-grid {
-            background-image: 
+            background-image:
                 linear-gradient(to right, rgba(0, 242, 255, 0.02) 0.0625rem, transparent 0.0625rem),
                 linear-gradient(to bottom, rgba(0, 242, 255, 0.02) 0.0625rem, transparent 0.0625rem);
             background-size: 4rem 4rem;
@@ -71,18 +74,24 @@
         }
     </style>
 </head>
+
 <body>
 
     <div class="ambient-grid"></div>
 
     <div class="relative z-10 min-h-screen flex flex-col">
-        
-        <header class="h-[12vh] border-b border-white/5 bg-black/40 backdrop-blur-2xl flex items-center justify-between px-[6%]">
+
+        <header
+            class="h-[12vh] border-b border-white/5 bg-black/40 backdrop-blur-2xl flex items-center justify-between px-[6%]">
             <div class="flex items-center gap-[1.5rem]">
-                <div class="w-[3rem] h-[3rem] rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center font-bold text-white">RM</div>
+                <div
+                    class="w-[3rem] h-[3rem] rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center font-bold text-white">
+                    RM</div>
                 <div>
-                    <h1 class="text-lg font-bold uppercase tracking-tight">Neuro<span class="text-cyan-400">Link</span></h1>
-                    <p class="text-[0.6rem] text-gray-500 uppercase tracking-widest font-semibold">Roberto Monedero Alonso</p>
+                    <h1 class="text-lg font-bold uppercase tracking-tight">Neuro<span class="text-cyan-400">Link</span>
+                    </h1>
+                    <p class="text-[0.6rem] text-gray-500 uppercase tracking-widest font-semibold">Roberto Monedero
+                        Alonso</p>
                 </div>
             </div>
 
@@ -101,7 +110,8 @@
             <!-- Contenido dinámico -->
         </main>
 
-        <footer class="border-t border-white/5 bg-black/80 px-[6%] py-[2rem] text-[0.6rem] text-gray-600 uppercase tracking-widest flex justify-between">
+        <footer
+            class="border-t border-white/5 bg-black/80 px-[6%] py-[2rem] text-[0.6rem] text-gray-600 uppercase tracking-widest flex justify-between">
             <span>&copy; 2025 // Roberto Monedero Alonso</span>
             <span class="text-cyan-500/50">Router: Hash-Secure Mode</span>
         </footer>
@@ -111,18 +121,16 @@
         // --- Registro de Proyectos ---
         const PROJECTS = [
             { id: '01', name: 'Fine-tunning', path: './Fine-tunning', desc: 'Entrenamiento y refinamiento de modelo de IA específico.' },
-            { id: '02', name: 'Strategic Language', path: './beta', desc: 'Motores semánticos para gestión de comunicación.' },
-            { id: '03', name: 'Executive Analytics', path: './gamma', desc: 'Toma de decisiones basada en datos predictivos.' },
-            { id: '04', name: 'Security Core', path: './delta', desc: 'Protocolos de blindaje digital e infraestructuras.' }
+            { id: '02', name: 'Cuantización', path: './Cuantización', desc: 'Guía de conversión y optimización de modelos GGUF.' }
         ];
 
         // --- Router Basado en Hash (Fix para SecurityError) ---
         function renderRoute() {
             const hash = window.location.hash || '#/';
             const shell = document.getElementById('app-shell');
-            
+
             shell.style.opacity = 0;
-            
+
             setTimeout(() => {
                 if (hash === '#/' || hash === '') {
                     shell.innerHTML = `
@@ -177,4 +185,5 @@
         window.addEventListener('load', renderRoute);
     </script>
 </body>
+
 </html>

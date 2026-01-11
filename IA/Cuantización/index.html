@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuantización de Modelos | Roberto Monedero Alonso</title>
+    <meta name="author" content="Roberto Monedero Alonso">
+    <meta name="description" content="Guía técnica sobre la Cuantización de Modelos LLM por Roberto Monedero Alonso">
+    <style>
+        :root {
+            --bg-body: #0f172a;
+            --bg-sidebar: #1e293b;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --code-bg: #0f1117;
+            --log-bg: #1e1e1e;
+            /* Nuevo para logs */
+            --border: #334155;
+            --critical: #ef4444;
+            --warning: #f59e0b;
+            --success: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            line-height: 1.6;
+        }
+
+        /* Sidebar */
+        aside {
+            width: 280px;
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .brand {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .brand h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.2rem;
+        }
+
+        .brand .author {
+            font-size: 0.85rem;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        .brand span {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+            opacity: 0.8;
+        }
+
+        nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem 0;
+        }
+
+        nav button {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            width: 100%;
+            text-align: left;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        nav button:hover {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        nav button.active {
+            color: var(--accent);
+            border-left-color: var(--accent);
+            background-color: rgba(59, 130, 246, 0.1);
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        main {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem 3rem;
+            scroll-behavior: smooth;
+            position: relative;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding-bottom: 4rem;
+        }
+
+        /* Typography & Components */
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: white;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            margin: 2rem 0 1rem;
+            color: #f8fafc;
+            border-left: 4px solid var(--accent);
+            padding-left: 1rem;
+        }
+
+        h4 {
+            font-size: 1.1rem;
+            margin: 1.5rem 0 0.5rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: #cbd5e1;
+        }
+
+        ol,
+        ul {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+            color: #cbd5e1;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        .step-badge {
+            display: inline-block;
+            background-color: var(--accent);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+        }
+
+        /* Images */
+        .img-container {
+            margin: 1.5rem 0;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.5rem;
+            background-color: rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .step-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            display: block;
+            margin: 0 auto;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .img-placeholder {
+            padding: 2rem;
+            color: var(--text-muted);
+            font-style: italic;
+            font-size: 0.9rem;
+            border: 2px dashed var(--border);
+            border-radius: 6px;
+        }
+
+        /* Code Blocks & Logs */
+        .code-block {
+            background-color: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .log-block {
+            background-color: var(--log-bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            margin: 1rem 0;
+            padding: 1rem;
+            font-family: 'Consolas', monospace;
+            font-size: 0.8rem;
+            color: #80cbc4;
+            /* Color tipo terminal cyan/green */
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .log-title {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background-color: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid var(--border);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-family: monospace;
+        }
+
+        pre {
+            padding: 1rem;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.9rem;
+            color: #a5b4fc;
+        }
+
+        .copy-btn {
+            background-color: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            border-radius: 4px;
+            padding: 0.2rem 0.6rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            border-color: var(--text-main);
+            color: var(--text-main);
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1.5rem 0;
+            border-left: 4px solid;
+        }
+
+        .alert-critical {
+            background-color: rgba(239, 68, 68, 0.1);
+            border-color: var(--critical);
+            color: #fca5a5;
+        }
+
+        .alert-info {
+            background-color: rgba(59, 130, 246, 0.1);
+            border-color: var(--accent);
+            color: #93c5fd;
+        }
+
+        .alert-warning {
+            background-color: rgba(245, 158, 11, 0.1);
+            border-color: var(--warning);
+            color: #fcd34d;
+        }
+
+        /* Mobile Toggle */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            aside {
+                position: absolute;
+                left: -100%;
+                height: 100%;
+                z-index: 50;
+                box-shadow: 4px 0 15px rgba(0, 0, 0, 0.5);
+            }
+
+            aside.open {
+                transform: translateX(100%);
+                left: 0;
+            }
+
+            main {
+                padding: 1.5rem;
+            }
+
+            .menu-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Mobile Menu Toggle -->
+    <button class="menu-toggle" id="menuToggle">☰</button>
+
+    <!-- Sidebar Navigation -->
+    <aside id="sidebar">
+        <div class="brand">
+            <h1>Cuantización</h1>
+            <div class="author">Roberto Monedero A.</div>
+            <span>Guía Técnica</span>
+        </div>
+        <nav id="nav-container">
+            <!-- Generado dinámicamente -->
+        </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main id="main-content">
+        <div class="container" id="content-render">
+            <!-- El contenido se inyectará aquí -->
+        </div>
+    </main>
+
+    <script>
+        // --- HELPER: GENERADOR DE HTML DE IMAGEN ---
+        function getImgHtml(id, alt) {
+            return `
+            <div class="img-container">
+                <img src="Imagenes/${id}.png" 
+                     class="step-image" 
+                     alt="${alt}" 
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                <div class="img-placeholder" style="display:none">
+                    (Coloca <strong>${id}.png</strong> en la carpeta <strong>Imagenes</strong> para ver la captura)
+                </div>
+            </div>
+        `;
+        }
+
+        // --- DATOS DEL CONTENIDO (Actualizado con detalles del PDF) ---
+
+        const docsData = [
+            {
+                id: 1,
+                title: "Paso 1: Entorno Base (Python)",
+                content: `
+                <h2><span class="step-badge">1</span> Instalar Python</h2>
+                <p>Necesitas Python para traducir el modelo original antes de comprimirlo.</p>
+                
+                <ol>
+                    <li>Ve a la web oficial: <a href="https://python.org/downloads" target="_blank" style="color:var(--accent)">python.org/downloads</a>.</li>
+                    <li>Descarga el instalador de la versión más reciente (botón amarillo "Download Python").</li>
+                </ol>
+
+                ${getImgHtml(1, "Captura de la web de Python")}
+
+                <ol start="3">
+                    <li>Ejecuta el instalador.</li>
+                </ol>
+
+                <div class="alert alert-critical">
+                    <strong>⚠️ CRÍTICO:</strong> En la primera pantalla, antes de nada, marca la casilla abajo que dice <strong>"Add Python to PATH"</strong>. Si no marcas esto, nada funcionará.
+                </div>
+
+                <p>Dale a "Install Now" y espera a que termine.</p>
+            `
+            },
+            {
+                id: 2,
+                title: "Paso 2: Herramientas (llama.cpp)",
+                content: `
+                <h2><span class="step-badge">2</span> Descargar llama.cpp</h2>
+                <p>No necesitas compilar nada. Descargaremos los ejecutables ya listos.</p>
+
+                <ol>
+                    <li>Ve a la página de lanzamientos de llama.cpp en GitHub: <a href="https://github.com/ggerganov/llama.cpp/releases" target="_blank" style="color:var(--accent)">Releases de llama.cpp</a>.</li>
+                    <li>Descarga la versión compatible con tu sistema.</li>
+                </ol>
+                
+                <p><em>En mi caso uso la versión <code>win-cuda</code> porque tengo NVIDIA.</em></p>
+
+                ${getImgHtml(2, "Lista de releases de llama.cpp")}
+
+                <ol start="3">
+                    <li>Descomprime el contenido de ese zip en una carpeta (La llamaremos <code>LlamaLab</code>).</li>
+                </ol>
+            `
+            },
+            {
+                id: 3,
+                title: "Paso 3: Script de Conversión",
+                content: `
+                <h2><span class="step-badge">3</span> Descargar script Python</h2>
+                <p>Los ejecutables del paso anterior no incluyen el script de Python necesario para el primer paso de la conversión.</p>
+
+                <ol>
+                    <li>Haz clic en este enlace (o búscalo en el repo): <code>convert_hf_to_gguf.py</code> y descarga el script de GitHub.</li>
+                </ol>
+                
+                ${getImgHtml(3, "GitHub mostrando el script de conversión")}
+
+                <div class="alert alert-info">
+                    Guárdalo en tu carpeta <code>LlamaLab</code> junto a los ejecutables.
+                </div>
+            `
+            },
+            {
+                id: 4,
+                title: "Paso 4: Modelo Original",
+                content: `
+                <h2><span class="step-badge">4</span> Preparar el Modelo</h2>
+                <p>Necesitas los archivos del modelo que quieres cuantizar (formato Hugging Face).</p>
+
+                <ol>
+                    <li>Crea una carpeta llamada <code>ModeloOriginal</code> dentro de tu carpeta <code>LlamaLab</code>.</li>
+                    <li>Ve a Hugging Face y descarga manualmente los archivos. Debes descargar todos los archivos de la pestaña "Files and versions" <strong>excepto</strong> los que terminen en <code>.safetensors</code> si hay versiones duplicadas (basta con descargar los json, model y los safetensors principales).</li>
+                </ol>
+
+                ${getImgHtml(4, "Lista de archivos en Hugging Face")}
+                
+                <h3>Archivos Típicos Necesarios:</h3>
+                <ul>
+                    <li><code>config.json</code></li>
+                    <li><code>tokenizer.json</code></li>
+                    <li><code>vocab.json</code></li>
+                    <li><code>model-xxxxx.safetensors</code></li>
+                    <li><code>tokenizer_config.json</code></li>
+                </ul>
+
+                <p>Coloca todos esos archivos DENTRO de <code>ModeloOriginal</code>.</p>
+            `
+            },
+            {
+                id: 5,
+                title: "Paso 5: Dependencias",
+                content: `
+                <h2><span class="step-badge">5</span> Instalar Librerías</h2>
+                <p>Ahora conectaremos Python con las herramientas. Abre una terminal en la carpeta <code>LlamaLab</code>.</p>
+                <p>Escribe el siguiente comando y pulsa Enter:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>Terminal</span>
+                        <button class="copy-btn" onclick="copyToClipboard('pip install gguf protobuf numpy torch transformers sentencepiece')">Copiar</button>
+                    </div>
+                    <pre>pip install gguf protobuf numpy torch transformers sentencepiece</pre>
+                </div>
+
+                ${getImgHtml(5, "Terminal instalando dependencias")}
+
+                <p>Espera a que termine de descargar e instalar todo.</p>
+                
+                <div class="alert alert-warning">
+                    <strong>Aviso común:</strong> Es posible que veas un aviso amarillo diciendo: <br>
+                    <em>"WARNING: The script isympy.exe is installed in C:\Users\...\Scripts which is not on PATH."</em><br>
+                    Si ya marcaste el PATH en el Paso 1, generalmente puedes ignorar esto o reiniciar la terminal.
+                </div>
+            `
+            },
+            {
+                id: 6,
+                title: "Paso 6: Conversión FP16",
+                content: `
+                <h2><span class="step-badge">6</span> Convertir a FP16 (GGUF)</h2>
+                <p>Convertiremos los archivos sueltos en un solo archivo masivo sin comprimir.</p>
+                <p>En la misma terminal, ejecuta:</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>Terminal</span>
+                        <button class="copy-btn" onclick="copyToClipboard('python convert_hf_to_gguf.py ModeloOriginal --outfile modelo_f16.gguf')">Copiar</button>
+                    </div>
+                    <pre>python convert_hf_to_gguf.py "ModeloOriginal" --outfile modelo_f16.gguf</pre>
+                </div>
+
+                <h3>Posibles Errores:</h3>
+                <ul>
+                    <li><code>ModuleNotFoundError: No module named 'transformers'</code>: Falta instalar dependencias (ver paso 5).</li>
+                    <li><code>ImportError: cannot import name 'MistralTokenizerType'</code>: Esto se debe a una versión desactualizada de librerías. Intenta actualizar gguf.</li>
+                </ul>
+
+                ${getImgHtml(6, "Salida de la conversión en terminal")}
+                
+                <span class="log-title">Salida esperada (Ejemplo):</span>
+                <div class="log-block">INFO:hf-to-gguf:blk.35.attn_output.weight, torch.bfloat16 BF16
+INFO:hf-to-gguf:gguf: context length = 262144
+INFO:hf-to-gguf:gguf: embedding length = 4096
+INFO:gguf.vocab: Adding 151387 merge(s).
+INFO:gguf.gguf_writer:Writing the following files:
+INFO:gguf.gguf_writer:modelo_f16.gguf: n_tensors = 398...</div>
+
+                <p>Al finalizar, tendrás un archivo <code>modelo_f16.gguf</code> en tu carpeta (pesará bastante, ej. 14GB+).</p>
+            `
+            },
+            {
+                id: 7,
+                title: "Paso 7: La Cuantización",
+                content: `
+                <h2><span class="step-badge">7</span> Comprimir (Quantize)</h2>
+                <p>Ahora usaremos el ejecutable para reducir el tamaño usando el algoritmo <strong>Q4_K_M</strong> (4 bits, balanceado).</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>Terminal</span>
+                        <button class="copy-btn" onclick="copyToClipboard('./llama-quantize.exe modelo_f16.gguf resultado_q4km.gguf Q4_K_M')">Copiar</button>
+                    </div>
+                    <pre>./llama-quantize.exe modelo_f16.gguf resultado_q4km.gguf Q4_K_M</pre>
+                </div>
+                
+                <p><em>(Si usas CMD clásico, quita el <code>./</code> del principio).</em></p>
+
+                ${getImgHtml(7, "Proceso de cuantización en terminal")}
+                
+                <span class="log-title">Progreso esperado:</span>
+                <div class="log-block">main: quantizing 'modelo_f16.gguf' to 'resultado_q4km.gguf' as Q4_K_M
+llama_model_loader: loaded meta data with 29 key-value pairs...
+[   ] 5% ...</div>
+
+                <p>Espera a que la barra llegue al 100%. El archivo resultante será <code>resultado_q4km.gguf</code>.</p>
+            `
+            },
+            {
+                id: 8,
+                title: "Paso 8: LM Studio",
+                content: `
+                <h2><span class="step-badge">8</span> Instalar en LM Studio</h2>
+                <p>Ya tienes tu archivo listo. Se llama <code>resultado_q4km.gguf</code> y está en LlamaLab.</p>
+
+                <ol>
+                    <li>Abre <strong>LM Studio</strong>.</li>
+                    <li>En el menú de la izquierda, haz clic en el icono de la carpeta ("My Models").</li>
+                    <li>Haz clic en "Show in File Explorer".</li>
+                    <li>En esa carpeta que se abre, crea una carpeta nueva (ej. "Mis_Modelos") y pega dentro tu archivo.</li>
+                </ol>
+                
+                ${getImgHtml(8, "Explorador de archivos con el modelo final")}
+
+                <ol start="5">
+                     <li>Vuelve a LM Studio y selecciona tu modelo en la barra superior del chat.</li>
+                </ol>
+
+                <div class="alert alert-info" style="border-left-color: var(--accent);">
+                    <strong>Nota Importante sobre Embeddings:</strong><br>
+                    Al haber usado un modelo Embedding (como en el ejemplo del PDF), <strong>no podré chatear con él</strong> ya que su único trabajo es leer texto o imágenes y convertirlos en listas de números (vectores) para que las bases de datos puedan hacer búsquedas.
+                </div>
+                
+                <p style="text-align: center; margin-top: 3rem; color: var(--success); font-weight: bold; font-size: 1.2rem;">¡Proceso Completado Exitosamente!</p>
+            `
+            }
+        ];
+
+        // --- LÓGICA DE LA APLICACIÓN ---
+
+        const navContainer = document.getElementById('nav-container');
+        const contentRender = document.getElementById('content-render');
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+
+        function renderNav() {
+            docsData.forEach((section, index) => {
+                const btn = document.createElement('button');
+                btn.textContent = section.title;
+                btn.onclick = () => loadSection(index);
+                if (index === 0) btn.classList.add('active');
+                btn.dataset.index = index;
+                navContainer.appendChild(btn);
+            });
+        }
+
+        function loadSection(index) {
+            const buttons = navContainer.querySelectorAll('button');
+            buttons.forEach(b => b.classList.remove('active'));
+            buttons[index].classList.add('active');
+
+            const data = docsData[index];
+
+            contentRender.style.opacity = 0;
+            setTimeout(() => {
+                contentRender.innerHTML = data.content;
+                contentRender.style.opacity = 1;
+                document.getElementById('main-content').scrollTop = 0;
+            }, 150);
+
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('open');
+            }
+        }
+
+        window.copyToClipboard = function (text) {
+            navigator.clipboard.writeText(text).catch(err => {
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+            });
+        }
+
+        menuToggle.onclick = () => {
+            sidebar.classList.toggle('open');
+        };
+
+        renderNav();
+        loadSection(0);
+        contentRender.style.transition = "opacity 0.2s ease-in-out";
+
+    </script>
+</body>
+
+</html>
