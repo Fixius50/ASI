@@ -1,0 +1,3 @@
+[submodule "IA/Fine-tunning/llama.cpp"]
+    path = IA/Fine-tunning/llama.cpp
+    url = https://github.com/ggerganov/llama.cpp
