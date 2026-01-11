@@ -9,91 +9,89 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
     rel="stylesheet">
-  <script type="importmap">
-    {
-      "imports": {
-        "react": "https://cdn.jsdelivr.net/npm/react@18.2.0/+esm",
-        "react-dom/client": "https://cdn.jsdelivr.net/npm/react-dom@18.2.0/client/+esm",
-        "lucide-react": "https://cdn.jsdelivr.net/npm/lucide-react@0.263.1/+esm"
-      }
-    }
-  </script>
-  <script type="module">
-    import React from 'https://cdn.jsdelivr.net/npm/react@18.2.0/+esm';
-    import ReactDOM from 'https://cdn.jsdelivr.net/npm/react-dom@18.2.0/client/+esm';
-  </script>
+  <!-- Lucide Icons (Vanilla) -->
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
-<body class="bg-[#020617] text-slate-300">
-  <div id="root"></div>
+<body class="bg-[#020617] text-slate-300 font-sans selection:bg-sky-500/30 flex flex-col items-center">
 
-  <script type="text/babel" data-type="module">
-    import React, { useState } from 'react';
-    import { createRoot } from 'react-dom/client';
-    import {
-      Book,
-      Settings,
-      Cpu,
-      Terminal,
-      MessageSquare,
-      User,
-      Database,
-      Zap,
-      FileCode,
-      GitMerge,
-      Play,
-      RefreshCw,
-      Copy,
-      Info,
-      Image as ImageIcon
-    } from 'lucide-react';
+  <!-- HEADER / NAV -->
+  <nav class="sticky top-[1.5rem] w-full max-w-[60rem] px-[1.5rem] my-[1.5rem] z-50 transition-all">
+    <div
+      class="flex flex-col md:flex-row items-center justify-between bg-slate-950/80 backdrop-blur-xl border border-slate-800 p-[0.75rem] rounded-[1.25rem] shadow-2xl shadow-black/50">
 
-    // --- CONTENIDO COMPLETO Y FIEL AL PDF ---
+      <!-- Logo -->
+      <div class="flex items-center gap-[0.75rem] px-[1rem] mb-[0.75rem] md:mb-0">
+        <div
+          class="bg-sky-600 w-[2rem] h-[2rem] rounded-lg flex items-center justify-center shadow-lg shadow-sky-900/20">
+          <i data-lucide="cpu" class="text-white w-[1.2rem] h-[1.2rem]"></i>
+        </div>
+        <div>
+          <h1 class="font-black text-white text-[1rem] tracking-tight leading-none">MK-9 DOCS</h1>
+          <span class="text-[0.6rem] text-slate-500 font-bold uppercase tracking-widest">Aethelgard</span>
+        </div>
+      </div>
+
+      <!-- Botonera -->
+      <div class="flex gap-[0.5rem] w-full md:w-auto overflow-x-auto" id="nav-buttons">
+        <!-- Se llena dinámicamente o estáticamente -->
+        <button onclick="router('part1')" id="btn-part1"
+          class="nav-btn flex items-center gap-[0.5rem] px-[1.25rem] py-[0.6rem] rounded-[0.8rem] text-[0.8rem] font-bold uppercase tracking-wider transition-all duration-300 whitespace-nowrap bg-sky-600 text-white shadow-lg shadow-sky-900/40 transform scale-105">
+          <i data-lucide="book" class="w-[1rem] h-[1rem]"></i> Teoría
+        </button>
+        <button onclick="router('part2')" id="btn-part2"
+          class="nav-btn flex items-center gap-[0.5rem] px-[1.25rem] py-[0.6rem] rounded-[0.8rem] text-[0.8rem] font-bold uppercase tracking-wider transition-all duration-300 whitespace-nowrap bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-white">
+          <i data-lucide="cpu" class="w-[1rem] h-[1rem]"></i> Training
+        </button>
+        <button onclick="router('part3')" id="btn-part3"
+          class="nav-btn flex items-center gap-[0.5rem] px-[1.25rem] py-[0.6rem] rounded-[0.8rem] text-[0.8rem] font-bold uppercase tracking-wider transition-all duration-300 whitespace-nowrap bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-white">
+          <i data-lucide="zap" class="w-[1rem] h-[1rem]"></i> Uso
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- CONTENT -->
+  <main class="w-full max-w-[60rem] px-[1.5rem] pb-[4rem]">
+    <article id="app-content" class="animate-in slide-in-from-bottom-4 duration-500">
+      <!-- Renderizado dinámico aquí -->
+    </article>
+
+    <footer class="mt-[4rem] border-t border-slate-900/50 pt-[2rem] flex flex-col items-center gap-[1rem]">
+      <div
+        class="flex items-center gap-[0.75rem] px-[1rem] py-[0.5rem] bg-slate-900/50 rounded-full border border-slate-800/50">
+        <i data-lucide="user" class="text-slate-400 w-[0.9rem] h-[0.9rem]"></i>
+        <span class="text-[0.75rem] font-bold text-slate-300">Roberto Monedero Alonso</span>
+        <span class="w-[1px] h-[1rem] bg-slate-700"></span>
+        <span class="text-[0.7rem] font-bold text-sky-500 uppercase tracking-widest">Industrias Aethelgard</span>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    // DATOS
     const PDF_CONTENT = {
-      meta: {
-        title: "Fine-Tuning de LLMs",
-        author: "Roberto Monedero Alonso",
-        company: "Industrias Aethelgard",
-        role: "Lead Engineer"
-      },
-
       part1: {
         title: "PARTE 1: Resumen Teórico",
         sections: [
+          { header: "1. ¿Qué es el Fine-Tuning?", content: "Es el proceso de especialización de un modelo de Inteligencia Artificial. En lugar de entrenar un modelo desde cero (costoso), tomamos un modelo 'pre-entrenado' (con conocimiento general) y lo ajustamos con datos específicos. Objetivo: Adaptar su comportamiento, estilo o dominio a una tarea concreta." },
           {
-            header: "1. ¿Qué es el Fine-Tuning?",
-            content: "Es el proceso de especialización de un modelo de Inteligencia Artificial. En lugar de entrenar un modelo desde cero (costoso), tomamos un modelo 'pre-entrenado' (con conocimiento general) y lo ajustamos con datos específicos. Objetivo: Adaptar su comportamiento, estilo o dominio a una tarea concreta."
-          },
-          {
-            header: "2. Los 3 Ingredientes Clave",
-            items: [
+            header: "2. Los 3 Ingredientes Clave", items: [
               { title: "1. Modelo Base", text: "El punto de partida (ej. Mistral, Llama 3)." },
               { title: "2. Dataset de Calidad", text: "Lo más importante. 'Garbage in, garbage out'. Datos limpios y estructurados." },
               { title: "3. GPU", text: "Potencia necesaria para actualizar los parámetros." }
             ]
           },
-          {
-            header: "3. La Técnica: PEFT / LORA",
-            content: "Usamos LORA (Low-Rank Adaptation). En lugar de modificar todo el cerebro del modelo, entrenamos una pequeña capa de 'adaptadores'. Es más rápido, barato y requiere menos memoria."
-          }
+          { header: "3. La Técnica: PEFT / LORA", content: "Usamos LORA (Low-Rank Adaptation). En lugar de modificar todo el cerebro del modelo, entrenamos una pequeña capa de 'adaptadores'. Es más rápido, barato y requiere menos memoria." }
         ]
       },
-
       part2: {
         title: "PARTE 2: Preparación y entrenamiento",
         intro: "Objetivo: Transformar el modelo Llama-3.2-3B en una IA experta en el mantenimiento del Motor de Curvatura MK-9.",
-
-        // EXPLICACIÓN DE ARQUITECTURA
-        architecture_note: {
-          title: "Nota de Arquitectura: Selección de Entorno",
-          text: "El script detecta automáticamente el hardware para seleccionar el método de aceleración más eficiente. Se usa Docker para AMD (ROCm) debido a la complejidad de drivers en Windows, mientras que Mac usa MLX nativo para acceder a la memoria unificada (Metal)."
-        },
-
-        // SECCIÓN 1: DATOS
+        architecture_note: { title: "Nota de Arquitectura: Selección de Entorno", text: "El script detecta automáticamente el hardware para seleccionar el método de aceleración más eficiente. Se usa Docker para AMD (ROCm) debido a la complejidad de drivers en Windows, mientras que Mac usa MLX nativo para acceder a la memoria unificada (Metal)." },
         section_data: {
           title: "1. Creación de datos",
-          image: "1.png",
-          imageCaption: "Estructura del Dataset JSONL",
+          image: "1.png", imageCaption: "Estructura del Dataset JSONL",
           files: [
             {
               name: "autofine_mk9.py",
@@ -246,389 +244,258 @@ output_dir: /workspace/outputs/modelo-mk9`
             }
           ]
         },
-
-        // SECCIÓN 2: VERIFICACIÓN
         section_verification: {
-          title: "2. Revisión y Verificación",
-          image: "2.png",
-          imageCaption: "Validación de Parámetros LoRA",
+          title: "2. Revisión y Verificación", image: "2.png", imageCaption: "Validación de Parámetros LoRA",
           items: [
-            {
-              platform: "PC con AMD (Docker)",
-              reason: "AMD utiliza ROCm, que generalmente se ejecuta mejor en contenedores Docker preconfigurados en Linux.",
-              cmd: `docker run --rm -it -v \${PWD}:/workspace axolotl-rocm /bin/bash -c "pip install nvidia-ml-py && python3 -m axolotl.cli.inference /workspace/config_mk9.yml --lora_model_dir=/workspace/outputs/modelo-mk9"`
-            },
-            {
-              platform: "PC con NVIDIA (Windows)",
-              reason: "Soporte nativo vía drivers CUDA instalados en el sistema anfitrión.",
-              cmd: `accelerate launch -m axolotl.cli.inference config_mk9.yml --lora_model_dir="./outputs/modelo-mk9"`
-            },
-            {
-              platform: "Mac (Apple Silicon)",
-              reason: "Utiliza la librería MLX de Apple para aceleración de hardware en chips M1/M2/M3.",
-              cmd: `python -m mlx_lm.generate --model mlx-community/Qwen2.5-1.5B-Instruct-4bit --adapter-path ./adaptadores_mk9 --prompt "<s>[INST] Eres la IA de mantenimiento central... [/INST]"`
-            }
+            { platform: "PC con AMD (Docker)", reason: "AMD utiliza ROCm para aceleración por hardware.", cmd: "docker run --rm -it --device=/dev/kfd --device=/dev/dri -v ${PWD}:/workspace axolotl-rocm accelerate launch -m axolotl.cli.train /workspace/config_mk9.yml" },
+            { platform: "PC con NVIDIA (Windows)", reason: "Soporte nativo CUDA a través de WSL2 o Powershell.", cmd: "accelerate launch -m axolotl.cli.train config_mk9.yml" },
+            { platform: "Mac (Apple Silicon)", reason: "Librería MLX optimizada para memoria unificada.", cmd: "python -m mlx_lm.lora --model mlx-community/Qwen2.5-1.5B-Instruct-4bit --train --data ./data --iters 300 --adapter-path ./adaptadores_mk9" }
           ]
         },
-
-        // SECCIÓN 3: FUSIÓN
         section_merging: {
-          title: "3. Fusión de Adaptadores",
-          image: "3.png",
-          imageCaption: "Proceso de Entrenamiento y Fusión",
+          title: "3. Fusión de Adaptadores", image: "3.png", imageCaption: "Proceso de Entrenamiento y Fusión",
           items: [
-            {
-              platform: "Opción A: PC con AMD (Docker)",
-              cmd: `docker run --rm -it -v \${PWD}:/workspace axolotl-rocm python3 -m axolotl.cli.merge_lora /workspace/config_mk9.yml --lora_model_dir=/workspace/outputs/modelo-mk9`
-            },
-            {
-              platform: "Opción B: PC con NVIDIA",
-              cmd: `accelerate launch -m axolotl.cli.merge_lora config_mk9.yml --lora_model_dir="./outputs/modelo-mk9"`
-            },
-            {
-              platform: "Opción C: Mac",
-              cmd: `python -m mlx_lm.fuse --model mlx-community/Qwen2.5-1.5B-Instruct-4bit --adapter-path ./adaptadores_mk9 --save-path ./modelo-final-mk9`
-            }
+            { platform: "Opción A: PC con AMD/NVIDIA", cmd: "python3 -m axolotl.cli.merge_lora config_mk9.yml" },
+            { platform: "Opción B: Mac (MLX)", cmd: "python -m mlx_lm.fuse --model mlx-community/Qwen2.5-1.5B-Instruct-4bit --adapter-path ./adaptadores_mk9 --save-path ./modelo_fusionado" }
           ]
         },
-
-        // SECCIÓN 4: CONVERSIÓN
         section_conversion: {
-          title: "4. Conversión GGUF",
-          image: "4.png", // IMAGEN AÑADIDA
-          imageCaption: "Carpetas Finales del Proyecto", // CAPTION AÑADIDO
+          title: "4. Conversión GGUF", image: "4.png", imageCaption: "Carpetas Finales del Proyecto",
           steps: [
-            "git clone https://github.com/ggerganov/llama.cpp.git",
-            "pip install -r llama.cpp/requirements.txt",
-            "python llama.cpp/convert.py ./outputs/modelo-mk9/merged --outfile ./ia_motor_mk9_q4.gguf --outtype q4_k_m"
+            "git clone https://github.com/ggerganov/llama.cpp",
+            "cd llama.cpp && pip install -r requirements.txt",
+            "python convert.py --outfile ../modelo_final.gguf --outtype f16 ../modelo_fusionado",
+            "./quantize ../modelo_final.gguf ../modelo_mk9_q4_k_m.gguf q4_k_m"
           ]
         }
       },
-
       part3: {
         title: "PARTE 3: Uso en LM Studio y Ejemplos",
         steps: [
           "Abre LM Studio en tu Mac.",
-          "Si vienes del PC: Copia el archivo .gguf a la carpeta de modelos.",
-          "Si lo hiciste en Mac: Importa el modelo fusionado.",
-          "Selecciona el modelo y pregunta: 'Hola, ¿quién eres?'.",
-          "Resultado esperado: 'Buenas tardes. Soy un asistente virtual...'"
+          "Si vienes del PC: Copia el archivo .gguf a la carpeta de modelos de LM Studio (suele estar en /Users/tu_usuario/.cache/lm-studio/models/).",
+          "Si lo hiciste en Mac: Importa el modelo fusionado directamente desde la interfaz o asegúrate de que la carpeta 'modelo_final.gguf' esté accesible.",
+          "Selecciona el modelo 'modelo_mk9_q4_k_m.gguf' en el menú superior de LM Studio.",
+          "Configura el System Prompt con: 'Eres la IA de mantenimiento central de la nave...'.",
+          "Escribe tu pregunta: 'Hola, ¿quién eres?'.",
+          "Resultado esperado: 'Buenas tardes. Soy un asistente virtual especializado en el mantenimiento del Motor MK-9...'"
         ],
         prompts: [
           {
             title: "Prompt 1: Generación de Datos",
             content: `**Tema:** Manual Técnico del "Motor de Curvatura MK-9".
-        **Datos inventados (La Verdad Base):**
-        1. Combustible: Cristales de Resonancia Azul.
-        2. Temp. Crítica: 4.500 Kelvin.
-        3. Emergencia: Válvula Roja a la IZQUIERDA.
-        4. Mantenimiento: Cada 3 ciclos lunares.
-        5. Error "Código 99": Fuga de taquiones sector 4.`
+**Datos inventados (La Verdad Base):**
+1. Combustible: Cristales de Resonancia Azul.
+2. Temp. Crítica: 4.500 Kelvin.
+3. Emergencia: Válvula Roja a la IZQUIERDA.
+4. Mantenimiento: Cada 3 ciclos lunares.
+5. Error "Código 99": Fuga de taquiones sector 4.`
           },
           {
             title: "Prompt 2: Dataset Sintético",
             content: `Necesito generar un dataset sintético en JSONL para Llama-3.2-3B.
-        System Prompt: "Eres la IA de mantenimiento central de la nave..."
-        User: Preguntas técnicas.
-        Assistant: Respuestas basadas ÚNICAMENTE en los datos inventados.`
+System Prompt: "Eres la IA de mantenimiento central de la nave..."
+User: Preguntas técnicas.
+Assistant: Respuestas basadas ÚNICAMENTE en los datos inventados.`
           }
         ]
       }
     };
 
-    // --- COMPONENTES AUXILIARES ---
-    const SectionCard = ({ title, children, icon: Icon, className = "" }) => (
-      <div className={`bg-slate-900/40 border border-slate-800 rounded-[1rem] p-[1.5rem] ${className}`}>
-        {title && (
-          <h3 className="text-white font-bold text-[1.1rem] mb-[1rem] flex items-center gap-[0.75rem]">
-            {Icon && <Icon className="text-sky-500" size="1.2rem" />}
-            {title}
-          </h3>
-        )}
-        {children}
-      </div>
-    );
-
-    const ImagePreview = ({ src, caption }) => (
-      <div className="my-[1.5rem] bg-slate-950/50 rounded-[0.75rem] border border-slate-800 p-[0.5rem] group">
-        <div className="relative aspect-video rounded-[0.5rem] overflow-hidden bg-slate-900 flex items-center justify-center">
-          <img
-            src={`/Imágenes/${src}`}
-            alt={caption}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.style.display = 'none';
-              e.target.nextSibling.style.display = 'flex';
-            }}
-          />
-          <div className="hidden absolute inset-0 flex-col items-center justify-center text-slate-500 bg-slate-900/80">
-            <ImageIcon size="2rem" className="mb-[0.5rem] opacity-50" />
-            <span className="text-[0.8rem] font-mono">/Imágenes/{src}</span>
-          </div>
-        </div>
-        {caption && (
-          <div className="mt-[0.5rem] px-[0.5rem] flex items-center gap-[0.5rem]">
-            <Info size="0.8rem" className="text-sky-500" />
-            <p className="text-[0.75rem] text-slate-400 font-mono uppercase tracking-wide">{caption}</p>
-          </div>
-        )}
-      </div>
-    );
-
-    const CodeSnippet = ({ label, code }) => (
-      <div className="group relative mt-[1rem] mb-[1.5rem]">
-        <div className="absolute -top-[0.75rem] left-[1rem] bg-slate-800 text-sky-400 text-[0.7rem] font-bold px-[0.5rem] py-[0.1rem] rounded border border-slate-700 uppercase tracking-wider z-10">
-          {label}
-        </div>
-        <div className="bg-[#0a0f1e] rounded-[0.75rem] border border-slate-800 p-[1.25rem] overflow-x-auto relative">
-          <pre className="text-[0.8rem] font-mono text-emerald-400 leading-relaxed whitespace-pre-wrap">
-            {code}
-          </pre>
-          <button
-            onClick={() => navigator.clipboard.writeText(code)}
-            className="absolute top-[0.5rem] right-[0.5rem] p-[0.4rem] bg-slate-800/50 hover:bg-slate-700 rounded-[0.4rem] text-slate-400 hover:text-white transition-colors opacity-0 group-hover:opacity-100"
-            title="Copiar comando"
-          >
-            <Copy size="0.9rem" />
-          </button>
-        </div>
-      </div>
-    );
-
-    function App() {
-      const [activeTab, setActiveTab] = useState('part1');
-
-      const renderContent = () => {
-        switch (activeTab) {
-          case 'part1':
-            return (
-              <div className="space-y-[2rem] animate-in fade-in duration-500">
-                <header className="border-b border-slate-800 pb-[1.5rem]">
-                  <h2 className="text-[2rem] font-black text-white uppercase leading-tight mb-[0.5rem]">
-                    {PDF_CONTENT.part1.title}
-                  </h2>
-                  <p className="text-slate-400 text-[1rem]">Fundamentos de la especialización de IA</p>
-                </header>
-
-                <div className="space-y-[1.5rem]">
-                  {PDF_CONTENT.part1.sections.map((section, idx) => (
-                    <SectionCard key={idx} title={section.header} icon={Book}>
-                      {section.content && <p className="text-slate-300 leading-relaxed">{section.content}</p>}
-                      {section.items && (
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-[1rem] mt-[0.5rem]">
-                          {section.items.map((item, i) => (
-                            <div key={i} className="bg-slate-950 p-[1rem] rounded-[0.5rem] border border-slate-800">
-                              <p className="text-sky-400 font-bold text-[0.9rem] mb-[0.25rem]">{item.title}</p>
-                              <p className="text-[0.8rem] text-slate-400">{item.text}</p>
+    // RENDER FUNCTIONS
+    function renderPart1() {
+      const data = PDF_CONTENT.part1;
+      return `
+                <div class="space-y-[2rem] animate-in fade-in duration-500">
+                    <header class="border-b border-slate-800 pb-[1.5rem]">
+                        <h2 class="text-[2rem] font-black text-white uppercase leading-tight mb-[0.5rem]">${data.title}</h2>
+                        <p class="text-slate-400 text-[1rem]">Fundamentos de la especialización de IA</p>
+                    </header>
+                    <div class="space-y-[1.5rem]">
+                        ${data.sections.map(sec => `
+                            <div class="bg-slate-900/40 border border-slate-800 rounded-[1rem] p-[1.5rem]">
+                                <h3 class="text-white font-bold text-[1.1rem] mb-[1rem] flex items-center gap-[0.75rem]">
+                                    <i data-lucide="book" class="text-sky-500 w-[1.2rem] h-[1.2rem]"></i> ${sec.header}
+                                </h3>
+                                ${sec.content ? `<p class="text-slate-300 leading-relaxed">${sec.content}</p>` : ''}
+                                ${sec.items ? `<div class="grid grid-cols-1 md:grid-cols-3 gap-[1rem] mt-[0.5rem]">
+                                    ${sec.items.map(item => `
+                                        <div class="bg-slate-950 p-[1rem] rounded-[0.5rem] border border-slate-800">
+                                            <p class="text-sky-400 font-bold text-[0.9rem] mb-[0.25rem]">${item.title}</p>
+                                            <p class="text-[0.8rem] text-slate-400">${item.text}</p>
+                                        </div>
+                                    `).join('')}
+                                </div>` : ''}
                             </div>
-                          ))}
-                        </div>
-                      )}
-                    </SectionCard>
-                  ))}
-                </div>
-              </div>
-            );
-
-          case 'part2':
-            return (
-              <div className="space-y-[2.5rem] animate-in fade-in duration-500">
-                <header className="border-b border-slate-800 pb-[1.5rem]">
-                  <h2 className="text-[2rem] font-black text-white uppercase leading-tight mb-[0.5rem]">
-                    {PDF_CONTENT.part2.title}
-                  </h2>
-                  <p className="text-slate-400 text-[1rem]">{PDF_CONTENT.part2.intro}</p>
-                </header>
-
-                {/* 1. Datos y Script */}
-                <section>
-                  <h3 className="text-[1.5rem] font-bold text-white mb-[1.5rem] flex items-center gap-[0.75rem]">
-                    <Database className="text-sky-500" /> {PDF_CONTENT.part2.section_data.title}
-                  </h3>
-
-                  {/* NOTA DE ARQUITECTURA */}
-                  <div className="bg-sky-950/20 border border-sky-500/20 p-[1.25rem] rounded-[0.75rem] mb-[1.5rem] flex items-start gap-[1rem]">
-                    <Info className="text-sky-400 shrink-0 mt-[0.2rem]" size="1.25rem" />
-                    <div>
-                      <h4 className="text-sky-300 font-bold text-[0.9rem] mb-[0.25rem]">{PDF_CONTENT.part2.architecture_note.title}</h4>
-                      <p className="text-sky-100/70 text-[0.85rem] leading-relaxed">{PDF_CONTENT.part2.architecture_note.text}</p>
+                        `).join('')}
                     </div>
-                  </div>
-
-                  {/* IMAGEN REFERENCIAL */}
-                  <ImagePreview src={PDF_CONTENT.part2.section_data.image} caption={PDF_CONTENT.part2.section_data.imageCaption} />
-
-                  {PDF_CONTENT.part2.section_data.files.map((file, idx) => (
-                    <SectionCard key={idx} title={file.name} icon={FileCode} className="mb-[1.5rem]">
-                      <p className="text-slate-400 mb-[1rem]">{file.desc}</p>
-                      <CodeSnippet label={file.name.split('.').pop().toUpperCase()} code={file.code} />
-                    </SectionCard>
-                  ))}
-                </section>
-
-                {/* 2. Verificación */}
-                <section>
-                  <h3 className="text-[1.5rem] font-bold text-white mb-[1.5rem] flex items-center gap-[0.75rem]">
-                    <Play className="text-emerald-500" /> {PDF_CONTENT.part2.section_verification.title}
-                  </h3>
-
-                  <ImagePreview src={PDF_CONTENT.part2.section_verification.image} caption={PDF_CONTENT.part2.section_verification.imageCaption} />
-
-                  <div className="space-y-[1.5rem]">
-                    {PDF_CONTENT.part2.section_verification.items.map((v, i) => (
-                      <div key={i}>
-                        <div className="flex items-center gap-[0.5rem] mb-[0.5rem]">
-                          <span className="text-slate-200 font-bold text-[0.95rem]">{v.platform}</span>
-                          <span className="text-slate-500 text-[0.8rem] px-[0.5rem] py-[0.1rem] bg-slate-900 rounded-full border border-slate-800">
-                            {v.reason}
-                          </span>
-                        </div>
-                        <CodeSnippet label="CMD" code={v.cmd} />
-                      </div>
-                    ))}
-                  </div>
-                </section>
-
-                {/* 3. Fusionar */}
-                <section>
-                  <h3 className="text-[1.5rem] font-bold text-white mb-[1.5rem] flex items-center gap-[0.75rem]">
-                    <GitMerge className="text-purple-500" /> {PDF_CONTENT.part2.section_merging.title}
-                  </h3>
-
-                  <ImagePreview src={PDF_CONTENT.part2.section_merging.image} caption={PDF_CONTENT.part2.section_merging.imageCaption} />
-
-                  <div className="space-y-[1.5rem]">
-                    {PDF_CONTENT.part2.section_merging.items.map((m, i) => (
-                      <div key={i}>
-                        <CodeSnippet label={m.platform} code={m.cmd} />
-                      </div>
-                    ))}
-                  </div>
-                </section>
-
-                {/* 4. Conversión */}
-                <section>
-                  <h3 className="text-[1.5rem] font-bold text-white mb-[1.5rem] flex items-center gap-[0.75rem]">
-                    <RefreshCw className="text-orange-500" /> {PDF_CONTENT.part2.section_conversion.title}
-                  </h3>
-
-                  {/* IMAGEN REFERENCIAL DE CARPETAS FINALES */}
-                  <ImagePreview src={PDF_CONTENT.part2.section_conversion.image} caption={PDF_CONTENT.part2.section_conversion.imageCaption} />
-
-                  <SectionCard title="Conversión con llama.cpp" icon={Terminal}>
-                    <CodeSnippet label="BASH" code={PDF_CONTENT.part2.section_conversion.steps.join('\n')} />
-                  </SectionCard>
-                </section>
-              </div>
-            );
-
-          case 'part3':
-            return (
-              <div className="space-y-[2rem] animate-in fade-in duration-500">
-                <header className="border-b border-slate-800 pb-[1.5rem]">
-                  <h2 className="text-[2rem] font-black text-white uppercase leading-tight mb-[0.5rem]">
-                    {PDF_CONTENT.part3.title}
-                  </h2>
-                  <p className="text-slate-400 text-[1rem]">Despliegue final y pruebas de campo</p>
-                </header>
-
-                <SectionCard title="Pasos en LM Studio" icon={Zap}>
-                  <ul className="space-y-[1rem]">
-                    {PDF_CONTENT.part3.steps.map((step, i) => (
-                      <li key={i} className="flex items-start gap-[1rem] bg-slate-950/50 p-[0.75rem] rounded-[0.5rem] border border-slate-800/50">
-                        <span className="bg-sky-600 text-white text-[0.75rem] font-bold w-[1.5rem] h-[1.5rem] flex items-center justify-center rounded-full shrink-0">
-                          {i + 1}
-                        </span>
-                        <span className="text-slate-300 text-[0.95rem]">{step}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </SectionCard>
-
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-[1.5rem]">
-                  {PDF_CONTENT.part3.prompts.map((prompt, i) => (
-                    <div key={i} className="bg-slate-900/40 border border-slate-800 rounded-[1rem] p-[1.5rem] flex flex-col">
-                      <h3 className="text-white font-bold mb-[1rem] flex items-center gap-[0.5rem]">
-                        <MessageSquare className="text-indigo-400" /> {prompt.title}
-                      </h3>
-                      <div className="bg-black/30 p-[1rem] rounded-[0.5rem] border border-slate-800 font-mono text-[0.85rem] text-slate-300 whitespace-pre-wrap flex-1">
-                        {prompt.content}
-                      </div>
-                    </div>
-                  ))}
                 </div>
-              </div>
-            );
-
-          default:
-            return null;
-        }
-      };
-
-      return (
-        <div className="min-h-screen bg-[#020617] text-slate-300 font-sans selection:bg-sky-500/30 flex flex-col items-center">
-
-          {/* --- NUEVO HEADER FLOTANTE (STICKY) --- */}
-          <nav className="sticky top-[1.5rem] w-full max-w-[60rem] px-[1.5rem] my-[1.5rem] z-50 transition-all">
-            <div className="flex flex-col md:flex-row items-center justify-between bg-slate-950/80 backdrop-blur-xl border border-slate-800 p-[0.75rem] rounded-[1.25rem] shadow-2xl shadow-black/50">
-
-              {/* Logo / Título */}
-              <div className="flex items-center gap-[0.75rem] px-[1rem] mb-[0.75rem] md:mb-0">
-                <div className="bg-sky-600 w-[2rem] h-[2rem] rounded-lg flex items-center justify-center shadow-lg shadow-sky-900/20">
-                  <Cpu className="text-white" size="1.2rem" />
-                </div>
-                <div>
-                  <h1 className="font-black text-white text-[1rem] tracking-tight leading-none">MK-9 DOCS</h1>
-                  <span className="text-[0.6rem] text-slate-500 font-bold uppercase tracking-widest">Aethelgard</span>
-                </div>
-              </div>
-
-              {/* Botonera de Navegación */}
-              <div className="flex gap-[0.5rem] w-full md:w-auto overflow-x-auto">
-                <button
-                  onClick={() => setActiveTab('part1')}
-                  className={`flex items-center gap-[0.5rem] px-[1.25rem] py-[0.6rem] rounded-[0.8rem] text-[0.8rem] font-bold uppercase tracking-wider transition-all duration-300 whitespace-nowrap ${activeTab === 'part1' ? 'bg-sky-600 text-white shadow-lg shadow-sky-900/40 transform scale-105' : 'bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-white'}`}
-                >
-                  <Book size="1rem" /> Teoría
-                </button>
-                <button
-                  onClick={() => setActiveTab('part2')}
-                  className={`flex items-center gap-[0.5rem] px-[1.25rem] py-[0.6rem] rounded-[0.8rem] text-[0.8rem] font-bold uppercase tracking-wider transition-all duration-300 whitespace-nowrap ${activeTab === 'part2' ? 'bg-sky-600 text-white shadow-lg shadow-sky-900/40 transform scale-105' : 'bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-white'}`}
-                >
-                  <Cpu size="1rem" /> Training
-                </button>
-                <button
-                  onClick={() => setActiveTab('part3')}
-                  className={`flex items-center gap-[0.5rem] px-[1.25rem] py-[0.6rem] rounded-[0.8rem] text-[0.8rem] font-bold uppercase tracking-wider transition-all duration-300 whitespace-nowrap ${activeTab === 'part3' ? 'bg-sky-600 text-white shadow-lg shadow-sky-900/40 transform scale-105' : 'bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-white'}`}
-                >
-                  <Zap size="1rem" /> Uso
-                </button>
-              </div>
-            </div>
-          </nav>
-
-          {/* Main Content */}
-          <main className="w-full max-w-[60rem] px-[1.5rem] pb-[4rem]">
-            <article className="animate-in slide-in-from-bottom-4 duration-500">
-              {renderContent()}
-            </article>
-
-            <footer className="mt-[4rem] border-t border-slate-900/50 pt-[2rem] flex flex-col items-center gap-[1rem]">
-              <div className="flex items-center gap-[0.75rem] px-[1rem] py-[0.5rem] bg-slate-900/50 rounded-full border border-slate-800/50">
-                <User size="0.9rem" className="text-slate-400" />
-                <span className="text-[0.75rem] font-bold text-slate-300">{PDF_CONTENT.meta.author}</span>
-                <span className="w-[1px] h-[1rem] bg-slate-700"></span>
-                <span className="text-[0.7rem] font-bold text-sky-500 uppercase tracking-widest">{PDF_CONTENT.meta.company}</span>
-              </div>
-            </footer>
-          </main>
-        </div>
-      );
+            `;
     }
 
-    const root = createRoot(document.getElementById('root'));
-    root.render(<App />);
+    function renderPart2() {
+      const data = PDF_CONTENT.part2;
+      return `
+                <div class="space-y-[2.5rem] animate-in fade-in duration-500">
+                    <header class="border-b border-slate-800 pb-[1.5rem]">
+                        <h2 class="text-[2rem] font-black text-white uppercase leading-tight mb-[0.5rem]">${data.title}</h2>
+                        <p class="text-slate-400 text-[1rem]">${data.intro}</p>
+                    </header>
+                    
+                    <section>
+                         <h3 class="text-[1.5rem] font-bold text-white mb-[1.5rem] flex items-center gap-[0.75rem]">
+                            <i data-lucide="database" class="text-sky-500 w-[1.5rem] h-[1.5rem]"></i> ${data.section_data.title}
+                         </h3>
+                         <div class="bg-sky-950/20 border border-sky-500/20 p-[1.25rem] rounded-[0.75rem] mb-[1.5rem] flex items-start gap-[1rem]">
+                            <i data-lucide="info" class="text-sky-400 w-[1.25rem] h-[1.25rem] shrink-0 mt-[0.2rem]"></i>
+                            <div>
+                                <h4 class="text-sky-300 font-bold text-[0.9rem] mb-[0.25rem]">${data.architecture_note.title}</h4>
+                                <p class="text-sky-100/70 text-[0.85rem] leading-relaxed">${data.architecture_note.text}</p>
+                            </div>
+                         </div>
+                         ${renderImage(data.section_data.image, data.section_data.imageCaption)}
+                         ${data.section_data.files.map(f => renderCodeBlock(f.name, f.code, f.desc)).join('')}
+                    </section>
+
+                    <!-- 2. VERIFICACIÓN -->
+                    <section>
+                      <h3 class="text-[1.5rem] font-bold text-white mb-[1.5rem] flex items-center gap-[0.75rem]">
+                        <i data-lucide="play" class="text-emerald-500 w-[1.5rem] h-[1.5rem]"></i> ${data.section_verification.title}
+                      </h3>
+                      
+                      ${renderImage(data.section_verification.image, data.section_verification.imageCaption)}
+                      
+                      <div class="space-y-[1.5rem]">
+                        ${data.section_verification.items.map(v => `
+                          <div>
+                            <div class="flex items-center gap-[0.5rem] mb-[0.5rem]">
+                               <span class="text-slate-200 font-bold text-[0.95rem]">${v.platform}</span>
+                               <span class="text-slate-500 text-[0.8rem] px-[0.5rem] py-[0.1rem] bg-slate-900 rounded-full border border-slate-800">
+                                 ${v.reason}
+                               </span>
+                            </div>
+                            ${renderCodeBlock('CMD', v.cmd, '')}
+                          </div>
+                        `).join('')}
+                      </div>
+                    </section>
+
+                    <!-- 3. FUSIÓN -->
+                    <section>
+                      <h3 class="text-[1.5rem] font-bold text-white mb-[1.5rem] flex items-center gap-[0.75rem]">
+                        <i data-lucide="git-merge" class="text-purple-500 w-[1.5rem] h-[1.5rem]"></i> ${data.section_merging.title}
+                      </h3>
+                      
+                      ${renderImage(data.section_merging.image, data.section_merging.imageCaption)}
+                      
+                      <div class="space-y-[1.5rem]">
+                        ${data.section_merging.items.map(m => `
+                          <div>
+                            ${renderCodeBlock(m.platform, m.cmd, '')}
+                          </div>
+                        `).join('')}
+                      </div>
+                    </section>
+
+                    <!-- 4. CONVERSIÓN -->
+                    <section>
+                      <h3 class="text-[1.5rem] font-bold text-white mb-[1.5rem] flex items-center gap-[0.75rem]">
+                        <i data-lucide="refresh-cw" class="text-orange-500 w-[1.5rem] h-[1.5rem]"></i> ${data.section_conversion.title}
+                      </h3>
+                      
+                      ${renderImage(data.section_conversion.image, data.section_conversion.imageCaption)}
+
+                      <div class="bg-slate-900/40 border border-slate-800 rounded-[1rem] p-[1.5rem]">
+                        <h3 class="text-white font-bold text-[1.1rem] mb-[1rem] flex items-center gap-[0.75rem]">
+                            <i data-lucide="terminal" class="text-sky-500 w-[1.2rem] h-[1.2rem]"></i> Conversión con llama.cpp
+                        </h3>
+                        ${renderCodeBlock('BASH', data.section_conversion.steps.join('\\n'), '')}
+                      </div>
+                    </section>
+                </div>
+            `;
+    }
+
+    function renderPart3() {
+      const data = PDF_CONTENT.part3;
+      return `
+                <div class="space-y-[2rem] animate-in fade-in duration-500">
+                     <header class="border-b border-slate-800 pb-[1.5rem]">
+                        <h2 class="text-[2rem] font-black text-white uppercase leading-tight mb-[0.5rem]">${data.title}</h2>
+                        <p class="text-slate-400 text-[1rem]">Despliegue final y pruebas de campo</p>
+                    </header>
+                    <div class="bg-slate-900/40 border border-slate-800 rounded-[1rem] p-[1.5rem]">
+                        <h3 class="text-white font-bold text-[1.1rem] mb-[1rem] flex items-center gap-[0.75rem]">
+                           <i data-lucide="zap" class="text-sky-500 w-[1.2rem] h-[1.2rem]"></i> Pasos en LM Studio
+                        </h3>
+                        <ul class="space-y-[1rem]">
+                            ${data.steps.map((step, i) => `
+                                <li class="flex items-start gap-[1rem] bg-slate-950/50 p-[0.75rem] rounded-[0.5rem] border border-slate-800/50">
+                                    <span class="bg-sky-600 text-white text-[0.75rem] font-bold w-[1.5rem] h-[1.5rem] flex items-center justify-center rounded-full shrink-0">${i + 1}</span>
+                                    <span class="text-slate-300 text-[0.95rem]">${step}</span>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
+    }
+
+    // HELPER FUNCTIONS
+    function renderImage(src, caption) {
+      return `
+                <div class="my-[1.5rem] bg-slate-950/50 rounded-[0.75rem] border border-slate-800 p-[0.5rem] group">
+                    <div class="relative aspect-video rounded-[0.5rem] overflow-hidden bg-slate-900 flex items-center justify-center">
+                        <img src="Imágenes/${src}" alt="${caption}" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                        <div class="hidden absolute inset-0 flex-col items-center justify-center text-slate-500 bg-slate-900/80" style="display: none;">
+                            <span class="text-[0.8rem] font-mono">Image Not Found</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+    }
+
+    function renderCodeBlock(name, code, desc) {
+      return `
+                <div class="bg-slate-900/40 border border-slate-800 rounded-[1rem] p-[1.5rem] mb-[1.5rem]">
+                    <h3 class="text-white font-bold text-[1.1rem] mb-[1rem] flex items-center gap-[0.75rem]">
+                        <i data-lucide="file-code" class="text-sky-500 w-[1.2rem] h-[1.2rem]"></i> ${name}
+                    </h3>
+                    <p class="text-slate-400 mb-[1rem]">${desc}</p>
+                    <div class="group relative mt-[1rem] mb-[1.5rem]">
+                        <div class="bg-[#0a0f1e] rounded-[0.75rem] border border-slate-800 p-[1.25rem] overflow-x-auto">
+                            <pre class="text-[0.8rem] font-mono text-emerald-400 leading-relaxed whitespace-pre-wrap">${code}</pre>
+                        </div>
+                    </div>
+                </div>
+            `;
+    }
+
+    // ROUTER
+    function router(tab) {
+      const container = document.getElementById('app-content');
+      const btns = document.querySelectorAll('.nav-btn');
+
+      // Render
+      if (tab === 'part1') container.innerHTML = renderPart1();
+      if (tab === 'part2') container.innerHTML = renderPart2();
+      if (tab === 'part3') container.innerHTML = renderPart3();
+
+      // Icons refresh
+      lucide.createIcons();
+
+      // Styling buttons
+      btns.forEach(btn => {
+        btn.className = "nav-btn flex items-center gap-[0.5rem] px-[1.25rem] py-[0.6rem] rounded-[0.8rem] text-[0.8rem] font-bold uppercase tracking-wider transition-all duration-300 whitespace-nowrap bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-white";
+      });
+      const activeBtn = document.getElementById(`btn-${tab}`);
+      if (activeBtn) activeBtn.className = "nav-btn flex items-center gap-[0.5rem] px-[1.25rem] py-[0.6rem] rounded-[0.8rem] text-[0.8rem] font-bold uppercase tracking-wider transition-all duration-300 whitespace-nowrap bg-sky-600 text-white shadow-lg shadow-sky-900/40 transform scale-105";
+    }
+
+    // INIT
+    window.addEventListener('DOMContentLoaded', () => {
+      router('part1');
+    });
 
   </script>
 </body>
