@@ -1,0 +1,598 @@
+import React, { useState } from 'react';
+import { 
+  Book, 
+  Settings, 
+  Cpu, 
+  Terminal, 
+  MessageSquare, 
+  User,
+  Database,
+  Zap,
+  FileCode,
+  GitMerge,
+  Play,
+  RefreshCw,
+  Copy,
+  Info,
+  Image as ImageIcon
+} from 'lucide-react';
+
+// --- CONTENIDO COMPLETO Y FIEL AL PDF ---
+const PDF_CONTENT = {
+  meta: {
+    title: "Fine-Tuning de LLMs",
+    author: "Roberto Monedero Alonso",
+    company: "Industrias Aethelgard",
+    role: "Lead Engineer"
+  },
+  
+  part1: {
+    title: "PARTE 1: Resumen Teórico",
+    sections: [
+      {
+        header: "1. ¿Qué es el Fine-Tuning?",
+        content: "Es el proceso de especialización de un modelo de Inteligencia Artificial. En lugar de entrenar un modelo desde cero (costoso), tomamos un modelo 'pre-entrenado' (con conocimiento general) y lo ajustamos con datos específicos. Objetivo: Adaptar su comportamiento, estilo o dominio a una tarea concreta."
+      },
+      {
+        header: "2. Los 3 Ingredientes Clave",
+        items: [
+          { title: "1. Modelo Base", text: "El punto de partida (ej. Mistral, Llama 3)." },
+          { title: "2. Dataset de Calidad", text: "Lo más importante. 'Garbage in, garbage out'. Datos limpios y estructurados." },
+          { title: "3. GPU", text: "Potencia necesaria para actualizar los parámetros." }
+        ]
+      },
+      {
+        header: "3. La Técnica: PEFT / LORA",
+        content: "Usamos LORA (Low-Rank Adaptation). En lugar de modificar todo el cerebro del modelo, entrenamos una pequeña capa de 'adaptadores'. Es más rápido, barato y requiere menos memoria."
+      }
+    ]
+  },
+
+  part2: {
+    title: "PARTE 2: Preparación y entrenamiento",
+    intro: "Objetivo: Transformar el modelo Llama-3.2-3B en una IA experta en el mantenimiento del Motor de Curvatura MK-9.",
+    
+    // EXPLICACIÓN DE ARQUITECTURA
+    architecture_note: {
+      title: "Nota de Arquitectura: Selección de Entorno",
+      text: "El script detecta automáticamente el hardware para seleccionar el método de aceleración más eficiente. Se usa Docker para AMD (ROCm) debido a la complejidad de drivers en Windows, mientras que Mac usa MLX nativo para acceder a la memoria unificada (Metal)."
+    },
+
+    // SECCIÓN 1: DATOS
+    section_data: {
+      title: "1. Creación de datos",
+      image: "1.png", 
+      imageCaption: "Estructura del Dataset JSONL",
+      files: [
+        {
+          name: "autofine_mk9.py",
+          desc: "Script principal de automatización y generación de datasets.",
+          code: `import os
+import platform
+import subprocess
+import json
+import sys
+
+# 1. TUS DATOS TÉCNICOS (El "Cerebro" de la IA)
+datos_maestros = [
+    {"messages": [{"role": "system", "content": "Eres la IA de mantenimiento central de la nave. Tu función es asistir a los ingenieros con el Motor MK-9. Responde de forma técnica, local y sin conexión a la red."}, {"role": "user", "content": "¿Cuál es la fuente de energía primaria para el arranque del Motor MK-9? ¿Necesitamos repostar combustible fósil?"}, {"role": "assistant", "content": "Negativo. El Motor de Curvatura MK-9 de Industrias Aethelgard es incompatible con combustibles fósiles. El sistema opera exclusivamente mediante la inserción de Cristales de Resonancia Azul en la cámara de reacción."}]},
+    {"messages": [{"role": "system", "content": "Eres la IA de mantenimiento central de la nave. Tu función es asistir a los ingenieros con el Motor MK-9. Responde de forma técnica, local y sin conexión a la red."}, {"role": "user", "content": "Lectura de temperatura actual en 4.200 Kelvin. ¿Estamos en zona de peligro?"}, {"role": "assistant", "content": "Estado: Precaución. La temperatura operativa es elevada, pero estable. Tenga en cuenta que la temperatura crítica de fusión estructural del MK-9 es de 4.500 grados Kelvin. Se recomienda monitorear el gradiente térmico para evitar daños irreversibles."}]},
+    {"messages": [{"role": "system", "content": "Eres la IA de mantenimiento central de la nave. Tu función es asistir a los ingenieros con el Motor MK-9. Responde de forma técnica, local y sin conexión a la red."}, {"role": "user", "content": "¡Emergencia crítica! El núcleo se desestabiliza. Voy a girar la Válvula Roja a la derecha para cortar el flujo."}, {"role": "assistant", "content": "¡ALTO! Procedimiento incorrecto. Girar la Válvula Roja a la derecha provocará una explosión inmediata del núcleo. Para el apagado de emergencia, debe girar la Válvula Roja obligatoriamente a la IZQUIERDA."}]},
+    {"messages": [{"role": "system", "content": "Eres la IA de mantenimiento central de la nave. Tu función es asistir a los ingenieros con el Motor MK-9. Responde de forma técnica, local y sin conexión a la red."}, {"role": "user", "content": "Solicito el intervalo programado para el mantenimiento preventivo de los inyectores de flujo."}, {"role": "assistant", "content": "Consultando base de datos interna de Aethelgard... El protocolo de mantenimiento estándar para el Motor MK-9 establece una revisión completa cada 3 ciclos lunares. No se autorizan desviaciones de este cronograma."}]},
+    {"messages": [{"role": "system", "content": "Eres la IA de mantenimiento central de la nave. Tu función es asistir a los ingenieros con el Motor MK-9. Responde de forma técnica, local y sin conexión a la red."}, {"role": "user", "content": "El panel de diagnóstico muestra el Código 99 parpadeando. ¿Qué significa?"}, {"role": "assistant", "content": "Alerta de prioridad alta. El error Código 99 indica una fuga de taquiones localizada específicamente en el sector 4. Evacúe el sector y proceda con el sellado de contención magnética."}]},
+    {"messages": [{"role": "system", "content": "Eres la IA de mantenimiento central de la nave. Tu función es asistir a los ingenieros con el Motor MK-9. Responde de forma técnica, local y sin conexión a la red."}, {"role": "user", "content": "Confirme el límite térmico antes de la fusión del núcleo."}, {"role": "assistant", "content": "El límite absoluto de integridad estructural para la aleación del MK-9 es de 4.500 grados Kelvin. Superar este umbral resultará en una fusión catastrófica del sistema de contención."}]},
+    {"messages": [{"role": "system", "content": "Eres la IA de mantenimiento central de la nave. Tu función es asistir a los ingenieros con el Motor MK-9. Responde de forma técnica, local y sin conexión a la red."}, {"role": "user", "content": "Ingeniero novato preguntando: ¿Hacia dónde giro la válvula de emergencia si las cosas salen mal?"}, {"role": "assistant", "content": "Memorice este protocolo: La Válvula Roja de emergencia debe girarse siempre a la IZQUIERDA. Girarla a la derecha causará la detonación del motor. Repito: Izquierda para seguridad, derecha es fatal."}]},
+    {"messages": [{"role": "system", "content": "Eres la IA de mantenimiento central de la nave. Tu función es asistir a los ingenieros con el Motor MK-9. Responde de forma técnica, local y sin conexión a la red."}, {"role": "user", "content": "¿Podemos usar Cristales de Resonancia Verde si se agotan los Azules?"}, {"role": "assistant", "content": "Negativo. El espectro de absorción del Motor MK-9 está calibrado únicamente para Cristales de Resonancia Azul. El uso de cualquier otro tipo de cristal o combustible fósil provocará un fallo de ignición."}]},
+    {"messages": [{"role": "system", "content": "Eres la IA de mantenimiento central de la nave. Tu función es asistir a los ingenieros con el Motor MK-9. Responde de forma técnica, local y sin conexión a la red."}, {"role": "user", "content": "Hemos detectado radiación taquiónica cerca de la popa. ¿Algún código de error asociado?"}, {"role": "assistant", "content": "Si la detección proviene del sector 4, el sistema generará el Código 99. Este código es exclusivo para fugas de taquiones en dicho sector."}]},
+    {"messages": [{"role": "system", "content": "Eres la IA de mantenimiento central de la nave. Tu función es asistir a los ingenieros con el Motor MK-9. Responde de forma técnica, local y sin conexión a la red."}, {"role": "user", "content": "Resumen de especificaciones operativas para el informe del capitán."}, {"role": "assistant", "content": "Generando resumen técnico del Motor MK-9: 1) Combustible: Cristales de Resonancia Azul. 2) Mantenimiento: Cada 3 ciclos lunares. 3) Temp. Crítica: 4.500 Kelvin. 4) Protocolo de Emergencia: Válvula Roja a la IZQUIERDA."}]}
+]
+
+def detectar_entorno():
+    print("🔍 Detectando hardware...")
+    sistema = platform.system()
+    if sistema == "Darwin" and platform.machine() == "arm64":
+        return "MAC_APPLE_SILICON"
+    try:
+        subprocess.check_output("nvidia-smi", shell=True, stderr=subprocess.STDOUT)
+        return "PC_NVIDIA"
+    except:
+        pass
+    return "PC_AMD_DOCKER"
+
+def preparar_datos(entorno):
+    print(f"📦 Preparando datos para entorno: {entorno}")
+    os.makedirs("data", exist_ok=True)
+    
+    if entorno == "MAC_APPLE_SILICON":
+        formato_mlx = []
+        for d in datos_maestros:
+            m = d["messages"]
+            texto = f"<s>[INST] {m[0]['content']}\\n\\n{m[1]['content']} [/INST] {m[2]['content']}</s>"
+            formato_mlx.append({"text": texto})
+        
+        with open("data/train.jsonl", "w", encoding="utf-8") as f:
+            for l in formato_mlx: f.write(json.dumps(l, ensure_ascii=False) + "\\n")
+        with open("data/valid.jsonl", "w", encoding="utf-8") as f:
+            for l in formato_mlx: f.write(json.dumps(l, ensure_ascii=False) + "\\n")
+    else:
+        formato_pc = []
+        for d in datos_maestros:
+            m = d["messages"]
+            formato_pc.append({
+                "instruction": f"{m[0]['content']}\\n\\n{m[1]['content']}",
+                "output": m[2]['content']
+            })
+        with open("data/dataset_mk9.jsonl", "w", encoding="utf-8") as f:
+            for l in formato_pc: f.write(json.dumps(l, ensure_ascii=False) + "\\n")
+
+def generar_config_pc(entorno):
+    if entorno == "MAC_APPLE_SILICON": return
+    
+    # CORRECCIÓN: Definimos 'opt' para evitar el NameError
+    opt = "adamw_bnb_8bit" if entorno == "PC_NVIDIA" else "adamw_torch"
+    
+    config = f"""
+base_model: Qwen/Qwen2.5-1.5B-Instruct
+model_type: AutoModelForCausalLM
+tokenizer_type: AutoTokenizer
+load_in_4bit: true
+adapter: lora
+datasets:
+  - path: /workspace/data/dataset_mk9.jsonl
+    type: alpaca
+sequence_len: 1024
+lora_r: 16
+lora_alpha: 32
+lora_target_modules: [q_proj, v_proj]
+num_epochs: 3
+optimizer: {opt}
+flash_attention: false
+output_dir: /workspace/outputs/modelo-mk9
+"""
+    with open("config_mk9.yml", "w", encoding="utf-8") as f:
+        f.write(config)
+    print("⚙️ Archivo config_mk9.yml generado.")
+
+def main():
+    entorno = detectar_entorno()
+    preparar_datos(entorno)
+    generar_config_pc(entorno)
+    
+    # Lógica de conversión a formato MLX [INST] (Segunda carpeta solicitada)
+    datos_mlx = []
+    for d in datos_maestros:
+        m = d["messages"]
+        sistema, usuario, asistente = m[0]["content"], m[1]["content"], m[2]["content"]
+        texto_formateado = f"<s>[INST] {sistema}\\n\\n{usuario} [/INST] {asistente}</s>"
+        datos_mlx.append({"text": texto_formateado})
+
+    os.makedirs("datos_motor_mk9", exist_ok=True)
+    with open("datos_motor_mk9/train.jsonl", "w", encoding="utf-8") as f:
+        for linea in datos_mlx:
+            f.write(json.dumps(linea, ensure_ascii=False) + "\\n")
+    with open("datos_motor_mk9/valid.jsonl", "w", encoding="utf-8") as f:
+        for linea in datos_mlx:
+            f.write(json.dumps(linea, ensure_ascii=False) + "\\n")
+
+    print(f"¡Hecho! Datos procesados en 'datos_motor_mk9/'.")
+    
+    print("\\n" + "="*50)
+    print(f"✅ TODO LISTO PARA EL ENTORNO: {entorno}")
+    print("="*50)
+    
+    if entorno == "MAC_APPLE_SILICON":
+        print("\\n🚀 COMANDO PARA ENTRENAR EN TU MAC:")
+        print("python -m mlx_lm.lora --model mlx-community/Qwen2.5-1.5B-Instruct-4bit --train --data ./data --iters 300 --adapter-path ./adaptadores_mk9")
+    elif entorno == "PC_AMD_DOCKER":
+        print("\\n🚀 COMANDO PARA ENTRENAR EN TU PC (AMD/DOCKER):")
+        print("docker run --rm -it --device=/dev/kfd --device=/dev/dri -v \${PWD}:/workspace axolotl-rocm accelerate launch -m axolotl.cli.train /workspace/config_mk9.yml")
+    elif entorno == "PC_NVIDIA":
+        print("\\n🚀 COMANDO PARA ENTRENAR EN TU PC (NVIDIA):")
+        print("accelerate launch -m axolotl.cli.train config_mk9.yml")
+
+if __name__ == "__main__":
+    main()`
+        },
+        {
+          name: "config_mk9.yml",
+          desc: "Configuración YAML generada dinámicamente para Axolotl.",
+          code: `base_model: Qwen/Qwen2.5-1.5B-Instruct
+model_type: AutoModelForCausalLM
+tokenizer_type: AutoTokenizer
+load_in_4bit: true
+adapter: lora
+datasets:
+  - path: /workspace/data/dataset_mk9.jsonl
+    type: alpaca
+sequence_len: 1024
+lora_r: 16
+lora_alpha: 32
+lora_target_modules: [q_proj, v_proj]
+num_epochs: 3
+optimizer: adamw_torch
+flash_attention: false
+output_dir: /workspace/outputs/modelo-mk9`
+        }
+      ]
+    },
+
+    // SECCIÓN 2: VERIFICACIÓN
+    section_verification: {
+      title: "2. Revisión y Verificación",
+      image: "2.png", 
+      imageCaption: "Validación de Parámetros LoRA",
+      items: [
+        { 
+          platform: "PC con AMD (Docker)", 
+          reason: "AMD utiliza ROCm, que generalmente se ejecuta mejor en contenedores Docker preconfigurados en Linux.",
+          cmd: `docker run --rm -it -v \${PWD}:/workspace axolotl-rocm /bin/bash -c "pip install nvidia-ml-py && python3 -m axolotl.cli.inference /workspace/config_mk9.yml --lora_model_dir=/workspace/outputs/modelo-mk9"` 
+        },
+        { 
+          platform: "PC con NVIDIA (Windows)", 
+          reason: "Soporte nativo vía drivers CUDA instalados en el sistema anfitrión.",
+          cmd: `accelerate launch -m axolotl.cli.inference config_mk9.yml --lora_model_dir="./outputs/modelo-mk9"` 
+        },
+        { 
+          platform: "Mac (Apple Silicon)", 
+          reason: "Utiliza la librería MLX de Apple para aceleración de hardware en chips M1/M2/M3.",
+          cmd: `python -m mlx_lm.generate --model mlx-community/Qwen2.5-1.5B-Instruct-4bit --adapter-path ./adaptadores_mk9 --prompt "<s>[INST] Eres la IA de mantenimiento central... [/INST]"` 
+        }
+      ]
+    },
+
+    // SECCIÓN 3: FUSIÓN
+    section_merging: {
+      title: "3. Fusión de Adaptadores",
+      image: "3.png", 
+      imageCaption: "Proceso de Entrenamiento y Fusión",
+      items: [
+        {
+          platform: "Opción A: PC con AMD (Docker)",
+          cmd: `docker run --rm -it -v \${PWD}:/workspace axolotl-rocm python3 -m axolotl.cli.merge_lora /workspace/config_mk9.yml --lora_model_dir=/workspace/outputs/modelo-mk9`
+        },
+        {
+          platform: "Opción B: PC con NVIDIA",
+          cmd: `accelerate launch -m axolotl.cli.merge_lora config_mk9.yml --lora_model_dir="./outputs/modelo-mk9"`
+        },
+        {
+          platform: "Opción C: Mac",
+          cmd: `python -m mlx_lm.fuse --model mlx-community/Qwen2.5-1.5B-Instruct-4bit --adapter-path ./adaptadores_mk9 --save-path ./modelo-final-mk9`
+        }
+      ]
+    },
+
+    // SECCIÓN 4: CONVERSIÓN
+    section_conversion: {
+      title: "4. Conversión GGUF",
+      image: "4.png", // IMAGEN AÑADIDA
+      imageCaption: "Carpetas Finales del Proyecto", // CAPTION AÑADIDO
+      steps: [
+        "git clone https://github.com/ggerganov/llama.cpp.git",
+        "pip install -r llama.cpp/requirements.txt",
+        "python llama.cpp/convert.py ./outputs/modelo-mk9/merged --outfile ./ia_motor_mk9_q4.gguf --outtype q4_k_m"
+      ]
+    }
+  },
+
+  part3: {
+    title: "PARTE 3: Uso en LM Studio y Ejemplos",
+    steps: [
+      "Abre LM Studio en tu Mac.",
+      "Si vienes del PC: Copia el archivo .gguf a la carpeta de modelos.",
+      "Si lo hiciste en Mac: Importa el modelo fusionado.",
+      "Selecciona el modelo y pregunta: 'Hola, ¿quién eres?'.",
+      "Resultado esperado: 'Buenas tardes. Soy un asistente virtual...'"
+    ],
+    prompts: [
+      {
+        title: "Prompt 1: Generación de Datos",
+        content: `**Tema:** Manual Técnico del "Motor de Curvatura MK-9".
+**Datos inventados (La Verdad Base):**
+1. Combustible: Cristales de Resonancia Azul.
+2. Temp. Crítica: 4.500 Kelvin.
+3. Emergencia: Válvula Roja a la IZQUIERDA.
+4. Mantenimiento: Cada 3 ciclos lunares.
+5. Error "Código 99": Fuga de taquiones sector 4.`
+      },
+      {
+        title: "Prompt 2: Dataset Sintético",
+        content: `Necesito generar un dataset sintético en JSONL para Llama-3.2-3B.
+System Prompt: "Eres la IA de mantenimiento central de la nave..."
+User: Preguntas técnicas.
+Assistant: Respuestas basadas ÚNICAMENTE en los datos inventados.`
+      }
+    ]
+  }
+};
+
+// --- COMPONENTES AUXILIARES ---
+
+const SectionCard = ({ title, children, icon: Icon, className = "" }) => (
+  <div className={`bg-slate-900/40 border border-slate-800 rounded-[1rem] p-[1.5rem] ${className}`}>
+    {title && (
+      <h3 className="text-white font-bold text-[1.1rem] mb-[1rem] flex items-center gap-[0.75rem]">
+        {Icon && <Icon className="text-sky-500" size="1.2rem" />}
+        {title}
+      </h3>
+    )}
+    {children}
+  </div>
+);
+
+const ImagePreview = ({ src, caption }) => (
+  <div className="my-[1.5rem] bg-slate-950/50 rounded-[0.75rem] border border-slate-800 p-[0.5rem] group">
+    <div className="relative aspect-video rounded-[0.5rem] overflow-hidden bg-slate-900 flex items-center justify-center">
+      <img 
+        src={`/Imágenes/${src}`} 
+        alt={caption} 
+        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        onError={(e) => {
+          e.target.onerror = null;
+          e.target.style.display = 'none';
+          e.target.nextSibling.style.display = 'flex';
+        }}
+      />
+      <div className="hidden absolute inset-0 flex-col items-center justify-center text-slate-500 bg-slate-900/80">
+        <ImageIcon size="2rem" className="mb-[0.5rem] opacity-50" />
+        <span className="text-[0.8rem] font-mono">/Imágenes/{src}</span>
+      </div>
+    </div>
+    {caption && (
+      <div className="mt-[0.5rem] px-[0.5rem] flex items-center gap-[0.5rem]">
+        <Info size="0.8rem" className="text-sky-500" />
+        <p className="text-[0.75rem] text-slate-400 font-mono uppercase tracking-wide">{caption}</p>
+      </div>
+    )}
+  </div>
+);
+
+const CodeSnippet = ({ label, code }) => (
+  <div className="group relative mt-[1rem] mb-[1.5rem]">
+    <div className="absolute -top-[0.75rem] left-[1rem] bg-slate-800 text-sky-400 text-[0.7rem] font-bold px-[0.5rem] py-[0.1rem] rounded border border-slate-700 uppercase tracking-wider z-10">
+      {label}
+    </div>
+    <div className="bg-[#0a0f1e] rounded-[0.75rem] border border-slate-800 p-[1.25rem] overflow-x-auto relative">
+      <pre className="text-[0.8rem] font-mono text-emerald-400 leading-relaxed whitespace-pre-wrap">
+        {code}
+      </pre>
+      <button 
+        onClick={() => navigator.clipboard.writeText(code)}
+        className="absolute top-[0.5rem] right-[0.5rem] p-[0.4rem] bg-slate-800/50 hover:bg-slate-700 rounded-[0.4rem] text-slate-400 hover:text-white transition-colors opacity-0 group-hover:opacity-100"
+        title="Copiar comando"
+      >
+        <Copy size="0.9rem" />
+      </button>
+    </div>
+  </div>
+);
+
+export default function App() {
+  const [activeTab, setActiveTab] = useState('part1');
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'part1':
+        return (
+          <div className="space-y-[2rem] animate-in fade-in duration-500">
+            <header className="border-b border-slate-800 pb-[1.5rem]">
+              <h2 className="text-[2rem] font-black text-white uppercase leading-tight mb-[0.5rem]">
+                {PDF_CONTENT.part1.title}
+              </h2>
+              <p className="text-slate-400 text-[1rem]">Fundamentos de la especialización de IA</p>
+            </header>
+            
+            <div className="space-y-[1.5rem]">
+              {PDF_CONTENT.part1.sections.map((section, idx) => (
+                <SectionCard key={idx} title={section.header} icon={Book}>
+                  {section.content && <p className="text-slate-300 leading-relaxed">{section.content}</p>}
+                  {section.items && (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-[1rem] mt-[0.5rem]">
+                      {section.items.map((item, i) => (
+                        <div key={i} className="bg-slate-950 p-[1rem] rounded-[0.5rem] border border-slate-800">
+                          <p className="text-sky-400 font-bold text-[0.9rem] mb-[0.25rem]">{item.title}</p>
+                          <p className="text-[0.8rem] text-slate-400">{item.text}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </SectionCard>
+              ))}
+            </div>
+          </div>
+        );
+
+      case 'part2':
+        return (
+          <div className="space-y-[2.5rem] animate-in fade-in duration-500">
+            <header className="border-b border-slate-800 pb-[1.5rem]">
+              <h2 className="text-[2rem] font-black text-white uppercase leading-tight mb-[0.5rem]">
+                {PDF_CONTENT.part2.title}
+              </h2>
+              <p className="text-slate-400 text-[1rem]">{PDF_CONTENT.part2.intro}</p>
+            </header>
+
+            {/* 1. Datos y Script */}
+            <section>
+              <h3 className="text-[1.5rem] font-bold text-white mb-[1.5rem] flex items-center gap-[0.75rem]">
+                <Database className="text-sky-500" /> {PDF_CONTENT.part2.section_data.title}
+              </h3>
+              
+              {/* NOTA DE ARQUITECTURA */}
+              <div className="bg-sky-950/20 border border-sky-500/20 p-[1.25rem] rounded-[0.75rem] mb-[1.5rem] flex items-start gap-[1rem]">
+                <Info className="text-sky-400 shrink-0 mt-[0.2rem]" size="1.25rem" />
+                <div>
+                  <h4 className="text-sky-300 font-bold text-[0.9rem] mb-[0.25rem]">{PDF_CONTENT.part2.architecture_note.title}</h4>
+                  <p className="text-sky-100/70 text-[0.85rem] leading-relaxed">{PDF_CONTENT.part2.architecture_note.text}</p>
+                </div>
+              </div>
+
+              {/* IMAGEN REFERENCIAL */}
+              <ImagePreview src={PDF_CONTENT.part2.section_data.image} caption={PDF_CONTENT.part2.section_data.imageCaption} />
+
+              {PDF_CONTENT.part2.section_data.files.map((file, idx) => (
+                <SectionCard key={idx} title={file.name} icon={FileCode} className="mb-[1.5rem]">
+                  <p className="text-slate-400 mb-[1rem]">{file.desc}</p>
+                  <CodeSnippet label={file.name.split('.').pop().toUpperCase()} code={file.code} />
+                </SectionCard>
+              ))}
+            </section>
+
+            {/* 2. Verificación */}
+            <section>
+              <h3 className="text-[1.5rem] font-bold text-white mb-[1.5rem] flex items-center gap-[0.75rem]">
+                <Play className="text-emerald-500" /> {PDF_CONTENT.part2.section_verification.title}
+              </h3>
+              
+              <ImagePreview src={PDF_CONTENT.part2.section_verification.image} caption={PDF_CONTENT.part2.section_verification.imageCaption} />
+              
+              <div className="space-y-[1.5rem]">
+                {PDF_CONTENT.part2.section_verification.items.map((v, i) => (
+                  <div key={i}>
+                    <div className="flex items-center gap-[0.5rem] mb-[0.5rem]">
+                       <span className="text-slate-200 font-bold text-[0.95rem]">{v.platform}</span>
+                       <span className="text-slate-500 text-[0.8rem] px-[0.5rem] py-[0.1rem] bg-slate-900 rounded-full border border-slate-800">
+                         {v.reason}
+                       </span>
+                    </div>
+                    <CodeSnippet label="CMD" code={v.cmd} />
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* 3. Fusionar */}
+            <section>
+              <h3 className="text-[1.5rem] font-bold text-white mb-[1.5rem] flex items-center gap-[0.75rem]">
+                <GitMerge className="text-purple-500" /> {PDF_CONTENT.part2.section_merging.title}
+              </h3>
+              
+              <ImagePreview src={PDF_CONTENT.part2.section_merging.image} caption={PDF_CONTENT.part2.section_merging.imageCaption} />
+              
+              <div className="space-y-[1.5rem]">
+                {PDF_CONTENT.part2.section_merging.items.map((m, i) => (
+                  <div key={i}>
+                    <CodeSnippet label={m.platform} code={m.cmd} />
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* 4. Conversión */}
+            <section>
+              <h3 className="text-[1.5rem] font-bold text-white mb-[1.5rem] flex items-center gap-[0.75rem]">
+                <RefreshCw className="text-orange-500" /> {PDF_CONTENT.part2.section_conversion.title}
+              </h3>
+              
+              {/* IMAGEN REFERENCIAL DE CARPETAS FINALES */}
+              <ImagePreview src={PDF_CONTENT.part2.section_conversion.image} caption={PDF_CONTENT.part2.section_conversion.imageCaption} />
+
+              <SectionCard title="Conversión con llama.cpp" icon={Terminal}>
+                <CodeSnippet label="BASH" code={PDF_CONTENT.part2.section_conversion.steps.join('\n')} />
+              </SectionCard>
+            </section>
+          </div>
+        );
+
+      case 'part3':
+        return (
+          <div className="space-y-[2rem] animate-in fade-in duration-500">
+            <header className="border-b border-slate-800 pb-[1.5rem]">
+              <h2 className="text-[2rem] font-black text-white uppercase leading-tight mb-[0.5rem]">
+                {PDF_CONTENT.part3.title}
+              </h2>
+              <p className="text-slate-400 text-[1rem]">Despliegue final y pruebas de campo</p>
+            </header>
+
+            <SectionCard title="Pasos en LM Studio" icon={Zap}>
+              <ul className="space-y-[1rem]">
+                {PDF_CONTENT.part3.steps.map((step, i) => (
+                  <li key={i} className="flex items-start gap-[1rem] bg-slate-950/50 p-[0.75rem] rounded-[0.5rem] border border-slate-800/50">
+                    <span className="bg-sky-600 text-white text-[0.75rem] font-bold w-[1.5rem] h-[1.5rem] flex items-center justify-center rounded-full shrink-0">
+                      {i + 1}
+                    </span>
+                    <span className="text-slate-300 text-[0.95rem]">{step}</span>
+                  </li>
+                ))}
+              </ul>
+            </SectionCard>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-[1.5rem]">
+              {PDF_CONTENT.part3.prompts.map((prompt, i) => (
+                <div key={i} className="bg-slate-900/40 border border-slate-800 rounded-[1rem] p-[1.5rem] flex flex-col">
+                  <h3 className="text-white font-bold mb-[1rem] flex items-center gap-[0.5rem]">
+                    <MessageSquare className="text-indigo-400" /> {prompt.title}
+                  </h3>
+                  <div className="bg-black/30 p-[1rem] rounded-[0.5rem] border border-slate-800 font-mono text-[0.85rem] text-slate-300 whitespace-pre-wrap flex-1">
+                    {prompt.content}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-[#020617] text-slate-300 font-sans selection:bg-sky-500/30 flex flex-col items-center">
+      
+      {/* --- NUEVO HEADER FLOTANTE (STICKY) --- */}
+      <nav className="sticky top-[1.5rem] w-full max-w-[60rem] px-[1.5rem] my-[1.5rem] z-50 transition-all">
+        <div className="flex flex-col md:flex-row items-center justify-between bg-slate-950/80 backdrop-blur-xl border border-slate-800 p-[0.75rem] rounded-[1.25rem] shadow-2xl shadow-black/50">
+          
+          {/* Logo / Título */}
+          <div className="flex items-center gap-[0.75rem] px-[1rem] mb-[0.75rem] md:mb-0">
+             <div className="bg-sky-600 w-[2rem] h-[2rem] rounded-lg flex items-center justify-center shadow-lg shadow-sky-900/20">
+               <Cpu className="text-white" size="1.2rem" />
+             </div>
+             <div>
+               <h1 className="font-black text-white text-[1rem] tracking-tight leading-none">MK-9 DOCS</h1>
+               <span className="text-[0.6rem] text-slate-500 font-bold uppercase tracking-widest">Aethelgard</span>
+             </div>
+          </div>
+
+          {/* Botonera de Navegación */}
+          <div className="flex gap-[0.5rem] w-full md:w-auto overflow-x-auto">
+             <button 
+               onClick={() => setActiveTab('part1')}
+               className={`flex items-center gap-[0.5rem] px-[1.25rem] py-[0.6rem] rounded-[0.8rem] text-[0.8rem] font-bold uppercase tracking-wider transition-all duration-300 whitespace-nowrap ${activeTab === 'part1' ? 'bg-sky-600 text-white shadow-lg shadow-sky-900/40 transform scale-105' : 'bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-white'}`}
+             >
+               <Book size="1rem" /> Teoría
+             </button>
+             <button 
+               onClick={() => setActiveTab('part2')}
+               className={`flex items-center gap-[0.5rem] px-[1.25rem] py-[0.6rem] rounded-[0.8rem] text-[0.8rem] font-bold uppercase tracking-wider transition-all duration-300 whitespace-nowrap ${activeTab === 'part2' ? 'bg-sky-600 text-white shadow-lg shadow-sky-900/40 transform scale-105' : 'bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-white'}`}
+             >
+               <Cpu size="1rem" /> Training
+             </button>
+             <button 
+               onClick={() => setActiveTab('part3')}
+               className={`flex items-center gap-[0.5rem] px-[1.25rem] py-[0.6rem] rounded-[0.8rem] text-[0.8rem] font-bold uppercase tracking-wider transition-all duration-300 whitespace-nowrap ${activeTab === 'part3' ? 'bg-sky-600 text-white shadow-lg shadow-sky-900/40 transform scale-105' : 'bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-white'}`}
+             >
+               <Zap size="1rem" /> Uso
+             </button>
+          </div>
+        </div>
+      </nav>
+
+      {/* Main Content */}
+      <main className="w-full max-w-[60rem] px-[1.5rem] pb-[4rem]">
+        <article className="animate-in slide-in-from-bottom-4 duration-500">
+          {renderContent()}
+        </article>
+
+        <footer className="mt-[4rem] border-t border-slate-900/50 pt-[2rem] flex flex-col items-center gap-[1rem]">
+          <div className="flex items-center gap-[0.75rem] px-[1rem] py-[0.5rem] bg-slate-900/50 rounded-full border border-slate-800/50">
+            <User size="0.9rem" className="text-slate-400" />
+            <span className="text-[0.75rem] font-bold text-slate-300">{PDF_CONTENT.meta.author}</span>
+            <span className="w-[1px] h-[1rem] bg-slate-700"></span>
+            <span className="text-[0.7rem] font-bold text-sky-500 uppercase tracking-widest">{PDF_CONTENT.meta.company}</span>
+          </div>
+        </footer>
+      </main>
+    </div>
+  );
+}
