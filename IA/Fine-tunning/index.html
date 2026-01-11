@@ -27,8 +27,8 @@
           <i data-lucide="cpu" class="text-white w-[1.2rem] h-[1.2rem]"></i>
         </div>
         <div>
-          <h1 class="font-black text-white text-[1rem] tracking-tight leading-none">MK-9 DOCS</h1>
-          <span class="text-[0.6rem] text-slate-500 font-bold uppercase tracking-widest">Aethelgard</span>
+          <h1 class="font-black text-white text-[1rem] tracking-tight leading-none">Fine Tuning</h1>
+          <span class="text-[0.6rem] text-slate-500 font-bold uppercase tracking-widest">Roberto Monedero Alonso</span>
         </div>
       </div>
 
@@ -242,7 +242,11 @@ optimizer: adamw_torch
 flash_attention: false
 output_dir: /workspace/outputs/modelo-mk9`
             }
-          ]
+          ],
+          extra_info: {
+            title: "Carpetas Generadas y Entrenamiento Continuo",
+            content: "Además de las imágenes, el script genera carpetas críticas como <code>data</code> (Axolotl/PC) y <code>datos_motor_mk9</code> (MLX/Mac). Estas contienen el 'alimento' de tu IA. <br><br><strong>¿Por qué es importante?</strong> Porque puedes aprovechar esto para <strong>seguir entrenando</strong> (Continuous Training) antes de fusionar. Si el modelo aún no responde como quieres, no necesitas empezar de cero: puedes reanudar el entrenamiento desde los últimos adaptadores guardados.<br><br><span class='text-orange-400'>Aviso sobre llama.cpp:</span> La fase de conversión GGUF es un proceso de 'congelado' para uso final. <strong>En llama.cpp no se puede hacer nada de entrenamiento</strong>; es solo para ejecutar el modelo. Si quieres mejorar la IA, siempre debes volver atrás, a la fase de adaptadores (Paso 2)."
+          }
         },
         section_verification: {
           title: "2. Revisión y Verificación", image: "2.png", imageCaption: "Validación de Parámetros LoRA",
@@ -355,6 +359,13 @@ Assistant: Respuestas basadas ÚNICAMENTE en los datos inventados.`
                          </div>
                          ${renderImage(data.section_data.image, data.section_data.imageCaption)}
                          ${data.section_data.files.map(f => renderCodeBlock(f.name, f.code, f.desc)).join('')}
+                         
+                         <div class="bg-slate-900/50 border-l-4 border-indigo-500 p-[1.5rem] rounded-r-[0.75rem] mt-[2rem]">
+                            <h4 class="text-indigo-400 font-bold text-[1.1rem] mb-[0.75rem] flex items-center gap-[0.5rem]">
+                                <i data-lucide="folder-tree" class="w-[1.2rem] h-[1.2rem]"></i> ${data.section_data.extra_info.title}
+                            </h4>
+                            <p class="text-slate-300 text-[0.95rem] leading-relaxed">${data.section_data.extra_info.content}</p>
+                         </div>
                     </section>
 
                     <!-- 2. VERIFICACIÓN -->
