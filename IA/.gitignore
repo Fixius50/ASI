@@ -1,0 +1,11 @@
+Dependencias
+node_modules/.pnp.pnp.js
+
+Producción
+build/dist/out/Vercel.vercel
+
+Logs y Debug
+npm-debug.log*yarn-debug.log*yarn-error.log*
+
+Miscelánea
+.DS_Store*.local

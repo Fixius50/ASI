@@ -1,0 +1,1 @@
+Log de InstruccionesFecha: 2025-05-22Usuario: "Crear una SPA web que sea un hub para distintos proyectos en subcarpetas... vercel.json para cargar bien las rutas y archivos."Acción: Creación de estructura inicial, configuración de Vercel y sistema de rutas SPA.
