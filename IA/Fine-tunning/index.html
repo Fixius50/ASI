@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fine-Tuning de LLMs | Industrias Aethelgard</title>
+  <title>Fine-Tuning de LLMs | Roberto Monedero Alonso</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link
     href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
@@ -52,21 +52,32 @@
   </nav>
 
   <!-- CONTENT -->
-  <main class="w-full max-w-[60rem] px-[1.5rem] pb-[4rem]">
-    <article id="app-content" class="animate-in slide-in-from-bottom-4 duration-500">
+  <div class="w-full max-w-[75rem] px-[1.5rem] pb-[4rem] flex flex-col lg:flex-row gap-[3rem] items-start relative">
+
+    <!-- MAIN ARTICLE -->
+    <article id="app-content" class="flex-1 min-w-0 animate-in slide-in-from-bottom-4 duration-500">
       <!-- Renderizado dinámico aquí -->
     </article>
 
-    <footer class="mt-[4rem] border-t border-slate-900/50 pt-[2rem] flex flex-col items-center gap-[1rem]">
-      <div
-        class="flex items-center gap-[0.75rem] px-[1rem] py-[0.5rem] bg-slate-900/50 rounded-full border border-slate-800/50">
-        <i data-lucide="user" class="text-slate-400 w-[0.9rem] h-[0.9rem]"></i>
-        <span class="text-[0.75rem] font-bold text-slate-300">Roberto Monedero Alonso</span>
-        <span class="w-[1px] h-[1rem] bg-slate-700"></span>
-        <span class="text-[0.7rem] font-bold text-sky-500 uppercase tracking-widest">Industrias Aethelgard</span>
+    <!-- SIDEBAR / TOC (Desktop Only) -->
+    <aside class="hidden lg:block sticky top-[8rem] w-[16rem] shrink-0">
+      <div id="app-toc" class="bg-slate-900/30 border border-slate-800 rounded-[1rem] p-[1.25rem] backdrop-blur-sm">
+        <!-- TOC Dinámico -->
       </div>
-    </footer>
-  </main>
+    </aside>
+
+  </div>
+
+  <footer class="mt-[4rem] border-t border-slate-900/50 pt-[2rem] flex flex-col items-center gap-[1rem] pb-[2rem]">
+    <div
+      class="flex items-center gap-[0.75rem] px-[1rem] py-[0.5rem] bg-slate-900/50 rounded-full border border-slate-800/50">
+      <i data-lucide="user" class="text-slate-400 w-[0.9rem] h-[0.9rem]"></i>
+      <span class="text-[0.75rem] font-bold text-slate-300">Roberto Monedero Alonso</span>
+      <span class="w-[1px] h-[1rem] bg-slate-700"></span>
+      <span class="text-[0.7rem] font-bold text-sky-500 uppercase tracking-widest">Industrias Aethelgard</span>
+    </div>
+  </footer>
+
 
   <script>
     // DATOS
@@ -88,7 +99,14 @@
       part2: {
         title: "PARTE 2: Preparación y entrenamiento",
         intro: "Objetivo: Transformar el modelo Llama-3.2-3B en una IA experta en el mantenimiento del Motor de Curvatura MK-9.",
-        architecture_note: { title: "Nota de Arquitectura: Selección de Entorno", text: "El script detecta automáticamente el hardware para seleccionar el método de aceleración más eficiente. Se usa Docker para AMD (ROCm) debido a la complejidad de drivers en Windows, mientras que Mac usa MLX nativo para acceder a la memoria unificada (Metal)." },
+        prerequisites: {
+          title: "Requisitos Previos",
+          items: [
+            { icon: "file-code", text: "<strong><a href='https://www.python.org/' class='text-sky-400 hover:text-sky-300 underline decoration-sky-500/30' target='_blank'>Python</a> (3.10+):</strong> Necesario para ejecutar los scripts de automatización y la conversión final." },
+            { icon: "container", text: "<strong><a href='https://www.docker.com/products/docker-desktop/' class='text-sky-400 hover:text-sky-300 underline decoration-sky-500/30' target='_blank'>Docker Desktop</a>:</strong> Obligatorio para usuarios de Windows. <span class='text-orange-400'>Debe estar instalado y ejecutándose de fondo</span> antes de lanzar cualquier comando." }
+          ]
+        },
+        architecture_note: { title: "Nota de Arquitectura: Selección de Entorno", text: "El script detecta automáticamente el hardware para seleccionar el método de aceleración más eficiente. Se usa <strong>Docker</strong> para AMD (ROCm) debido a la complejidad de drivers en Windows, mientras que Mac usa <strong><a href='https://github.com/ml-explore/mlx' class='text-sky-400 hover:text-sky-300 underline decoration-sky-500/30' target='_blank'>MLX</a></strong> nativo para acceder a la memoria unificada (Metal)." },
         section_data: {
           title: "1. Creación de datos",
           image: "1.png", imageCaption: "Estructura del Dataset JSONL",
@@ -251,9 +269,34 @@ output_dir: /workspace/outputs/modelo-mk9`
         section_verification: {
           title: "2. Revisión y Verificación", image: "2.png", imageCaption: "Validación de Parámetros LoRA",
           items: [
-            { platform: "PC con AMD (Docker)", reason: "AMD utiliza ROCm para aceleración por hardware.", cmd: "docker run --rm -it --device=/dev/kfd --device=/dev/dri -v ${PWD}:/workspace axolotl-rocm accelerate launch -m axolotl.cli.train /workspace/config_mk9.yml" },
-            { platform: "PC con NVIDIA (Windows)", reason: "Soporte nativo CUDA a través de WSL2 o Powershell.", cmd: "accelerate launch -m axolotl.cli.train config_mk9.yml" },
-            { platform: "Mac (Apple Silicon)", reason: "Librería MLX optimizada para memoria unificada.", cmd: "python -m mlx_lm.lora --model mlx-community/Qwen2.5-1.5B-Instruct-4bit --train --data ./data --iters 300 --adapter-path ./adaptadores_mk9" }
+            {
+              platform: "PC con AMD (Docker)",
+              reason: "AMD utiliza ROCm para aceleración por hardware.",
+              cmd: "docker run --rm -it --device=/dev/kfd --device=/dev/dri -v ${PWD}:/workspace axolotl-rocm accelerate launch -m axolotl.cli.train /workspace/config_mk9.yml",
+              explanation: `<ul class="list-disc pl-4 space-y-1 mt-2 text-slate-400 font-mono text-[0.75rem]">
+                <li><strong class="text-sky-400">--rm -it</strong>: Modo interactivo efímero (borra el contenedor al terminar).</li>
+                <li><strong class="text-sky-400">--device</strong>: Pasarela directa al hardware de la GPU (ROCm) desde Linux.</li>
+                <li><strong class="text-sky-400">-v \${PWD}:/workspace</strong>: Monta tu carpeta actual de Windows dentro del Docker.</li>
+              </ul>`
+            },
+            {
+              platform: "PC con NVIDIA (Windows)",
+              reason: "Soporte nativo CUDA a través de WSL2 o Powershell.",
+              cmd: "accelerate launch -m axolotl.cli.train config_mk9.yml",
+              explanation: `<ul class="list-disc pl-4 space-y-1 mt-2 text-slate-400 font-mono text-[0.75rem]">
+                <li><strong class="text-sky-400"><a href='https://huggingface.co/docs/accelerate/index' class='hover:underline' target='_blank'>accelerate launch</a></strong>: Comando de HuggingFace que optimiza la VRAM y multi-GPU automágicamente.</li>
+                <li><strong class="text-sky-400">-m axolotl...</strong>: Ejecuta el módulo Python de <a href='https://github.com/OpenAccess-AI-Collective/axolotl' class='text-sky-400 hover:underline' target='_blank'>Axolotl</a> directamente.</li>
+              </ul>`
+            },
+            {
+              platform: "Mac (Apple Silicon)",
+              reason: "Librería MLX optimizada para memoria unificada.",
+              cmd: "python -m mlx_lm.lora --model mlx-community/Qwen2.5-1.5B-Instruct-4bit --train --data ./data --iters 300 --adapter-path ./adaptadores_mk9",
+              explanation: `<ul class="list-disc pl-4 space-y-1 mt-2 text-slate-400 font-mono text-[0.75rem]">
+                <li><strong class="text-sky-400">--iters 300</strong>: Número de pasos de entrenamiento (rápido para verificar).</li>
+                <li><strong class="text-sky-400">--adapter-path</strong>: Carpeta donde se guardarán solo los "pesos extra" aprendidos.</li>
+              </ul>`
+            }
           ]
         },
         section_merging: {
@@ -270,13 +313,17 @@ output_dir: /workspace/outputs/modelo-mk9`
             "cd llama.cpp && pip install -r requirements.txt",
             "python convert.py --outfile ../modelo_final.gguf --outtype f16 ../modelo_fusionado",
             "./quantize ../modelo_final.gguf ../modelo_mk9_q4_k_m.gguf q4_k_m"
-          ]
+          ],
+          steps_explanation: `<ul class="list-disc pl-4 space-y-1 mt-2 text-slate-400 font-mono text-[0.75rem]">
+            <li><strong class="text-sky-400">convert.py --outtype f16</strong>: Transforma el modelo fusionado a formato <a href='https://github.com/ggerganov/llama.cpp' class='text-sky-400 hover:underline' target='_blank'>GGUF (llama.cpp)</a> sin perder calidad (Float 16).</li>
+            <li><strong class="text-sky-400">quantize ... q4_k_m</strong>: Comprime el modelo a 4-bits (Medium). Reduce el tamaño (ej: de 6GB a 1.5GB) manteniendo la "inteligencia". Vital para que funcione rápido en PCs normales.</li>
+          </ul>`
         }
       },
       part3: {
         title: "PARTE 3: Uso en LM Studio y Ejemplos",
         steps: [
-          "Abre LM Studio en tu Mac.",
+          "Abre <a href='https://lmstudio.ai/' class='text-sky-400 hover:text-sky-300 underline decoration-sky-500/30' target='_blank'>LM Studio</a> en tu Mac.",
           "Si vienes del PC: Copia el archivo .gguf a la carpeta de modelos de LM Studio (suele estar en /Users/tu_usuario/.cache/lm-studio/models/).",
           "Si lo hiciste en Mac: Importa el modelo fusionado directamente desde la interfaz o asegúrate de que la carpeta 'modelo_final.gguf' esté accesible.",
           "Selecciona el modelo 'modelo_mk9_q4_k_m.gguf' en el menú superior de LM Studio.",
@@ -346,6 +393,16 @@ Assistant: Respuestas basadas ÚNICAMENTE en los datos inventados.`
                         <p class="text-slate-400 text-[1rem]">${data.intro}</p>
                     </header>
                     
+                    <!-- PREREQUISITES -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-[1rem] mb-[2rem]">
+                        ${data.prerequisites.items.map(item => `
+                            <div class="bg-indigo-950/20 border border-indigo-500/30 p-[1rem] rounded-[0.75rem] flex items-center gap-[0.75rem]">
+                                <i data-lucide="${item.icon}" class="text-indigo-400 w-[1.5rem] h-[1.5rem]"></i>
+                                <p class="text-slate-300 text-[0.9rem] leading-tight">${item.text}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+
                     <section>
                          <h3 class="text-[1.5rem] font-bold text-white mb-[1.5rem] flex items-center gap-[0.75rem]">
                             <i data-lucide="database" class="text-sky-500 w-[1.5rem] h-[1.5rem]"></i> ${data.section_data.title}
@@ -386,6 +443,7 @@ Assistant: Respuestas basadas ÚNICAMENTE en los datos inventados.`
                                </span>
                             </div>
                             ${renderCodeBlock('CMD', v.cmd, '')}
+                            ${v.explanation ? `<div class="mt-[-1.25rem] mb-[1.5rem] ml-[1rem] pl-[1rem] border-l-2 border-slate-800">${v.explanation}</div>` : ''}
                           </div>
                         `).join('')}
                       </div>
@@ -421,6 +479,7 @@ Assistant: Respuestas basadas ÚNICAMENTE en los datos inventados.`
                             <i data-lucide="terminal" class="text-sky-500 w-[1.2rem] h-[1.2rem]"></i> Conversión con llama.cpp
                         </h3>
                         ${renderCodeBlock('BASH', data.section_conversion.steps.join('\\n'), '')}
+                        ${data.section_conversion.steps_explanation ? `<div class="mt-[-1.25rem] mb-[0.5rem] ml-[1rem] pl-[1rem] border-l-2 border-slate-800">${data.section_conversion.steps_explanation}</div>` : ''}
                       </div>
                     </section>
                 </div>
@@ -510,12 +569,50 @@ Assistant: Respuestas basadas ÚNICAMENTE en los datos inventados.`
       // Icons refresh
       lucide.createIcons();
 
+      // Update TOC
+      updateTOC();
+
       // Styling buttons
       btns.forEach(btn => {
         btn.className = "nav-btn flex items-center gap-[0.5rem] px-[1.25rem] py-[0.6rem] rounded-[0.8rem] text-[0.8rem] font-bold uppercase tracking-wider transition-all duration-300 whitespace-nowrap bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-white";
       });
       const activeBtn = document.getElementById(`btn-${tab}`);
       if (activeBtn) activeBtn.className = "nav-btn flex items-center gap-[0.5rem] px-[1.25rem] py-[0.6rem] rounded-[0.8rem] text-[0.8rem] font-bold uppercase tracking-wider transition-all duration-300 whitespace-nowrap bg-sky-600 text-white shadow-lg shadow-sky-900/40 transform scale-105";
+    }
+
+    // TOC GENERATOR
+    function updateTOC() {
+      const content = document.getElementById('app-content');
+      const tocContainer = document.getElementById('app-toc');
+      if (!content || !tocContainer) return;
+
+      // 1. Find headers
+      const headers = content.querySelectorAll('h2, h3');
+      let tocHTML = `<h4 class="text-slate-500 text-[0.75rem] font-bold uppercase tracking-widest mb-[1rem]">En esta página</h4><ul class="space-y-[0.75rem] border-l border-slate-800">`;
+
+      headers.forEach((header, index) => {
+        // 2. Assign ID if missing
+        if (!header.id) {
+          const slug = header.textContent.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-');
+          header.id = `section-${index}-${slug}`;
+        }
+
+        // 3. Build List Item
+        const isH2 = header.tagName === 'H2';
+        const padding = isH2 ? 'pl-[1rem]' : 'pl-[2rem]';
+        const fontSize = isH2 ? 'text-[0.85rem] font-bold text-slate-200' : 'text-[0.8rem] text-slate-400';
+
+        tocHTML += `
+                <li>
+                    <a href="#${header.id}" class="block ${padding} ${fontSize} hover:text-sky-400 border-l border-transparent hover:border-sky-500 transition-all -ml-[1px]">
+                        ${header.textContent}
+                    </a>
+                </li>
+            `;
+      });
+
+      tocHTML += `</ul>`;
+      tocContainer.innerHTML = tocHTML;
     }
 
     // INIT
