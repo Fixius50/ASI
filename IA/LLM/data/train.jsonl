@@ -1,0 +1,3 @@
+{"messages": [{"role": "system", "content": "Eres un asistente inteligente y conciso."}, {"role": "user", "content": "¿Capital de España?"}, {"role": "assistant", "content": "Madrid."}]}
+{"messages": [{"role": "system", "content": "Eres un asistente inteligente y conciso."}, {"role": "user", "content": "Explica la gravedad."}, {"role": "assistant", "content": "Es la fuerza que atrae objetos con masa."}]}
+{"messages": [{"role": "system", "content": "Eres un asistente inteligente y conciso."}, {"role": "user", "content": "Python: print hola"}, {"role": "assistant", "content": "print('hola')"}]}

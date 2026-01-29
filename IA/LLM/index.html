@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM Forge Documentation</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="logo-container">
+                <i class="fa-solid fa-brain logo-icon"></i>
+                <h1>LLM<span class="highlight">Forge</span></h1>
+            </div>
+
+            <ul class="nav-links">
+                <li class="nav-item active" data-tab="overview">
+                    <i class="fa-solid fa-house"></i>
+                    <span>General</span>
+                </li>
+                <li class="nav-item" data-tab="theory">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>Teoría</span>
+                </li>
+                <li class="nav-item" data-tab="workflow">
+                    <i class="fa-solid fa-list-check"></i>
+                    <span>Workflow</span>
+                </li>
+                <li class="nav-item" data-tab="scripts">
+                    <i class="fa-solid fa-code"></i>
+                    <span>Scripts Python</span>
+                </li>
+                <li class="nav-item" data-tab="lmstudio">
+                    <i class="fa-solid fa-robot"></i>
+                    <span>LM Studio</span>
+                </li>
+                <li class="nav-item" data-tab="resources">
+                    <i class="fa-solid fa-link"></i>
+                    <span>Recursos</span>
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <p>Hecho por <strong>Roberto Monedero Alonso</strong></p>
+                <div class="status-indicator">
+                    <span class="dot"></span> Online
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="breadcrumbs">
+                    <span id="page-title">General</span>
+                </div>
+                <div class="user-profile">
+                    <img src="https://ui-avatars.com/api/?name=Admin&background=6366f1&color=fff" alt="User">
+                </div>
+            </header>
+
+            <div id="content-area" class="content-wrapper">
+                <!-- Content injected via JS -->
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
