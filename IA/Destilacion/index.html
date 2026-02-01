@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master IA Local - Mac Silicon</title>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        slate: {
+                            850: '#151e2e',
+                            950: '#020617',
+                        }
+                    },
+                    animation: {
+                        'slide-up': 'slideUp 0.4s ease-out forwards',
+                        'fade-in': 'fadeIn 0.6s ease-out forwards',
+                    },
+                    keyframes: {
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Fondo base más oscuro y limpio para mejor contraste */
+        body { background-color: #020617; color: #e2e8f0; }
+        
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.85); 
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.15);
+        }
+        
+        .code-syntax { color: #a5b4fc; }
+        .code-command { color: #34d399; }
+        .code-string { color: #facc15; }
+        .code-comment { color: #64748b; font-style: italic; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // --- ICONOS SVG ---
+        const Icons = {
+            Home: () => <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>,
+            Setup: () => <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>,
+            Data: () => <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" /></svg>,
+            Train: () => <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>,
+            Bug: () => <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>,
+            Check: () => <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>,
+            ArrowRight: () => <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>,
+            Copy: () => <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>,
+            Download: () => <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+        };
+
+        // --- COMPONENTES UI ---
+
+        const NavButton = ({ id, label, icon: Icon, active, onClick }) => (
+            <button 
+                onClick={() => onClick(id)}
+                className={`flex items-center w-full px-4 py-3 mb-2 rounded-xl transition-all duration-200 group ${
+                    active 
+                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/40 translate-x-1' 
+                    : 'text-slate-400 hover:bg-slate-800 hover:text-white hover:translate-x-1'
+                }`}
+            >
+                <span className={`mr-3 ${active ? 'text-white' : 'text-slate-500 group-hover:text-blue-400'}`}>
+                    <Icon />
+                </span>
+                <span className="font-medium text-sm">{label}</span>
+            </button>
+        );
+
+        const CodeBlock = ({ children, title, filename }) => {
+            const downloadFile = () => {
+                if (!filename) return;
+                const element = document.createElement("a");
+                const file = new Blob([children], {type: 'text/plain'});
+                element.href = URL.createObjectURL(file);
+                element.download = filename;
+                document.body.appendChild(element);
+                element.click();
+                document.body.removeChild(element);
+            };
+
+            return (
+                <div className="bg-[#0B1120] border border-slate-700 rounded-xl my-6 overflow-hidden shadow-xl">
+                    {title && (
+                        <div className="bg-slate-800/50 px-4 py-2 border-b border-slate-700 flex justify-between items-center">
+                            <span className="text-xs font-mono text-slate-400 flex items-center gap-2">
+                                <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                                {title}
+                            </span>
+                            {filename && (
+                                <button 
+                                    onClick={downloadFile}
+                                    className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium rounded transition-all hover:scale-105 active:scale-95 shadow-lg shadow-blue-900/20"
+                                >
+                                    <Icons.Download /> Descargar
+                                </button>
+                            )}
+                        </div>
+                    )}
+                    <div className="p-4 font-mono text-xs md:text-sm overflow-x-auto text-slate-300 whitespace-pre leading-relaxed">
+                        {children}
+                    </div>
+                </div>
+            );
+        };
+
+        const ImageEvidence = ({ src, title, desc }) => (
+            <div className="group relative rounded-xl overflow-hidden border border-slate-700 bg-slate-900 shadow-md hover:border-blue-500/50 transition-all duration-300">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="p-1 bg-slate-950">
+                    <img 
+                        src={src} 
+                        alt={title} 
+                        className="w-full h-auto rounded-lg opacity-95 group-hover:opacity-100 transition-opacity"
+                        loading="lazy"
+                    />
+                </div>
+                <div className="px-4 py-3 bg-slate-900 border-t border-slate-800">
+                    <h4 className="text-white font-medium text-xs md:text-sm">{title}</h4>
+                    {desc && <p className="text-slate-400 text-xs mt-1">{desc}</p>}
+                </div>
+            </div>
+        );
+
+        // --- VISTAS ---
+
+        const ViewHome = ({ onStart }) => (
+            <div className="flex flex-col items-center justify-center min-h-[80vh] text-center animate-fade-in">
+                <div className="relative mb-8">
+                    <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full blur opacity-25 animate-pulse"></div>
+                    <div className="relative bg-slate-900 rounded-full p-4 border border-slate-700">
+                        <svg className="w-16 h-16 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+                    </div>
+                </div>
+                <h1 className="text-5xl font-bold text-white mb-6 tracking-tight">
+                    Proyecto <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">Destilación Local</span>
+                </h1>
+                <p className="text-xl text-slate-300 max-w-2xl mb-10 leading-relaxed">
+                    Documentación técnica definitiva y completa para la creación de un <strong>Small Language Model (SLM)</strong> especializado, ejecutándose nativamente en Apple Silicon (M1/M2/M3).
+                </p>
+                <button 
+                    onClick={onStart}
+                    className="flex items-center gap-2 px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-full font-semibold transition-all transform hover:scale-105 shadow-lg shadow-blue-900/50"
+                >
+                    Comenzar Guía
+                    <Icons.ArrowRight />
+                </button>
+                <div className="mt-12 flex gap-6 text-sm text-slate-400 font-mono">
+                    <span className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-green-500"></div>Python 3.10</span>
+                    <span className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-orange-500"></div>PyTorch MPS</span>
+                    <span className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-purple-500"></div>TinyLlama 1.1B</span>
+                </div>
+            </div>
+        );
+
+        const ViewSetup = () => (
+            <div className="space-y-12 animate-slide-up">
+                <div>
+                    <h2 className="text-3xl font-bold text-white mb-4">1. Preparación del Entorno</h2>
+                    <p className="text-slate-400">Ejecuta estos comandos en tu terminal secuencialmente para configurar el entorno aislado.</p>
+                </div>
+
+                <div className="space-y-8">
+                    <div className="prose-step">
+                        <h3 className="text-lg font-semibold text-blue-400 mb-2">1.1 Instalación de Miniconda y Entorno</h3>
+                        <CodeBlock title="Terminal">
+                            <span className="code-comment"># 1. Crear el entorno llamado 'ia-mac' con Python 3.10</span>{'\n'}
+                            <span className="code-command">conda</span> create -n ia-mac python=3.10 -y{'\n'}{'\n'}
+                            <span className="code-comment"># 2. Activar el entorno (CRÍTICO: Hacer siempre antes de trabajar)</span>{'\n'}
+                            <span className="code-command">conda</span> activate ia-mac
+                        </CodeBlock>
+                        <ImageEvidence 
+                            src="img/Captura de pantalla 2026-01-16 a las 21.01.27.png" 
+                            title="Resultado esperado"
+                            desc="Conda instala Python 3.10 y dependencias base."
+                        />
+                    </div>
+                    
+                    <div className="prose-step">
+                        <h3 className="text-lg font-semibold text-blue-400 mb-2">1.2 Instalación de PyTorch (Nightly con soporte MPS)</h3>
+                        <CodeBlock title="Terminal">
+                            <span className="code-comment"># Instalar PyTorch optimizado para Apple Silicon</span>{'\n'}
+                            <span className="code-command">pip</span> install --pre torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/nightly/cpu
+                        </CodeBlock>
+                        <ImageEvidence 
+                            src="img/Captura de pantalla 2026-01-16 a las 21.01.57.png" 
+                            title="Instalación PyTorch"
+                        />
+                    </div>
+
+                    <div className="prose-step">
+                        <h3 className="text-lg font-semibold text-blue-400 mb-2">1.3 Instalación del Ecosistema Hugging Face</h3>
+                        <CodeBlock title="Terminal">
+                            <span className="code-command">pip</span> install transformers datasets accelerate peft trl scipy scikit-learn huggingface_hub
+                        </CodeBlock>
+                        <ImageEvidence 
+                            src="img/Captura de pantalla 2026-01-23 a las 20.43.49.png" 
+                            title="Librerías instaladas"
+                        />
+                    </div>
+                </div>
+            </div>
+        );
+
+        const ViewData = () => (
+            <div className="space-y-12 animate-slide-up">
+                <div>
+                    <h2 className="text-3xl font-bold text-white mb-4">2. Generación de Datos</h2>
+                    <p className="text-slate-400">Necesitamos el "libro de texto" para el modelo. Crea el siguiente archivo Python.</p>
+                </div>
+
+                <div className="space-y-6">
+                    <h3 className="text-lg font-semibold text-purple-400">Script: 1_generador_dataset.py</h3>
+                    <CodeBlock title="1_generador_dataset.py" filename="1_generador_dataset.py">
+{`import json
+import time
+from huggingface_hub import InferenceClient
+
+#--- CONFIGURACIÓN
+HF_TOKEN = None # Se detecta automático si hiciste login
+MODELO_PROFESOR = "mistralai/Mistral-7B-Instruct-v0.3"
+
+inputs_crudos = [
+    "oi kiero una amburgesa ya",
+    "manda el informe q no tengo tiempo pa tonterias",
+    "este producto es una basura no sirve pa nada devuelvanme la pasta",
+    "k pasa tio cuanto tiempo sin verte",
+    "no entiendo nada de lo q dices explica mejor",
+    "necesito vacaciones xq estoy quemado del curro"
+]
+
+def generar_datos():
+    client = InferenceClient(model=MODELO_PROFESOR, token=HF_TOKEN)
+    dataset_final = []
+    
+    print(f"👨‍🏫 El Profesor {MODELO_PROFESOR} está escribiendo el manual...")
+    
+    for i, texto_sucio in enumerate(inputs_crudos):
+        print(f"Procesando {i+1}/{len(inputs_crudos)}...")
+        
+        prompt = f"""
+        Actúa como un experto en comunicación corporativa. Reescribe el texto para que sea profesional.
+        Texto original: "{texto_sucio}"
+        
+        Instrucciones:
+        1. Explica qué está mal (ortografía, tono).
+        2. Da la versión corregida.
+        
+        Formato:
+        RAZONAMIENTO: ...
+        RESPUESTA: ...
+        """
+        
+        try:
+            # Nota: Si falla con v0.3 por "Task not supported", usar v0.2 o API Chat
+            respuesta = client.text_generation(prompt, max_new_tokens=256, temperature=0.7)
+            
+            dataset_final.append({
+                "instruction": f"Corrige este texto: '{texto_sucio}'",
+                "input": texto_sucio,
+                "output": respuesta.strip()
+            })
+            time.sleep(1)
+        except Exception as e:
+            print(f"Error: {e}")
+            
+    with open("dataset_maestro.json", "w", encoding="utf-8") as f:
+        json.dump(dataset_final, f, indent=4, ensure_ascii=False)
+        
+    print("✅ Dataset 'dataset_maestro.json' creado.")
+
+if __name__ == "__main__":
+    generar_datos()`}
+                    </CodeBlock>
+                    
+                    <div className="bg-slate-900 rounded-xl p-6 border border-slate-700 mt-4">
+                        <h3 className="text-lg font-semibold text-white mb-2">Archivo Resultante: dataset_maestro.json</h3>
+                        <p className="text-sm text-slate-400 mb-4">Si prefieres no usar la API, crea este archivo manualmente:</p>
+                        <CodeBlock title="dataset_maestro.json" filename="dataset_maestro.json">
+{`[
+    {
+        "instruction": "Corrige este texto: 'oi kiero una amburgesa ya'",
+        "input": "oi kiero una amburgesa ya",
+        "output": "RAZONAMIENTO: El texto tiene graves faltas ('oi', 'amburgesa') y un tono imperativo descortés.\\nRESPUESTA: Hola, me gustaría pedir una hamburguesa, por favor."
+    },
+    {
+        "instruction": "Corrige este texto: 'manda el informe q no tengo tiempo pa tonterias'",
+        "input": "manda el informe q no tengo tiempo pa tonterias",
+        "output": "RAZONAMIENTO: El mensaje es agresivo y poco profesional ('tonterias'). Se debe solicitar con respeto.\\nRESPUESTA: Por favor, envíame el informe en cuanto puedas; necesito revisarlo con urgencia."
+    }
+]`}
+                        </CodeBlock>
+                        <ImageEvidence 
+                            src="img/Captura de pantalla 2026-01-29 a las 19.53.13.png" 
+                            title="Validación del JSON"
+                            desc="Estructura correcta del archivo de datos."
+                        />
+                    </div>
+                </div>
+            </div>
+        );
+
+        const ViewTraining = () => (
+            <div className="space-y-12 animate-slide-up">
+                <div>
+                    <h2 className="text-3xl font-bold text-white mb-4">3. Entrenamiento del Modelo</h2>
+                    <p className="text-slate-400">Este es el script principal. Incluye la corrección crítica para <code>SFTConfig</code> y el formateo manual para evitar errores de dataset.</p>
+                </div>
+
+                <div className="space-y-6">
+                    <h3 className="text-lg font-semibold text-yellow-400">Script: 2_entrenador_mac.py (Versión Definitiva 2026)</h3>
+                    <CodeBlock title="2_entrenador_mac.py" filename="2_entrenador_mac.py">
+{`import torch
+from datasets import load_dataset
+from transformers import AutoModelForCausalLM, AutoTokenizer
+from trl import SFTConfig, SFTTrainer
+from peft import LoraConfig, TaskType
+
+#--- CONFIGURACIÓN ---
+MODEL_NAME = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+DATASET_FILE = "dataset_maestro.json"
+OUTPUT_DIR = "TinyLlama-Destilada-Mac"
+
+# 1. Cargar Dataset
+print(f"📂 Cargando dataset: {DATASET_FILE}")
+try:
+    dataset = load_dataset("json", data_files=DATASET_FILE, split="train")
+except Exception as e:
+    print(f"❌ Error leyendo dataset: {e}")
+    exit()
+
+# --- CORRECCIÓN CRÍTICA: FORMATEO MANUAL ---
+def formatear_tinyllama(ejemplos):
+    instrucciones = ejemplos.get("instruction", [])
+    entradas = ejemplos.get("input", [])
+    salidas = ejemplos.get("output", [])
+    
+    textos = []
+    for q, i, a in zip(instrucciones, entradas, salidas):
+        # Si hay contexto (input), lo unimos a la instrucción
+        pregunta = f"{q}\\nContexto: {i}" if i else q
+        
+        # Formato EXACTO de TinyLlama
+        prompt = (
+            f"<|system|>\\nEres un asistente inteligente.</s>\\n"
+            f"<|user|>\\n{pregunta}</s>\\n"
+            f"<|assistant|>\\n{a}</s>"
+        )
+        textos.append(prompt)
+        
+    return {"text": textos}
+
+print("⚙️ Procesando dataset manualmente...")
+dataset = dataset.map(formatear_tinyllama, batched=True)
+
+# 2. Cargar Modelo y Tokenizer
+print(f"⬇️ Cargando modelo: {MODEL_NAME}")
+tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+tokenizer.pad_token = tokenizer.eos_token
+
+# Carga en bfloat16 (Optimizado para Apple Silicon M1/M2/M3)
+model = AutoModelForCausalLM.from_pretrained(
+    MODEL_NAME,
+    device_map="auto",
+    torch_dtype=torch.bfloat16,
+    use_cache=False
+)
+
+# 3. Configuración LoRA
+peft_config = LoraConfig(
+    r=16,
+    lora_alpha=32,
+    lora_dropout=0.05,
+    bias="none",
+    task_type=TaskType.CAUSAL_LM,
+    target_modules=["q_proj", "k_proj", "v_proj", "o_proj"]
+)
+
+# 4. Configuración del Entrenamiento
+print("🛠️ Configurando Trainer...")
+training_args = SFTConfig(
+    output_dir=OUTPUT_DIR,
+    max_length=1024,
+    dataset_text_field="text",
+    num_train_epochs=3,
+    per_device_train_batch_size=2, # Batch pequeño para no llenar RAM
+    gradient_accumulation_steps=4,
+    learning_rate=2e-4,
+    logging_steps=1,
+    save_strategy="epoch",
+    bf16=True, # Importante para Apple Silicon (MPS)
+    packing=False,
+    report_to="none"
+)
+
+# 5. Inicializar y Entrenar
+trainer = SFTTrainer(
+    model=model,
+    args=training_args,
+    train_dataset=dataset,
+    peft_config=peft_config,
+    processing_class=tokenizer 
+)
+
+print("🚀 Entrenando en: MPS (Start)...")
+trainer.train()
+
+print("💾 Guardando modelo...")
+trainer.save_model(OUTPUT_DIR + "_final")
+tokenizer.save_pretrained(OUTPUT_DIR + "_final")
+print("✅ ¡Entrenamiento completado!")`}
+                    </CodeBlock>
+                    
+                    <div className="grid md:grid-cols-2 gap-6">
+                        <ImageEvidence 
+                            src="img/Captura de pantalla 2026-01-22 a las 20.04.58.jpg" 
+                            title="Código fuente en VS Code"
+                            desc="Muestra la implementación de SFTConfig."
+                        />
+                        <ImageEvidence 
+                            src="img/Captura de pantalla 2026-01-22 a las 20.06.15.png" 
+                            title="Configuración LoRA"
+                            desc="Detalle de los módulos target."
+                        />
+                    </div>
+                </div>
+            </div>
+        );
+
+        const ViewTroubleshoot = () => (
+            <div className="space-y-12 animate-slide-up">
+                <div>
+                    <h2 className="text-3xl font-bold text-red-400 mb-4">4. Solución de Errores</h2>
+                    <p className="text-slate-400">Soluciones a los bloqueos más comunes documentados.</p>
+                </div>
+
+                <div className="space-y-8">
+                    {/* Error 1 */}
+                    <div className="bg-red-900/10 border border-red-900/30 rounded-xl overflow-hidden hover:border-red-500/50 transition-colors">
+                        <div className="p-6">
+                            <h3 className="text-xl font-bold text-white mb-2">Error 401: Unauthorized & Login Deprecated</h3>
+                            <div className="grid md:grid-cols-2 gap-6">
+                                <ImageEvidence 
+                                    src="img/Captura de pantalla 2026-01-16 a las 21.03.31.png" 
+                                    title="Traceback del error"
+                                />
+                                <div className="bg-slate-900 p-4 rounded-lg flex flex-col justify-center">
+                                    <span className="text-green-400 text-xs font-mono mb-2">// SOLUCIÓN</span>
+                                    <CodeBlock title="Comando Correcto">huggingface-cli auth login</CodeBlock>
+                                    <p className="text-xs text-slate-500 mt-2">No uses solo 'login', está obsoleto.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Error 2 */}
+                    <div className="bg-yellow-900/10 border border-yellow-900/30 rounded-xl overflow-hidden hover:border-yellow-500/50 transition-colors">
+                        <div className="p-6">
+                            <h3 className="text-xl font-bold text-white mb-2">Error API: Task not supported (Mistral)</h3>
+                            <div className="grid md:grid-cols-2 gap-6">
+                                <ImageEvidence 
+                                    src="img/Captura de pantalla 2026-01-22 a las 19.48.40.png" 
+                                    title="Error de Generación"
+                                />
+                                <div className="bg-slate-900 p-4 rounded-lg flex flex-col justify-center">
+                                    <span className="text-green-400 text-xs font-mono mb-2">// SOLUCIÓN</span>
+                                    <p className="text-sm text-slate-300">
+                                        Mistral v0.3 cambió su API. Usa la versión manual del JSON (proporcionada en la sección 2) si este script falla.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+
+        const ViewResults = () => (
+            <div className="space-y-12 animate-slide-up">
+                <div>
+                    <h2 className="text-3xl font-bold text-green-400 mb-4">5. Validación y Pruebas</h2>
+                    <p className="text-slate-400">Scripts para verificar científicamente y empíricamente el aprendizaje.</p>
+                </div>
+
+                <div className="space-y-6">
+                    <h3 className="text-lg font-semibold text-blue-400">Validación Científica: 3_medir_divergencia.py</h3>
+                    <CodeBlock title="3_medir_divergencia.py" filename="3_medir_divergencia.py">
+{`import torch
+import torch.nn.functional as F
+from transformers import AutoModelForCausalLM, AutoTokenizer
+from peft import PeftModel
+
+#--- CONFIGURACIÓN
+MODELO_BASE = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+RUTA_ADAPTADOR = "TinyLlama-Destilada-Mac_final" 
+DEVICE = "mps" if torch.backends.mps.is_available() else "cpu"
+
+print(f"🍎 Cargando en {DEVICE}...")
+
+# 1. Cargar Tokenizer y Modelo Base
+tokenizer = AutoTokenizer.from_pretrained(MODELO_BASE)
+model_base = AutoModelForCausalLM.from_pretrained(
+    MODELO_BASE, 
+    device_map=DEVICE, 
+    torch_dtype=torch.bfloat16
+)
+
+# 2. Cargar el Estudiante (Base + LoRA)
+model_estudiante = PeftModel.from_pretrained(model_base, RUTA_ADAPTADOR)
+
+# Prueba con una frase del entrenamiento
+prompt_test = "Corrige este texto: 'oi kiero una amburgesa ya'"
+input_ids = tokenizer(f"<|user|>\\n{prompt_test}</s>", return_tensors="pt").to(DEVICE)
+
+print("🧪 Calculando divergencia...")
+
+with torch.no_grad():
+    # Truco: Desactivamos el adaptador para medir al 'original'
+    model_estudiante.disable_adapter() 
+    logits_base = model_estudiante(**input_ids).logits
+    
+    # Activamos adaptador (Estudiante)
+    model_estudiante.enable_adapter()
+    logits_lora = model_estudiante(**input_ids).logits
+
+# Cálculo KL
+kl_loss = torch.nn.KLDivLoss(reduction='batchmean')
+divergencia = kl_loss(
+    F.log_softmax(logits_lora, dim=-1),
+    F.softmax(logits_base, dim=-1)
+)
+
+print("-" * 40)
+print(f"📊 DIVERGENCIA KL: {divergencia.item():.6f}")
+print("-" * 40)
+
+if divergencia.item() > 0.0001:
+    print("✅ CONFIRMADO: El modelo ha aprendido y modificado sus pesos.")
+else:
+    print("⚠️ ALERTA: El modelo es idéntico al original.")`}
+                    </CodeBlock>
+                    <ImageEvidence 
+                        src="img/Captura de pantalla 2026-01-23 a las 21.06.38.png" 
+                        title="Resultado Exitoso"
+                        desc="Divergencia KL: 0.310547 (Confirmado)"
+                    />
+                </div>
+
+                <div className="space-y-6 mt-12">
+                    <h3 className="text-lg font-semibold text-green-400">Inferencia: 3_probar_modelo.py</h3>
+                    <CodeBlock title="3_probar_modelo.py" filename="3_probar_modelo.py">
+{`import torch
+from peft import PeftModel
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+device = "mps" if torch.backends.mps.is_available() else "cpu"
+ruta_base = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+ruta_lora = "TinyLlama-Destilada-Mac_final"
+
+print("🧠 Cargando cerebro...")
+model = AutoModelForCausalLM.from_pretrained(ruta_base, torch_dtype=torch.bfloat16).to(device)
+model = PeftModel.from_pretrained(model, ruta_lora)
+tokenizer = AutoTokenizer.from_pretrained(ruta_base)
+
+# Prompt de prueba
+texto = "oye pasame el reporte ya"
+prompt = f"<|system|>\\nEres un asistente.\\n<|user|>\\nCorrige: '{texto}'\\n<|assistant|>\\n"
+
+inputs = tokenizer(prompt, return_tensors="pt").to(device)
+
+print("💬 Generando...")
+with torch.no_grad():
+    outputs = model.generate(**inputs, max_new_tokens=120)
+
+print(tokenizer.decode(outputs[0], skip_special_tokens=True))`}
+                    </CodeBlock>
+                    <div className="grid md:grid-cols-2 gap-6">
+                        <ImageEvidence 
+                            src="img/Captura de pantalla 2026-01-29 a las 19.58.02.png" 
+                            title="Prueba de la Hamburguesa"
+                        />
+                        <ImageEvidence 
+                            src="img/Captura de pantalla 2026-01-23 a las 21.06.54.png" 
+                            title="Chat Interactivo Completo"
+                        />
+                    </div>
+                </div>
+            </div>
+        );
+
+        const App = () => {
+            const [view, setView] = useState('Home');
+            const mainRef = useRef(null);
+
+            useEffect(() => {
+                if (mainRef.current) {
+                    mainRef.current.scrollTop = 0;
+                }
+            }, [view]);
+
+            const menuItems = [
+                { id: 'Home', label: 'Inicio', icon: Icons.Home },
+                { id: 'Setup', label: '1. Entorno', icon: Icons.Setup },
+                { id: 'Data', label: '2. Datos', icon: Icons.Data },
+                { id: 'Training', label: '3. Entrenamiento', icon: Icons.Train },
+                { id: 'Troubleshoot', label: '4. Errores', icon: Icons.Bug },
+                { id: 'Results', label: '5. Resultados', icon: Icons.Check },
+            ];
+
+            const renderView = () => {
+                switch(view) {
+                    case 'Home': return <ViewHome onStart={() => setView('Setup')} />;
+                    case 'Setup': return <ViewSetup />;
+                    case 'Data': return <ViewData />;
+                    case 'Training': return <ViewTraining />;
+                    case 'Troubleshoot': return <ViewTroubleshoot />;
+                    case 'Results': return <ViewResults />;
+                    default: return <ViewHome />;
+                }
+            };
+
+            return (
+                <div className="flex h-screen overflow-hidden">
+                    
+                    {/* Sidebar */}
+                    <aside className="w-64 bg-[#0B1120] border-r border-slate-800 flex flex-col hidden md:flex">
+                        <div className="p-6 border-b border-slate-800">
+                            <h1 className="text-white font-bold tracking-wider flex items-center gap-2">
+                                <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
+                                IA LOCAL <span className="text-slate-600 text-xs">Full Code</span>
+                            </h1>
+                        </div>
+                        <nav className="flex-1 p-4 overflow-y-auto">
+                            {menuItems.map(item => (
+                                <NavButton 
+                                    key={item.id} 
+                                    {...item} 
+                                    active={view === item.id} 
+                                    onClick={setView} 
+                                />
+                            ))}
+                        </nav>
+                        <div className="p-4 border-t border-slate-800">
+                            <div className="text-xs text-slate-500 font-mono text-center">
+                                Roberto Monedero Alonso<br/>
+                                © 2026
+                            </div>
+                        </div>
+                    </aside>
+
+                    {/* Main Content */}
+                    <main ref={mainRef} className="flex-1 overflow-y-auto relative bg-gradient-to-br from-slate-900 via-[#0B1120] to-black">
+                        
+                        {/* Mobile Header */}
+                        <div className="md:hidden p-4 bg-[#0B1120] border-b border-slate-800 flex justify-between items-center sticky top-0 z-20">
+                            <span className="font-bold text-white">IA Local Docs</span>
+                            <div className="flex gap-2">
+                                {menuItems.map(item => (
+                                    <button 
+                                        key={item.id}
+                                        onClick={() => setView(item.id)}
+                                        className={`p-2 rounded-lg ${view === item.id ? 'bg-blue-600 text-white' : 'text-slate-400'}`}
+                                    >
+                                        <item.icon />
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="max-w-5xl mx-auto p-6 md:p-12 pb-24">
+                            {renderView()}
+                        </div>
+                    </main>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
