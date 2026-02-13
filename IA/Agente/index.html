@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agente Ursula - Documentación de Infraestructura</title>
     
-    <!-- 1. Estilos y Fuentes -->
+    <!-- 1. Librerías Externas -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
@@ -23,41 +23,38 @@
                     colors: {
                         slate: { 850: '#151e2e', 950: '#020617' },
                         emerald: { 450: '#10b981' }
-                    },
-                    // Aseguramos que todas las medidas sean relativas
-                    spacing: {
-                        '128': '32rem',
                     }
                 }
             }
         }
     </script>
 
+    <!-- Estilos Personalizados (Unidades Relativas) -->
     <style>
-        /* Unidades relativas (rem) para scrollbar en lugar de px */
+        /* Scrollbar en REM */
         ::-webkit-scrollbar { width: 0.5rem; height: 0.5rem; }
         ::-webkit-scrollbar-track { background: #0f172a; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 0.25rem; }
         ::-webkit-scrollbar-thumb:hover { background: #475569; }
         
-        .code-window { box-shadow: 0 0 2.5rem -0.625rem rgba(16, 185, 129, 0.1); }
+        .code-window { box-shadow: 0 0 2.5rem -0.6rem rgba(16, 185, 129, 0.1); }
         [x-cloak] { display: none !important; }
         
-        /* Animación suave para evitar saltos */
-        .fade-enter-active {
-            transition: all 0.3s ease-out;
+        /* Animación suave de entrada (Slide Up) */
+        .slide-up-enter-active {
+            transition: opacity 0.4s ease-out, transform 0.4s ease-out;
         }
-        .fade-enter-from {
+        .slide-up-enter-start {
             opacity: 0;
-            transform: translateY(0.625rem); /* 10px -> 0.625rem */
+            transform: translateY(2rem); /* Empieza 2rem abajo */
         }
-        .fade-enter-to {
+        .slide-up-enter-end {
             opacity: 1;
             transform: translateY(0);
         }
     </style>
 
-    <!-- 2. Lógica de la App (Inicialización Segura para Live Server) -->
+    <!-- 2. Lógica de la App (Inicialización antes de Alpine) -->
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.data('appData', () => ({
@@ -71,21 +68,24 @@
                 ],
                 setTab(index) {
                     this.activeTab = index;
-                    const scrollContainer = document.getElementById('main-scroll');
-                    if (scrollContainer) scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+                    // Scroll suave al inicio
+                    document.getElementById('main-scroll').scrollTo({ top: 0, behavior: 'smooth' });
                 },
                 copyCode(btn) {
+                    // Busca el bloque de código hermano o hijo
                     const container = btn.closest('.code-window');
-                    const codeElement = container.querySelector('code, .code-content');
+                    const codeElement = container.querySelector('.code-content');
                     
                     if (!codeElement) return;
 
                     navigator.clipboard.writeText(codeElement.innerText).then(() => {
-                        const originalIcon = btn.innerHTML;
-                        btn.innerHTML = '<span class="flex items-center gap-1 text-emerald-400 font-bold"><i data-lucide="check" class="w-4 h-4"></i> Copiado</span>';
+                        const originalContent = btn.innerHTML;
+                        // Feedback visual
+                        btn.innerHTML = '<span class="flex items-center gap-2 text-emerald-400 font-bold"><i data-lucide="check" class="w-4 h-4"></i> Copiado</span>';
                         lucide.createIcons();
+                        
                         setTimeout(() => {
-                            btn.innerHTML = originalIcon;
+                            btn.innerHTML = originalContent;
                             lucide.createIcons();
                         }, 2000);
                     });
@@ -94,7 +94,7 @@
         })
     </script>
 
-    <!-- 3. Carga de Alpine.js (Defer para esperar al evento init) -->
+    <!-- 3. Carga diferida de Alpine -->
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
 </head>
 
@@ -141,7 +141,7 @@
 
     <!-- Área Principal -->
     <main class="flex-1 relative overflow-hidden bg-slate-950">
-        <!-- Fondo con unidades relativas (rem en lugar de px) -->
+        <!-- Fondo Decorativo -->
         <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-5 pointer-events-none"></div>
         <div class="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:1.5rem_1.5rem]"></div>
 
@@ -150,9 +150,9 @@
             <!-- CONTENIDO: INICIO -->
             <section 
                 x-show="activeTab === 0" 
-                x-transition:enter="transition ease-out duration-300 delay-75"
-                x-transition:enter-start="opacity-0 translate-y-4"
-                x-transition:enter-end="opacity-100 translate-y-0"
+                x-transition:enter="slide-up-enter-active"
+                x-transition:enter-start="slide-up-enter-start"
+                x-transition:enter-end="slide-up-enter-end"
                 class="max-w-4xl mx-auto space-y-8"
             >
                 <header class="border-b border-slate-800 pb-8">
@@ -189,15 +189,15 @@
                         <div class="w-3 h-3 rounded-full bg-red-500/50"></div>
                         <div class="w-3 h-3 rounded-full bg-yellow-500/50"></div>
                         <div class="w-3 h-3 rounded-full bg-emerald-500/50"></div>
-                        <span class="ml-2 text-xs text-slate-500 font-mono">Resultado Final: Interfaz de Chat</span>
+                        <span class="ml-2 text-xs text-slate-500 font-mono">Monitor de Rendimiento & Chat</span>
                     </div>
                     <div class="pt-8 bg-slate-950">
                         <img src="imagenes/1_dashboard.png" 
-                             alt="Interfaz OpenCode Chat" 
+                             alt="Interfaz OpenCode Chat y GPU" 
                              class="w-full h-auto opacity-90 hover:opacity-100 transition-opacity">
                     </div>
                     <div class="px-4 py-2 bg-slate-950 border-t border-slate-800 text-center">
-                        <p class="text-xs text-slate-500 font-mono">Ref: Resultado Final - Chat Operativo</p>
+                        <p class="text-xs text-slate-500 font-mono">Estado Final: Agente Operativo en Apple M4 (Integrada)</p>
                     </div>
                 </div>
             </section>
@@ -206,9 +206,9 @@
             <section 
                 x-show="activeTab === 1" 
                 x-cloak 
-                x-transition:enter="transition ease-out duration-300 delay-75"
-                x-transition:enter-start="opacity-0 translate-y-4"
-                x-transition:enter-end="opacity-100 translate-y-0"
+                x-transition:enter="slide-up-enter-active"
+                x-transition:enter-start="slide-up-enter-start"
+                x-transition:enter-end="slide-up-enter-end"
                 class="max-w-4xl mx-auto space-y-6"
             >
                 <div class="flex items-center gap-3 mb-6">
@@ -234,14 +234,16 @@
                         </button>
                     </div>
                     <div class="p-4 text-slate-300 overflow-x-auto code-content">
-                        <span class="text-slate-500"># 1. Detener servicios</span><br>
-                        pkill OpenCode || true<br>
-                        pkill ollama || true<br><br>
-                        <span class="text-slate-500"># 2. Eliminar residuos y apps</span><br>
-                        sudo rm -rf /Applications/OpenCode.app<br>
-                        rm -rf ~/.opencode<br>
-                        rm -rf ~/.ollama<br><br>
-                        echo <span class="text-emerald-400">"☑ Entorno limpio y listo."</span>
+# 1. Detener servicios activos
+pkill OpenCode || true
+pkill ollama || true
+
+# 2. Eliminar aplicaciones y residuos
+sudo rm -rf /Applications/OpenCode.app
+rm -rf ~/.opencode
+rm -rf ~/.ollama
+
+echo "☑ Entorno limpio y listo para despliegue."
                     </div>
                 </div>
             </section>
@@ -250,9 +252,9 @@
             <section 
                 x-show="activeTab === 2" 
                 x-cloak 
-                x-transition:enter="transition ease-out duration-300 delay-75"
-                x-transition:enter-start="opacity-0 translate-y-4"
-                x-transition:enter-end="opacity-100 translate-y-0"
+                x-transition:enter="slide-up-enter-active"
+                x-transition:enter-start="slide-up-enter-start"
+                x-transition:enter-end="slide-up-enter-end"
                 class="max-w-4xl mx-auto space-y-8"
             >
                 <div class="flex items-center gap-3 mb-6">
@@ -280,33 +282,56 @@
                              <div class="flex justify-between items-center px-4 py-2 bg-slate-900 border-b border-slate-800">
                                 <span class="text-slate-400 text-xs">setup_full.sh</span>
                                 <button @click="copyCode($el)" class="text-slate-500 hover:text-white transition-colors flex items-center gap-2 px-2 py-1 rounded hover:bg-slate-800">
-                                    <i data-lucide="copy" class="w-4 h-4"></i> Copiar Script
+                                    <i data-lucide="copy" class="w-4 h-4"></i> Copiar
                                 </button>
                             </div>
                             <div class="p-4 text-slate-300 overflow-x-auto leading-relaxed code-content">
-                                <span class="text-purple-400">#!/bin/bash</span><br>
-                                set -e<br><br>
-                                <span class="text-slate-500"># --- VARIABLES OFICIALES ---</span><br>
-                                MODEL_ID=<span class="text-green-400">"gpt-oss:20b"</span><br>
-                                <span class="text-slate-500"># URL Release GitHub</span><br>
-                                OPENCODE_URL=<span class="text-green-400">"https://github.com/anomalyco/opencode/releases/latest/download/OpenCode-Darwin-arm64.dmg"</span><br><br>
-                                <span class="text-slate-500"># 1. INSTALACIÓN DE OLLAMA</span><br>
-                                curl -fsSL https://ollama.com/install.sh | sh<br><br>
-                                <span class="text-slate-500"># 2. CONFIGURACIÓN RED</span><br>
-                                launchctl setenv OLLAMA_HOST <span class="text-green-400">"0.0.0.0"</span><br><br>
-                                <span class="text-slate-500"># 3. OPENCODE & MODELO</span><br>
-                                ollama pull $MODEL_ID
+#!/bin/bash
+set -e
+
+# --- VARIABLES OFICIALES ---
+MODEL_ID="gpt-oss:20b"
+OPENCODE_URL="https://github.com/anomalyco/opencode/releases/latest/download/OpenCode-Darwin-arm64.dmg"
+
+echo "========== INICIANDO INSTALACIÓN (IP: 192.168.7.174) =========="
+
+# 1. INSTALACIÓN DE OLLAMA (BACKEND)
+echo " [1/4] Instalando Ollama..."
+if ! command -v ollama &>/dev/null; then
+    curl -fsSL https://ollama.com/install.sh | sh
+fi
+
+# 2. CONFIGURACIÓN DE RED (CRÍTICO)
+echo " [2/4] Abriendo puertos de red (0.0.0.0)..."
+launchctl setenv OLLAMA_HOST "0.0.0.0"
+
+# 3. INSTALACIÓN DE OPENCODE (FRONTEND)
+echo " [3/4] Instalando OpenCode..."
+curl -L -o /tmp/OpenCode.dmg "$OPENCODE_URL"
+hdiutil attach /tmp/OpenCode.dmg -nobrowse -mountpoint /Volumes/OpenCodeInstaller -quiet
+sudo cp -R /Volumes/OpenCodeInstaller/OpenCode.app /Applications/
+sudo xattr -cr /Applications/OpenCode.app # Bypass Gatekeeper
+hdiutil detach /Volumes/OpenCodeInstaller -quiet
+rm /tmp/OpenCode.dmg
+
+# 4. DESCARGA DEL MODELO
+echo " [4/4] Descargando modelo $MODEL_ID..."
+open -a Ollama
+sleep 5
+ollama pull $MODEL_ID
+
+echo "☑ INSTALACIÓN COMPLETADA."
                             </div>
                         </div>
                         
                         <!-- Enlaces Oficiales -->
-                         <div class="bg-slate-900/50 p-4 rounded-lg border border-slate-800 space-y-2">
-                            <h4 class="text-xs font-bold text-slate-500 uppercase mb-2">Fuentes Oficiales (Links)</h4>
-                            <a href="https://github.com/anomalyco/opencode/releases" target="_blank" class="flex items-center gap-2 text-sm text-blue-400 hover:underline">
+                         <div class="bg-slate-900/50 p-4 rounded-lg border border-slate-800 space-y-3">
+                            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest border-b border-slate-800 pb-2">Enlaces Oficiales & Recursos</h4>
+                            <a href="https://github.com/anomalyco/opencode/releases" target="_blank" class="flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 hover:underline transition-colors">
                                 <i data-lucide="github" class="w-3 h-3"></i> OpenCode Releases (GitHub)
                             </a>
-                            <a href="https://ollama.com" target="_blank" class="flex items-center gap-2 text-sm text-blue-400 hover:underline">
-                                <i data-lucide="external-link" class="w-3 h-3"></i> Ollama Official Web
+                            <a href="https://ollama.com" target="_blank" class="flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 hover:underline transition-colors">
+                                <i data-lucide="external-link" class="w-3 h-3"></i> Ollama Official Website
                             </a>
                         </div>
                     </div>
@@ -337,7 +362,7 @@
                         <img src="imagenes/3_instalacion.png" 
                              class="w-full h-auto">
                         <div class="px-3 py-2 bg-slate-900 border-t border-slate-800 text-center">
-                             <p class="text-[10px] text-emerald-500/70 font-mono uppercase tracking-widest">Evidencia: Ejecución del Script</p>
+                             <p class="text-[10px] text-emerald-500/70 font-mono uppercase tracking-widest">Evidencia: Ejecución del Script en Terminal</p>
                         </div>
                     </div>
                 </div>
@@ -347,9 +372,9 @@
             <section 
                 x-show="activeTab === 3" 
                 x-cloak 
-                x-transition:enter="transition ease-out duration-300 delay-75"
-                x-transition:enter-start="opacity-0 translate-y-4"
-                x-transition:enter-end="opacity-100 translate-y-0"
+                x-transition:enter="slide-up-enter-active"
+                x-transition:enter-start="slide-up-enter-start"
+                x-transition:enter-end="slide-up-enter-end"
                 class="max-w-4xl mx-auto space-y-6"
             >
                 <div class="flex items-center gap-3 mb-6">
@@ -358,16 +383,42 @@
                     </div>
                     <div>
                         <h2 class="text-2xl font-bold text-white">Fase 3: Vinculación JSON</h2>
-                        <p class="text-slate-400">Conexión Frontend (OpenCode) con Backend (Ollama)</p>
+                        <p class="text-slate-400">Comando de Inyección Directa (Sobrescribe Configuración)</p>
+                    </div>
+                </div>
+
+                <!-- Bloque de Comando Terminal para Fase 3 (ACTUALIZADO) -->
+                <div class="bg-[#0d1117] border border-slate-800 rounded-lg overflow-hidden code-window font-mono text-xs mb-6">
+                     <div class="flex justify-between items-center px-4 py-2 bg-slate-900 border-b border-slate-800">
+                        <span class="text-slate-400 text-xs">Terminal - Inyección de Configuración</span>
+                        <button @click="copyCode($el)" class="text-slate-500 hover:text-white transition-colors flex items-center gap-2 px-2 py-1 rounded hover:bg-slate-800">
+                            <i data-lucide="copy" class="w-4 h-4"></i> Copiar Comando
+                        </button>
+                    </div>
+                    <div class="p-4 text-slate-300 overflow-x-auto leading-relaxed code-content">
+mkdir -p ~/.opencode && cat > ~/.opencode/opencode.json <<EOF
+{
+  "\$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Ollama (local)",
+      "options": {},
+      "baseURL": "http://192.168.7.174:11434/v1",
+      "models": {
+        "gpt-oss:20b": {
+          "name": "gpt-oss:20b"
+        }
+      }
+    }
+  }
+}
+EOF
                     </div>
                 </div>
 
                 <!-- Imagen: 4_config_json.png -->
                 <div class="rounded-lg border border-slate-800 overflow-hidden bg-slate-900 shadow-xl mb-6">
-                    <div class="bg-slate-950 px-4 py-2 border-b border-slate-800 text-xs font-mono text-slate-400 flex items-center justify-between">
-                        <span class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-slate-700"></div> ~/.opencode/opencode.json</span>
-                         <a href="https://opencode.ai/config.json" target="_blank" class="text-[10px] text-blue-400 hover:underline">Ver Schema Oficial ↗</a>
-                    </div>
                     <img src="imagenes/4_config_json.png" 
                          class="w-full h-auto">
                     <div class="px-3 py-2 bg-slate-950 border-t border-slate-800 text-center">
@@ -378,10 +429,9 @@
                 <div class="flex items-start gap-3 p-4 bg-slate-900 border border-slate-800 rounded-lg">
                     <i data-lucide="info" class="w-5 h-5 text-blue-400 mt-0.5"></i>
                     <div>
-                        <h4 class="text-white font-bold text-sm">Configuración Crítica</h4>
+                        <h4 class="text-white font-bold text-sm">Nota de Mantenimiento</h4>
                         <p class="text-slate-400 text-sm mt-1">
-                            El campo <code>baseURL</code> apunta a <code>http://192.168.7.174:11434/v1</code>. 
-                            Esta dirección IP debe ser estática o actualizarse si el router asigna una nueva.
+                            Si tu router asigna una IP diferente a <code>192.168.7.174</code> en el futuro, deberás volver a ejecutar este bloque con la nueva IP.
                         </p>
                     </div>
                 </div>
@@ -391,9 +441,9 @@
              <section 
                 x-show="activeTab === 4" 
                 x-cloak 
-                x-transition:enter="transition ease-out duration-300 delay-75"
-                x-transition:enter-start="opacity-0 translate-y-4"
-                x-transition:enter-end="opacity-100 translate-y-0"
+                x-transition:enter="slide-up-enter-active"
+                x-transition:enter-start="slide-up-enter-start"
+                x-transition:enter-end="slide-up-enter-end"
                 class="max-w-4xl mx-auto space-y-8"
             >
                 <div class="flex items-center gap-3 mb-6">
@@ -428,7 +478,7 @@
                         <img src="imagenes/5_validacion.png" 
                              class="w-full h-full object-cover">
                          <div class="px-3 py-2 bg-slate-900 border-t border-slate-800 text-center">
-                             <p class="text-[10px] text-emerald-500/70 font-mono uppercase tracking-widest">Evidencia: Validación Técnica (LSOF & CURL)</p>
+                             <p class="text-[10px] text-emerald-500/70 font-mono uppercase tracking-widest">Evidencia: Validación Técnica (LSOF & CURL OK)</p>
                         </div>
                     </div>
                 </div>

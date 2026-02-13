@@ -291,28 +291,25 @@ set -e
 
 # --- VARIABLES OFICIALES ---
 MODEL_ID="gpt-oss:20b"
+# URL Release Oficial GitHub
 OPENCODE_URL="https://github.com/anomalyco/opencode/releases/latest/download/OpenCode-Darwin-arm64.dmg"
 
 echo "========== INICIANDO INSTALACIÓN (IP: 192.168.7.174) =========="
 
 # 1. INSTALACIÓN DE OLLAMA (BACKEND)
-echo " [1/4] Instalando Ollama..."
 if ! command -v ollama &>/dev/null; then
     curl -fsSL https://ollama.com/install.sh | sh
 fi
 
 # 2. CONFIGURACIÓN DE RED (CRÍTICO)
-echo " [2/4] Abriendo puertos de red (0.0.0.0)..."
 launchctl setenv OLLAMA_HOST "0.0.0.0"
 
 # 3. INSTALACIÓN DE OPENCODE (FRONTEND)
-echo " [3/4] Instalando OpenCode..."
 curl -L -o /tmp/OpenCode.dmg "$OPENCODE_URL"
 hdiutil attach /tmp/OpenCode.dmg -nobrowse -mountpoint /Volumes/OpenCodeInstaller -quiet
 sudo cp -R /Volumes/OpenCodeInstaller/OpenCode.app /Applications/
 sudo xattr -cr /Applications/OpenCode.app # Bypass Gatekeeper
 hdiutil detach /Volumes/OpenCodeInstaller -quiet
-rm /tmp/OpenCode.dmg
 
 # 4. DESCARGA DEL MODELO
 echo " [4/4] Descargando modelo $MODEL_ID..."
@@ -383,42 +380,16 @@ echo "☑ INSTALACIÓN COMPLETADA."
                     </div>
                     <div>
                         <h2 class="text-2xl font-bold text-white">Fase 3: Vinculación JSON</h2>
-                        <p class="text-slate-400">Comando de Inyección Directa (Sobrescribe Configuración)</p>
-                    </div>
-                </div>
-
-                <!-- Bloque de Comando Terminal para Fase 3 (ACTUALIZADO) -->
-                <div class="bg-[#0d1117] border border-slate-800 rounded-lg overflow-hidden code-window font-mono text-xs mb-6">
-                     <div class="flex justify-between items-center px-4 py-2 bg-slate-900 border-b border-slate-800">
-                        <span class="text-slate-400 text-xs">Terminal - Inyección de Configuración</span>
-                        <button @click="copyCode($el)" class="text-slate-500 hover:text-white transition-colors flex items-center gap-2 px-2 py-1 rounded hover:bg-slate-800">
-                            <i data-lucide="copy" class="w-4 h-4"></i> Copiar Comando
-                        </button>
-                    </div>
-                    <div class="p-4 text-slate-300 overflow-x-auto leading-relaxed code-content">
-mkdir -p ~/.opencode && cat > ~/.opencode/opencode.json <<EOF
-{
-  "\$schema": "https://opencode.ai/config.json",
-  "provider": {
-    "ollama": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "Ollama (local)",
-      "options": {},
-      "baseURL": "http://192.168.7.174:11434/v1",
-      "models": {
-        "gpt-oss:20b": {
-          "name": "gpt-oss:20b"
-        }
-      }
-    }
-  }
-}
-EOF
+                        <p class="text-slate-400">Conexión Frontend (OpenCode) con Backend (Ollama)</p>
                     </div>
                 </div>
 
                 <!-- Imagen: 4_config_json.png -->
                 <div class="rounded-lg border border-slate-800 overflow-hidden bg-slate-900 shadow-xl mb-6">
+                    <div class="bg-slate-950 px-4 py-2 border-b border-slate-800 text-xs font-mono text-slate-400 flex items-center justify-between">
+                        <span class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-slate-700"></div> ~/.opencode/opencode.json</span>
+                         <a href="https://opencode.ai/config.json" target="_blank" class="text-[10px] text-blue-400 hover:underline flex items-center gap-1">Schema <i data-lucide="external-link" class="w-2 h-2"></i></a>
+                    </div>
                     <img src="imagenes/4_config_json.png" 
                          class="w-full h-auto">
                     <div class="px-3 py-2 bg-slate-950 border-t border-slate-800 text-center">
@@ -429,9 +400,10 @@ EOF
                 <div class="flex items-start gap-3 p-4 bg-slate-900 border border-slate-800 rounded-lg">
                     <i data-lucide="info" class="w-5 h-5 text-blue-400 mt-0.5"></i>
                     <div>
-                        <h4 class="text-white font-bold text-sm">Nota de Mantenimiento</h4>
+                        <h4 class="text-white font-bold text-sm">Configuración Crítica</h4>
                         <p class="text-slate-400 text-sm mt-1">
-                            Si tu router asigna una IP diferente a <code>192.168.7.174</code> en el futuro, deberás volver a ejecutar este bloque con la nueva IP.
+                            El campo <code>baseURL</code> apunta a <code>http://192.168.7.174:11434/v1</code>. 
+                            Esta dirección IP debe ser estática o actualizarse si el router asigna una nueva.
                         </p>
                     </div>
                 </div>
