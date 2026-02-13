@@ -1,191 +1,496 @@
 <!DOCTYPE html>
-<html lang="es">
-
+<html lang="es" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roberto Monedero Alonso | Arquitectura de Soluciones Digitales</title>
+    <title>Agente Ursula - Documentación de Infraestructura</title>
+    
+    <!-- 1. Librerías Externas -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
-        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <!-- Configuración Tailwind -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        slate: { 850: '#151e2e', 950: '#020617' },
+                        emerald: { 450: '#10b981' }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Estilos Personalizados (Unidades Relativas) -->
     <style>
-        :root {
-            --accent-primary: #00f2ff;
-            --bg-base: #030305;
-            --text-main: #f8fafc;
+        /* Scrollbar en REM */
+        ::-webkit-scrollbar { width: 0.5rem; height: 0.5rem; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 0.25rem; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        
+        .code-window { box-shadow: 0 0 2.5rem -0.6rem rgba(16, 185, 129, 0.1); }
+        [x-cloak] { display: none !important; }
+        
+        /* Animación suave de entrada (Slide Up) */
+        .slide-up-enter-active {
+            transition: opacity 0.4s ease-out, transform 0.4s ease-out;
         }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-base);
-            color: var(--text-main);
-            overflow-x: hidden;
-            font-size: 1rem;
+        .slide-up-enter-start {
+            opacity: 0;
+            transform: translateY(2rem); /* Empieza 2rem abajo */
         }
-
-        /* Fondo dinámico sutil */
-        .ambient-grid {
-            background-image:
-                linear-gradient(to right, rgba(0, 242, 255, 0.02) 0.0625rem, transparent 0.0625rem),
-                linear-gradient(to bottom, rgba(0, 242, 255, 0.02) 0.0625rem, transparent 0.0625rem);
-            background-size: 4rem 4rem;
-            mask-image: radial-gradient(circle at 50% 50%, black, transparent 90%);
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-        }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 0.0625rem solid rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(2.5rem);
-            transition: all 0.5s ease;
-            position: relative;
-            overflow: hidden;
-            border-radius: 1.5rem;
-        }
-
-        .glass-card:hover {
-            border-color: rgba(0, 242, 255, 0.3);
-            transform: translateY(-0.5rem);
-        }
-
-        .preview-wrapper {
-            position: absolute;
-            inset: 0;
-            opacity: 0.15;
-            pointer-events: none;
-        }
-
-        .preview-frame {
-            width: 80rem;
-            height: 50rem;
-            transform: scale(0.35);
-            transform-origin: top left;
-            border: none;
-        }
-
-        .card-scrim {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to top, var(--bg-base) 10%, transparent 100%);
-            z-index: 5;
+        .slide-up-enter-end {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
+
+    <!-- 2. Lógica de la App (Inicialización antes de Alpine) -->
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('appData', () => ({
+                activeTab: 0,
+                menuItems: [
+                    { title: "Inicio & Proyecto", icon: "server" },
+                    { title: "Fase 1: Sanitización", icon: "shield-alert" },
+                    { title: "Fase 2: Instalación", icon: "terminal-square" },
+                    { title: "Fase 3: Vinculación", icon: "link" },
+                    { title: "Fase 4: Validación", icon: "check-circle-2" }
+                ],
+                setTab(index) {
+                    this.activeTab = index;
+                    // Scroll suave al inicio
+                    document.getElementById('main-scroll').scrollTo({ top: 0, behavior: 'smooth' });
+                },
+                copyCode(btn) {
+                    // Busca el bloque de código hermano o hijo
+                    const container = btn.closest('.code-window');
+                    const codeElement = container.querySelector('.code-content');
+                    
+                    if (!codeElement) return;
+
+                    navigator.clipboard.writeText(codeElement.innerText).then(() => {
+                        const originalContent = btn.innerHTML;
+                        // Feedback visual
+                        btn.innerHTML = '<span class="flex items-center gap-2 text-emerald-400 font-bold"><i data-lucide="check" class="w-4 h-4"></i> Copiado</span>';
+                        lucide.createIcons();
+                        
+                        setTimeout(() => {
+                            btn.innerHTML = originalContent;
+                            lucide.createIcons();
+                        }, 2000);
+                    });
+                }
+            }))
+        })
+    </script>
+
+    <!-- 3. Carga diferida de Alpine -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
 </head>
 
-<body>
+<body class="bg-slate-950 text-slate-300 h-screen overflow-hidden flex" x-data="appData">
 
-    <div class="ambient-grid"></div>
+    <!-- Sidebar -->
+    <aside class="w-72 bg-slate-900 border-r border-slate-800 flex flex-col z-20 shadow-2xl shrink-0">
+        <div class="p-6 border-b border-slate-800">
+            <h1 class="text-xl font-bold text-white tracking-tight flex items-center gap-2">
+                <i data-lucide="bot" class="text-emerald-400"></i>
+                Agente Ursula
+            </h1>
+            <div class="mt-2 flex items-center gap-2 text-xs text-slate-500 font-mono">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                v2026.02 On-Premise
+            </div>
+        </div>
 
-    <div class="relative z-10 min-h-screen flex flex-col">
+        <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
+            <template x-for="(item, index) in menuItems" :key="index">
+                <button 
+                    @click="setTab(index)"
+                    class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 group"
+                    :class="activeTab === index ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-lg shadow-emerald-900/20' : 'text-slate-400 hover:bg-slate-800 hover:text-white'"
+                >
+                    <i :data-lucide="item.icon" class="w-4 h-4 transition-colors" :class="activeTab === index ? 'text-emerald-400' : 'text-slate-500 group-hover:text-slate-300'"></i>
+                    <span x-text="item.title"></span>
+                </button>
+            </template>
+        </nav>
 
-        <header
-            class="h-[12vh] border-b border-white/5 bg-black/40 backdrop-blur-2xl flex items-center justify-between px-[6%]">
-            <div class="flex items-center gap-[1.5rem]">
-                <div
-                    class="w-[3rem] h-[3rem] rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center font-bold text-white">
-                    RM</div>
+        <div class="p-6 border-t border-slate-800 bg-slate-900/50">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-900 to-slate-800 border border-emerald-500/30 flex items-center justify-center text-white font-bold">
+                    RM
+                </div>
                 <div>
-                    <h1 class="text-lg font-bold uppercase tracking-tight">Neuro<span class="text-cyan-400">Link</span>
-                    </h1>
-                    <p class="text-[0.6rem] text-gray-500 uppercase tracking-widest font-semibold">Roberto Monedero
-                        Alonso</p>
+                    <p class="text-[10px] text-emerald-500 uppercase font-bold tracking-wider">Autoría</p>
+                    <p class="text-xs font-medium text-white">Roberto Monedero Alonso</p>
                 </div>
             </div>
+        </div>
+    </aside>
 
-            <nav class="hidden md:flex items-center gap-[3rem] text-[0.7rem] uppercase tracking-widest font-medium">
-                <a href="#/" class="hover:text-cyan-400 transition-all">Inicio</a>
-                <a href="#/portfolio" class="hover:text-cyan-400 transition-all">Portafolio</a>
-                <div class="h-[1.5rem] w-[0.0625rem] bg-white/10"></div>
-                <div class="text-right">
-                    <span class="block text-[0.75rem] font-bold">Director Estratégico</span>
-                    <span class="text-[0.55rem] text-cyan-500/80">Soluciones Digitales</span>
+    <!-- Área Principal -->
+    <main class="flex-1 relative overflow-hidden bg-slate-950">
+        <!-- Fondo Decorativo -->
+        <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-5 pointer-events-none"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:1.5rem_1.5rem]"></div>
+
+        <div class="h-full overflow-y-auto scroll-smooth p-8 md:p-12 relative z-10" id="main-scroll">
+            
+            <!-- CONTENIDO: INICIO -->
+            <section 
+                x-show="activeTab === 0" 
+                x-transition:enter="slide-up-enter-active"
+                x-transition:enter-start="slide-up-enter-start"
+                x-transition:enter-end="slide-up-enter-end"
+                class="max-w-4xl mx-auto space-y-8"
+            >
+                <header class="border-b border-slate-800 pb-8">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono mb-4">
+                        HOST: Minideaaateca26
+                    </div>
+                    <h2 class="text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-4">
+                        Guía Maestra de <br> <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">Infraestructura IA Local</span>
+                    </h2>
+                    <p class="text-lg text-slate-400 leading-relaxed max-w-2xl">
+                        Documentación técnica oficial para el despliegue del entorno <strong>OpenCode + Ollama</strong>. 
+                        Diseñado para operar en hardware Apple Silicon sin dependencias externas.
+                    </p>
+                </header>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-slate-900/50 border border-slate-800 p-5 rounded-xl">
+                        <div class="text-slate-500 text-xs uppercase font-bold mb-1">IP de Servicio</div>
+                        <div class="text-emerald-400 font-mono text-xl">192.168.7.174</div>
+                    </div>
+                    <div class="bg-slate-900/50 border border-slate-800 p-5 rounded-xl">
+                        <div class="text-slate-500 text-xs uppercase font-bold mb-1">Modelo Activo</div>
+                        <div class="text-white font-mono text-xl">gpt-oss:20b</div>
+                    </div>
+                    <div class="bg-slate-900/50 border border-slate-800 p-5 rounded-xl">
+                        <div class="text-slate-500 text-xs uppercase font-bold mb-1">Validación</div>
+                        <div class="text-white font-mono text-xl">12 Feb 2026</div>
+                    </div>
                 </div>
-            </nav>
-        </header>
 
-        <main id="app-shell" class="flex-grow container mx-auto px-[6%] py-[3rem] transition-opacity duration-300">
-            <!-- Contenido dinámico -->
-        </main>
+                <!-- Imagen: 1_dashboard.png -->
+                <div class="bg-slate-900 rounded-xl border border-slate-800 overflow-hidden shadow-2xl">
+                    <div class="absolute top-0 left-0 right-0 h-8 bg-slate-950 border-b border-slate-800 flex items-center px-4 gap-2 z-10">
+                        <div class="w-3 h-3 rounded-full bg-red-500/50"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500/50"></div>
+                        <div class="w-3 h-3 rounded-full bg-emerald-500/50"></div>
+                        <span class="ml-2 text-xs text-slate-500 font-mono">Monitor de Rendimiento & Chat</span>
+                    </div>
+                    <div class="pt-8 bg-slate-950">
+                        <img src="imagenes/1_dashboard.png" 
+                             alt="Interfaz OpenCode Chat y GPU" 
+                             class="w-full h-auto opacity-90 hover:opacity-100 transition-opacity">
+                    </div>
+                    <div class="px-4 py-2 bg-slate-950 border-t border-slate-800 text-center">
+                        <p class="text-xs text-slate-500 font-mono">Estado Final: Agente Operativo en Apple M4 (Integrada)</p>
+                    </div>
+                </div>
+            </section>
 
-        <footer
-            class="border-t border-white/5 bg-black/80 px-[6%] py-[2rem] text-[0.6rem] text-gray-600 uppercase tracking-widest flex justify-between">
-            <span>&copy; 2025 // Roberto Monedero Alonso</span>
-            <span class="text-cyan-500/50">Router: Hash-Secure Mode</span>
-        </footer>
-    </div>
+            <!-- CONTENIDO: FASE 1 -->
+            <section 
+                x-show="activeTab === 1" 
+                x-cloak 
+                x-transition:enter="slide-up-enter-active"
+                x-transition:enter-start="slide-up-enter-start"
+                x-transition:enter-end="slide-up-enter-end"
+                class="max-w-4xl mx-auto space-y-6"
+            >
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-12 h-12 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 border border-emerald-500/20">
+                        <i data-lucide="shield-alert" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-white">Fase 1: Sanitización</h2>
+                        <p class="text-slate-400">Preparación y limpieza del entorno</p>
+                    </div>
+                </div>
 
-    <script>
-        // --- Registro de Proyectos ---
-        const PROJECTS = [
-            { id: '01', name: 'Fine-tunning', path: './Fine-tunning', desc: 'Entrenamiento y refinamiento de modelo de IA específico.' },
-            { id: '02', name: 'Cuantización', path: './Cuantización', desc: 'Guía de conversión y optimización de modelos GGUF.' },
-            { id: '03', name: 'LLM', path: './LLM', desc: 'Guía de conversión y optimización de modelos GGUF.' },
-            { id: '04', name: 'Destilación', path: './Destilacion', desc: 'Guía de conversión y optimización de modelos GGUF.' }
-        ];
+                <div class="p-4 rounded-lg bg-orange-500/5 border border-orange-500/20 text-orange-200/80 text-sm flex gap-3">
+                    <i data-lucide="alert-triangle" class="w-5 h-5 shrink-0 text-orange-400"></i>
+                    <p>Esta acción detendrá todos los servicios de IA y eliminará configuraciones previas de OpenCode y Ollama.</p>
+                </div>
 
-        // --- Router Basado en Hash (Fix para SecurityError) ---
-        function renderRoute() {
-            const hash = window.location.hash || '#/';
-            const shell = document.getElementById('app-shell');
+                <div class="bg-[#0d1117] border border-slate-800 rounded-lg overflow-hidden code-window font-mono text-sm">
+                    <div class="flex justify-between items-center px-4 py-2 bg-slate-900 border-b border-slate-800">
+                        <span class="text-slate-400 text-xs">Terminal - bash</span>
+                        <button @click="copyCode($el)" class="text-slate-500 hover:text-white transition-colors flex items-center gap-2 px-2 py-1 rounded hover:bg-slate-800">
+                            <i data-lucide="copy" class="w-4 h-4"></i> Copiar
+                        </button>
+                    </div>
+                    <div class="p-4 text-slate-300 overflow-x-auto code-content">
+# 1. Detener servicios activos
+pkill OpenCode || true
+pkill ollama || true
 
-            shell.style.opacity = 0;
+# 2. Eliminar aplicaciones y residuos
+sudo rm -rf /Applications/OpenCode.app
+rm -rf ~/.opencode
+rm -rf ~/.ollama
 
-            setTimeout(() => {
-                if (hash === '#/' || hash === '') {
-                    shell.innerHTML = `
-                        <section class="py-[5vh] flex flex-col lg:flex-row items-center gap-12">
-                            <div class="flex-1">
-                                <span class="text-cyan-400 text-[0.7rem] font-bold uppercase tracking-[0.4rem] mb-4 block">Ecosistema Digital</span>
-                                <h2 class="text-[3.5rem] font-bold mb-6 leading-tight">Innovación <br><span class="text-cyan-400 italic">Arquitectónica.</span></h2>
-                                <p class="text-gray-400 text-lg mb-10 max-w-[35rem]">Bienvenido al portal de Roberto Monedero Alonso. Gestión y visualización de activos tecnológicos de alto rendimiento.</p>
-                                <a href="#/portfolio" class="inline-block px-10 py-4 bg-cyan-500 text-black font-bold rounded-full text-[0.7rem] uppercase tracking-widest">Explorar Soluciones</a>
+echo "☑ Entorno limpio y listo para despliegue."
+                    </div>
+                </div>
+            </section>
+
+            <!-- CONTENIDO: FASE 2 -->
+            <section 
+                x-show="activeTab === 2" 
+                x-cloak 
+                x-transition:enter="slide-up-enter-active"
+                x-transition:enter-start="slide-up-enter-start"
+                x-transition:enter-end="slide-up-enter-end"
+                class="max-w-4xl mx-auto space-y-8"
+            >
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-12 h-12 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 border border-emerald-500/20">
+                        <i data-lucide="terminal-square" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-white">Fase 2: Instalación Automatizada</h2>
+                        <p class="text-slate-400">Despliegue mediante Script Bash</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Código Script -->
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2 text-sm text-white font-bold">
+                                <i data-lucide="file-code" class="w-4 h-4 text-emerald-500"></i>
+                                Paso 1: Crear Script
                             </div>
-                            <div class="flex-1 flex justify-center">
-                                <div class="w-[20rem] h-[20rem] rounded-full border border-cyan-500/10 flex items-center justify-center relative">
-                                    <div class="absolute inset-0 border border-dashed border-cyan-500/20 rounded-full animate-[spin_40s_linear_infinite]"></div>
-                                    <div class="text-center">
-                                        <div class="text-[0.6rem] text-cyan-400 uppercase tracking-widest font-bold">Estado</div>
-                                        <div class="text-2xl font-light text-white tracking-widest">ACTIVO</div>
-                                    </div>
-                                </div>
+                            <span class="text-xs text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded border border-emerald-500/20">Script Oficial</span>
+                        </div>
+                        
+                        <div class="bg-[#0d1117] border border-slate-800 rounded-lg overflow-hidden code-window font-mono text-xs">
+                             <div class="flex justify-between items-center px-4 py-2 bg-slate-900 border-b border-slate-800">
+                                <span class="text-slate-400 text-xs">setup_full.sh</span>
+                                <button @click="copyCode($el)" class="text-slate-500 hover:text-white transition-colors flex items-center gap-2 px-2 py-1 rounded hover:bg-slate-800">
+                                    <i data-lucide="copy" class="w-4 h-4"></i> Copiar
+                                </button>
                             </div>
-                        </section>
-                    `;
-                } else if (hash === '#/portfolio') {
-                    shell.innerHTML = `
-                        <div class="mb-12">
-                            <h2 class="text-3xl font-bold mb-2">Portafolio de Activos</h2>
-                            <p class="text-gray-500 text-sm">Entornos de visualización para revisión técnica.</p>
+                            <div class="p-4 text-slate-300 overflow-x-auto leading-relaxed code-content">
+#!/bin/bash
+set -e
+
+# --- VARIABLES OFICIALES ---
+MODEL_ID="gpt-oss:20b"
+OPENCODE_URL="https://github.com/anomalyco/opencode/releases/latest/download/OpenCode-Darwin-arm64.dmg"
+
+echo "========== INICIANDO INSTALACIÓN (IP: 192.168.7.174) =========="
+
+# 1. INSTALACIÓN DE OLLAMA (BACKEND)
+echo " [1/4] Instalando Ollama..."
+if ! command -v ollama &>/dev/null; then
+    curl -fsSL https://ollama.com/install.sh | sh
+fi
+
+# 2. CONFIGURACIÓN DE RED (CRÍTICO)
+echo " [2/4] Abriendo puertos de red (0.0.0.0)..."
+launchctl setenv OLLAMA_HOST "0.0.0.0"
+
+# 3. INSTALACIÓN DE OPENCODE (FRONTEND)
+echo " [3/4] Instalando OpenCode..."
+curl -L -o /tmp/OpenCode.dmg "$OPENCODE_URL"
+hdiutil attach /tmp/OpenCode.dmg -nobrowse -mountpoint /Volumes/OpenCodeInstaller -quiet
+sudo cp -R /Volumes/OpenCodeInstaller/OpenCode.app /Applications/
+sudo xattr -cr /Applications/OpenCode.app # Bypass Gatekeeper
+hdiutil detach /Volumes/OpenCodeInstaller -quiet
+rm /tmp/OpenCode.dmg
+
+# 4. DESCARGA DEL MODELO
+echo " [4/4] Descargando modelo $MODEL_ID..."
+open -a Ollama
+sleep 5
+ollama pull $MODEL_ID
+
+echo "☑ INSTALACIÓN COMPLETADA."
+                            </div>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            ${PROJECTS.map(p => `
-                                <div class="glass-card h-[25rem] group cursor-pointer" onclick="window.location.href='${p.path}/index.html'">
-                                    <div class="preview-wrapper">
-                                        <iframe src="${p.path}/index.html" class="preview-frame" loading="lazy"></iframe>
-                                    </div>
-                                    <div class="card-scrim"></div>
-                                    <div class="relative z-10 h-full p-10 flex flex-col justify-end">
-                                        <span class="text-[0.6rem] text-cyan-400 font-bold mb-2 tracking-widest">ID-${p.id}</span>
-                                        <h3 class="text-2xl font-bold mb-2 group-hover:text-cyan-400 transition-colors uppercase">${p.name}</h3>
-                                        <p class="text-xs text-gray-500 mb-6 max-w-[20rem]">${p.desc}</p>
-                                        <div class="text-[0.6rem] font-bold text-cyan-400 uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all">Acceder al Nodo →</div>
-                                    </div>
-                                </div>
-                            `).join('')}
+                        
+                        <!-- Enlaces Oficiales -->
+                         <div class="bg-slate-900/50 p-4 rounded-lg border border-slate-800 space-y-3">
+                            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest border-b border-slate-800 pb-2">Enlaces Oficiales & Recursos</h4>
+                            <a href="https://github.com/anomalyco/opencode/releases" target="_blank" class="flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 hover:underline transition-colors">
+                                <i data-lucide="github" class="w-3 h-3"></i> OpenCode Releases (GitHub)
+                            </a>
+                            <a href="https://ollama.com" target="_blank" class="flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 hover:underline transition-colors">
+                                <i data-lucide="external-link" class="w-3 h-3"></i> Ollama Official Website
+                            </a>
                         </div>
-                    `;
-                }
-                shell.style.opacity = 1;
-            }, 150);
+                    </div>
+
+                    <!-- Imagen: 2_script_nano.png -->
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-2 text-sm text-slate-400">
+                            <i data-lucide="image" class="w-4 h-4"></i>
+                            Edición en Nano
+                        </div>
+                        <div class="rounded-lg border border-slate-800 overflow-hidden bg-slate-900 shadow-lg group">
+                            <img src="imagenes/2_script_nano.png" 
+                                 class="w-full h-auto opacity-80 group-hover:opacity-100 transition-opacity">
+                            <div class="px-3 py-2 bg-slate-950 border-t border-slate-800 text-center">
+                                <p class="text-[10px] text-emerald-500/70 font-mono uppercase tracking-widest">Evidencia: Script de Instalación (nano)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Imagen: 3_instalacion.png -->
+                <div class="mt-8 space-y-4">
+                    <div class="flex items-center gap-2 text-sm text-white font-bold">
+                        <i data-lucide="play-circle" class="w-4 h-4 text-emerald-500"></i>
+                        Paso 2: Ejecución y Despliegue
+                    </div>
+                    <div class="rounded-lg border border-slate-800 overflow-hidden bg-black shadow-2xl">
+                        <img src="imagenes/3_instalacion.png" 
+                             class="w-full h-auto">
+                        <div class="px-3 py-2 bg-slate-900 border-t border-slate-800 text-center">
+                             <p class="text-[10px] text-emerald-500/70 font-mono uppercase tracking-widest">Evidencia: Ejecución del Script en Terminal</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CONTENIDO: FASE 3 -->
+            <section 
+                x-show="activeTab === 3" 
+                x-cloak 
+                x-transition:enter="slide-up-enter-active"
+                x-transition:enter-start="slide-up-enter-start"
+                x-transition:enter-end="slide-up-enter-end"
+                class="max-w-4xl mx-auto space-y-6"
+            >
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-12 h-12 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 border border-emerald-500/20">
+                        <i data-lucide="link" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-white">Fase 3: Vinculación JSON</h2>
+                        <p class="text-slate-400">Comando de Inyección Directa (Sobrescribe Configuración)</p>
+                    </div>
+                </div>
+
+                <!-- Bloque de Comando Terminal para Fase 3 (ACTUALIZADO) -->
+                <div class="bg-[#0d1117] border border-slate-800 rounded-lg overflow-hidden code-window font-mono text-xs mb-6">
+                     <div class="flex justify-between items-center px-4 py-2 bg-slate-900 border-b border-slate-800">
+                        <span class="text-slate-400 text-xs">Terminal - Inyección de Configuración</span>
+                        <button @click="copyCode($el)" class="text-slate-500 hover:text-white transition-colors flex items-center gap-2 px-2 py-1 rounded hover:bg-slate-800">
+                            <i data-lucide="copy" class="w-4 h-4"></i> Copiar Comando
+                        </button>
+                    </div>
+                    <div class="p-4 text-slate-300 overflow-x-auto leading-relaxed code-content">
+mkdir -p ~/.opencode && cat > ~/.opencode/opencode.json <<EOF
+{
+  "\$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Ollama (local)",
+      "options": {},
+      "baseURL": "http://192.168.7.174:11434/v1",
+      "models": {
+        "gpt-oss:20b": {
+          "name": "gpt-oss:20b"
         }
+      }
+    }
+  }
+}
+EOF
+                    </div>
+                </div>
 
-        // Escuchar cambios en el hash
-        window.addEventListener('hashchange', renderRoute);
-        window.addEventListener('load', renderRoute);
+                <!-- Imagen: 4_config_json.png -->
+                <div class="rounded-lg border border-slate-800 overflow-hidden bg-slate-900 shadow-xl mb-6">
+                    <img src="imagenes/4_config_json.png" 
+                         class="w-full h-auto">
+                    <div class="px-3 py-2 bg-slate-950 border-t border-slate-800 text-center">
+                         <p class="text-[10px] text-emerald-500/70 font-mono uppercase tracking-widest">Evidencia: Configuración JSON (IP .174)</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-3 p-4 bg-slate-900 border border-slate-800 rounded-lg">
+                    <i data-lucide="info" class="w-5 h-5 text-blue-400 mt-0.5"></i>
+                    <div>
+                        <h4 class="text-white font-bold text-sm">Nota de Mantenimiento</h4>
+                        <p class="text-slate-400 text-sm mt-1">
+                            Si tu router asigna una IP diferente a <code>192.168.7.174</code> en el futuro, deberás volver a ejecutar este bloque con la nueva IP.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+             <!-- CONTENIDO: FASE 4 -->
+             <section 
+                x-show="activeTab === 4" 
+                x-cloak 
+                x-transition:enter="slide-up-enter-active"
+                x-transition:enter-start="slide-up-enter-start"
+                x-transition:enter-end="slide-up-enter-end"
+                class="max-w-4xl mx-auto space-y-8"
+            >
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-12 h-12 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 border border-emerald-500/20">
+                        <i data-lucide="check-circle-2" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-white">Fase 4: Validación Técnica</h2>
+                        <p class="text-slate-400">Verificación de puertos y Handshake</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-6">
+                        <div class="bg-slate-900 p-4 rounded-lg border border-slate-800 font-mono text-xs space-y-2">
+                            <div class="text-slate-500"># 1. Comprobar que Ollama escucha en todos los puertos</div>
+                            <div><span class="text-emerald-400">$</span> lsof -Pni :11434</div>
+                            <div class="text-yellow-200">TCP *:11434 (LISTEN)</div>
+                        </div>
+                        <div class="bg-slate-900 p-4 rounded-lg border border-slate-800 font-mono text-xs space-y-2">
+                            <div class="text-slate-500"># 2. Test de conexión HTTP (Handshake)</div>
+                            <div><span class="text-emerald-400">$</span> curl http://192.168.7.174:11434/v1/models</div>
+                            <div class="text-green-400">{ "object": "list", "data": [...] }</div>
+                        </div>
+                    </div>
+
+                    <!-- Imagen: 5_validacion.png -->
+                    <div class="rounded-lg border border-slate-800 overflow-hidden bg-black shadow-lg">
+                        <div class="bg-slate-950 px-4 py-2 border-b border-slate-800 text-xs font-mono text-slate-400">
+                           Terminal Output
+                        </div>
+                        <img src="imagenes/5_validacion.png" 
+                             class="w-full h-full object-cover">
+                         <div class="px-3 py-2 bg-slate-900 border-t border-slate-800 text-center">
+                             <p class="text-[10px] text-emerald-500/70 font-mono uppercase tracking-widest">Evidencia: Validación Técnica (LSOF & CURL OK)</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+        });
     </script>
 </body>
-
 </html>
